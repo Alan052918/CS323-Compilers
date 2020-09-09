@@ -1,10 +1,8 @@
-#include<stdio.h>
+#include <stdio.h>
 
-void say_hello_world(){
-    printf("hello wolrd!\n");
-}
+void say_hello_world() { printf("hello wolrd!\n"); }
 
-int main(void){
-    say_hello_world();
-    return 0;
+int main(void) {
+  say_hello_world();
+  return 0;
 }
