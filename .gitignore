@@ -9,3 +9,4 @@ syntax.tab.[hc]
 bin
 !*/test/*.out
 .vscode/
+venv/
