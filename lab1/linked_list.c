@@ -1,5 +1,7 @@
 #include "linked_list.h"
 
+#define INT_MIN -0x80000000
+
 node *linked_list_init() {
   node *head = (node *)malloc(sizeof(node));
   head->count = 0;
@@ -133,7 +135,7 @@ void linked_list_remove_all(node *head, int val) {
 int linked_list_get(node *head, int index) {
   node *cur = head->next;
   if (index >= linked_list_size(head) || index < 0) {
-    return INT32_MIN;
+    return INT_MIN;
   }
   while (index--) {
     cur = cur->next;
