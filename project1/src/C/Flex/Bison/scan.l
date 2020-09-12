@@ -5,56 +5,65 @@
 
 %option yylineno
 
-INT     [0-9]+|0[xX][0-9]+
+INT     [-+]?[0-9]+|[-+]?0[xX][0-9]+
 FLOAT   [0-9]+\.[0-9]+
 CHAR    \'[a-zA-Z]\'
-ID      [^0-9][0-9a-zA-Z]+
+ID      [a-zA-Z_][a-zA-Z0-9_]*
 TYPE    "int"|"char"|"float"
+STR_LTR \"[^\"]*\"
+SPC     [ \t\r\n\f\v]
 
 %%
 
-{INT}       { printf("INT\n"); }
-{FLOAT}     { printf("FLOAT\n"); }
-{CHAR}      { printf("CHAR\n"); }
-{ID}        { printf("ID %s\n", yytext); }
-{TYPE}      { printf("TYPE %s\n", yytext); }
-"struct"    { printf("STRUCT\n"); }
-"if"        { printf("IF\n"); }
-"else"      { printf("ELSE\n"); }
-"while"     { printf("WHILE\n"); }
-"return"    { printf("RETURN\n"); }
-"."         { printf("DOT\n"); }
-";"         { printf("SEMI\n"); }
-","         { printf("COMMA\n"); }
-"="         { printf("ASSIGN\n"); }
-"<"         { printf("LT\n"); }
-"<="        { printf("LE\n"); }
-">"         { printf("GT\n"); }
-">="        { printf("GE\n"); }
-"!="        { printf("NE\n"); }
-"=="        { printf("EQ\n"); }
-"+"         { printf("PLUS\n"); }
-"-"         { printf("MINUS\n"); }
-"*"         { printf("MUL\n"); }
-"/"         { printf("DIV\n"); }
-"&&"        { printf("AND\n"); }
-"||"        { printf("OR\n"); }
-"!"         { printf("NOT\n"); }
-"("         { printf("LP\n"); }
-")"         { printf("RP\n"); }
-"["         { printf("LB\n"); }
-"]"         { printf("RB\n"); }
-"{"         { printf("LC\n"); }
-"}"         { printf("RC\n"); }
+{SPC}     { /* whitespace characters, do nothing */ }
+{INT}     { printf("INT %s\n", yytext); }
+{FLOAT}   { printf("FLOAT %s\n", yytext); }
+{CHAR}    { printf("CHAR %s\n", yytext); }
+{TYPE}    { printf("TYPE %s\n", yytext); }
+"struct"  { printf("STRUCT\n"); }
+"if"      { printf("IF\n"); }
+"else"    { printf("ELSE\n"); }
+"while"   { printf("WHILE\n"); }
+"return"  { printf("RETURN\n"); }
+{ID}      { printf("ID %s\n", yytext); }
+"."       { printf("DOT\n"); }
+";"       { printf("SEMI\n"); }
+","       { printf("COMMA\n"); }
+"="       { printf("ASSIGN\n"); }
+"<"       { printf("LT\n"); }
+">"       { printf("GT\n"); }
+"+"       { printf("PLUS\n"); }
+"-"       { printf("MINUS\n"); }
+"*"       { printf("MUL\n"); }
+"/"       { printf("DIV\n"); }
+"!"       { printf("NOT\n"); }
+"("       { printf("LP\n"); }
+")"       { printf("RP\n"); }
+"["       { printf("LB\n"); }
+"]"       { printf("RB\n"); }
+"{"       { printf("LC\n"); }
+"}"       { printf("RC\n"); }
+"<="      { printf("LE\n"); }
+">="      { printf("GE\n"); }
+"!="      { printf("NE\n"); }
+"=="      { printf("EQ\n"); }
+"&&"      { printf("AND\n"); }
+"||"      { printf("OR\n"); }
 
-"//"        { char c; while((c=input()) != ’\n’); }
-\"[^\"]*\"  {
-  if(yytext[yyleng-2] == ’\\’) {
+
+"//"      { char c; while ((c=input()) != '\n'); }
+{STR_LTR} {
+  if(yytext[yyleng-2] == '\\') {
     yyless(yyleng-1);
     yymore();
   } else {
     /* process the string literal */
   }
+}
+
+.         {
+  printf("Error type A at Line %d: Unknown characters \'%s\'\n", 
+    yylineno, yytext);
 }
 
 %%
