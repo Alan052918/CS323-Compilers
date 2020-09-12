@@ -5,27 +5,16 @@
 
 %option yylineno
 
-INT     [-+]?[0-9]+|[-+]?0[xX][0-9]+
-FLOAT   [0-9]+\.[0-9]+
-CHAR    \'[a-zA-Z]\'
-ID      [a-zA-Z_][a-zA-Z0-9_]*
-TYPE    "int"|"char"|"float"
-STR_LTR \"[^\"]*\"
 SPC     [ \t\r\n\f\v]
+INT     [-+]?[0-9][0-9]*|[-+]?0[xX][0-9a-fA-F][0-9a-fA-F]*
+FLOAT   [0-9]+\.[0-9]+
+CHAR    \'[a-zA-Z]\'|\'\\x[0-9a-fA-F]+\'
+TYPE    "int"|"char"|"float"
+ID      [a-zA-Z_][a-zA-Z0-9_]*
 
 %%
 
 {SPC}     { /* whitespace characters, do nothing */ }
-{INT}     { printf("INT %s\n", yytext); }
-{FLOAT}   { printf("FLOAT %s\n", yytext); }
-{CHAR}    { printf("CHAR %s\n", yytext); }
-{TYPE}    { printf("TYPE %s\n", yytext); }
-"struct"  { printf("STRUCT\n"); }
-"if"      { printf("IF\n"); }
-"else"    { printf("ELSE\n"); }
-"while"   { printf("WHILE\n"); }
-"return"  { printf("RETURN\n"); }
-{ID}      { printf("ID %s\n", yytext); }
 "."       { printf("DOT\n"); }
 ";"       { printf("SEMI\n"); }
 ","       { printf("COMMA\n"); }
@@ -50,16 +39,19 @@ SPC     [ \t\r\n\f\v]
 "&&"      { printf("AND\n"); }
 "||"      { printf("OR\n"); }
 
-
 "//"      { char c; while ((c=input()) != '\n'); }
-{STR_LTR} {
-  if(yytext[yyleng-2] == '\\') {
-    yyless(yyleng-1);
-    yymore();
-  } else {
-    /* process the string literal */
-  }
-}
+
+"struct"  { printf("STRUCT\n"); }
+"if"      { printf("IF\n"); }
+"else"    { printf("ELSE\n"); }
+"while"   { printf("WHILE\n"); }
+"return"  { printf("RETURN\n"); }
+
+{INT}     { printf("INT %s\n", yytext); }
+{FLOAT}   { printf("FLOAT %s\n", yytext); }
+{CHAR}    { printf("CHAR %s\n", yytext); }
+{TYPE}    { printf("TYPE %s\n", yytext); }
+{ID}      { printf("ID %s\n", yytext); }
 
 .         {
   printf("Error type A at Line %d: Unknown characters \'%s\'\n", 
