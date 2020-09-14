@@ -1,4 +1,6 @@
 %{
+  #include "syntax.tab.h"
+
   #define EXIT_OK 0
   #define EXIT_FAIL 1
 %}
@@ -15,39 +17,39 @@ ID      [a-zA-Z_][a-zA-Z0-9_]*
 %%
 
 {SPC}     { /* whitespace characters, do nothing */ }
-"."       { printf("DOT\n"); }
-";"       { printf("SEMI\n"); }
-","       { printf("COMMA\n"); }
-"="       { printf("ASSIGN\n"); }
-"<"       { printf("LT\n"); }
-">"       { printf("GT\n"); }
-"+"       { printf("PLUS\n"); }
-"-"       { printf("MINUS\n"); }
-"*"       { printf("MUL\n"); }
-"/"       { printf("DIV\n"); }
-"!"       { printf("NOT\n"); }
-"("       { printf("LP\n"); }
-")"       { printf("RP\n"); }
-"["       { printf("LB\n"); }
-"]"       { printf("RB\n"); }
-"{"       { printf("LC\n"); }
-"}"       { printf("RC\n"); }
-"<="      { printf("LE\n"); }
-">="      { printf("GE\n"); }
-"!="      { printf("NE\n"); }
-"=="      { printf("EQ\n"); }
-"&&"      { printf("AND\n"); }
-"||"      { printf("OR\n"); }
+"."       { return DOT; }
+";"       { return SEMI; }
+","       { return COMMA; }
+"="       { return ASSIGN; }
+"<"       { return LT; }
+">"       { return GT; }
+"+"       { return PLUS; }
+"-"       { return MINUS; }
+"*"       { return MUL; }
+"/"       { return DIV; }
+"!"       { return NOT; }
+"("       { return LP; }
+")"       { return RP; }
+"["       { return LB; }
+"]"       { return RB; }
+"{"       { return LC; }
+"}"       { return RC; }
+"<="      { return LE; }
+">="      { return GE; }
+"!="      { return NE; }
+"=="      { return EQ; }
+"&&"      { return AND; }
+"||"      { return OR; }
 
 "//"      { char c; while ((c=input()) != '\n'); }
 
-"struct"  { printf("STRUCT\n"); }
-"if"      { printf("IF\n"); }
-"else"    { printf("ELSE\n"); }
-"while"   { printf("WHILE\n"); }
-"return"  { printf("RETURN\n"); }
+"struct"  { return STRUCT; }
+"if"      { return IF; }
+"else"    { return ELSE; }
+"while"   { return WHILE; }
+"return"  { return RETURN; }
 
-{INT}     { printf("INT %s\n", yytext); }
+{INT}     { yylval = atoi(yytext); return INT; }
 {FLOAT}   { printf("FLOAT %s\n", yytext); }
 {CHAR}    { printf("CHAR %s\n", yytext); }
 {TYPE}    { printf("TYPE %s\n", yytext); }

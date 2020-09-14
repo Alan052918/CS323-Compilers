@@ -1,0 +1,138 @@
+%{
+  #include "lex.yy.c"
+
+  void yyerror(const char *);
+%}
+
+%union {
+  int int_value;
+  float float_value;
+  char *string_value;
+}
+
+%token ASSIGN AND OR NOT LT LE GT GE NE EQ PLUS MINUS MUL DIV
+%token ID LB RB LP RP LC RC TYPE STRUCT
+%token <int_value> INT
+%token <float_value> FLOAT
+%token <char_value> CHAR
+%token COMMA DOT SEMI
+%token RETURN WHILE IF ELSE
+
+%%
+
+/**
+ * High-level definition: top-level syntax for a SPL program
+ * - global variable declarations
+ * - function definitions
+ */
+Program: ExtDefList
+ ;
+ExtDefList: Specifier ExtDecList SEMI
+ | // TODO
+ ;
+ExtDecList: VarDec
+ | Specifier SEMI
+ | Specifier FunDec CompSt
+ ;
+
+/**
+ * Specifier: SPL type system
+ * - primitive types: int, float, char
+ * - structure type
+ */
+Specifier: TYPE
+ | StructSpecifier ;
+StructSpecifier: STRUCT ID LC DefList RC
+ | STRUCT ID
+ ;
+
+/**
+ * Declarator: variable and function declaration
+ * The array type is specified by the declarator
+ */
+VarDec: ID
+ | VarDec LB INT RB
+ ;
+FunDec: ID LP VarList RP
+ | ID LP RP
+ ;
+VarList: ParamDec COMMA VarList
+ | ParamDec
+ ;
+ParamDec: Specifier VarDec
+ ;
+
+/**
+ * Statement: program structures like branchs and loops
+ * - enclosed bny curly braces
+ * - end with a semicolon
+ */
+CompSt: LC DefList StmtList RC
+ ;
+StmtList: Stmt StmtList
+ | // TODO
+ ;
+Stmt: Exp SEMI
+ | CompSt
+ | RETURN Exp SEMI
+ | IF LP Exp RP Stmt
+ | IF LP Exp RP Stmt ELSE Stmt
+ | WHILE LP Exp RP Stmt
+ ;
+
+/* Local definition: declaration and assignment of local variables */
+DefList: Def DefList
+ | // TODO
+ ;
+Def: Specifier DecList SEMI
+ ;
+DecList: Dec
+ | Dec COMMA DecList
+ ;
+Dec: VarDec
+ | VarDec ASSIGN Exp
+ ;
+
+/**
+ * Expression
+ * - single constant
+ * - operations on variables: operators have precedence and associativity
+ */
+Exp: Exp ASSIGN Exp
+ | Exp AND Exp
+ | Exp OR Exp
+ | Exp LT Exp
+ | Exp LE Exp
+ | Exp GT Exp
+ | Exp GE Exp
+ | Exp NE Exp
+ | Exp EQ Exp
+ | Exp PLUS Exp
+ | Exp MINUS Exp
+ | Exp MUL Exp
+ | Exp DIV Exp
+ | LP Exp RP
+ | MINUS Exp
+ | NOT Exp
+ | ID LP Args RP
+ | ID LP RP
+ | Exp LB Exp RB
+ | Exp DOT ID
+ | ID
+ | INT
+ | FLOAT
+ | CHAR
+ ;
+Args: Exp COMMA Args
+ | Exp
+ ;
+
+%%
+
+void yyerror(const char *s) {
+  fprintf(stderr, "%s\n", s);
+}
+
+int main(int argc, char **argv) {
+  yyparse();
+}
