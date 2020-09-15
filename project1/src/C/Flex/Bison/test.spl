@@ -1,0 +1,7 @@
+int test_spl()
+// This is a single-line comment
+{
+  int i = 0, j = 0x0, k = 0X1A;
+  float l = 1.0;
+  char c = 'x', d = '\x12';
+}

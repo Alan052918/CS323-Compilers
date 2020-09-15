@@ -10,13 +10,21 @@
   char *string_value;
 }
 
-%token ASSIGN AND OR NOT LT LE GT GE NE EQ PLUS MINUS MUL DIV
-%token ID LB RB LP RP LC RC TYPE STRUCT
 %token <int_value> INT
 %token <float_value> FLOAT
 %token <char_value> CHAR
+%token ID LC RC TYPE STRUCT
 %token COMMA DOT SEMI
 %token RETURN WHILE IF ELSE
+
+%right ASSIGN
+%left OR
+%left AND
+%left LT LE GT GE NE EQ
+%left PLUS MINUS
+%left MUL DIV
+%right NOT 
+%left LB RB LP RP DOT
 
 %%
 
@@ -28,7 +36,7 @@
 Program: ExtDefList
  ;
 ExtDefList: Specifier ExtDecList SEMI
- | // TODO
+ | 
  ;
 ExtDecList: VarDec
  | Specifier SEMI
