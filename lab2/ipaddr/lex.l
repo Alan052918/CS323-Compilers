@@ -4,8 +4,10 @@
 %}
 %option noyywrap
 
-v4 "WRITE YOUR REGULAR EXPRESSIONS HERE"
-v6 "ADD ANY SUB-PATTERNS AS YOU WANT"
+v4seg [0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5]
+v4    ^{v4seg}\.{v4seg}\.{v4seg}\.{v4seg}$
+v6seg [a-fA-F0-9]{1,4}
+v6    ^{v6seg}:{v6seg}:{v6seg}:{v6seg}:{v6seg}:{v6seg}:{v6seg}:{v6seg}$
 
 %%
 {v4} { indicator = 4; }
