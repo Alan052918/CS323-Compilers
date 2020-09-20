@@ -36,7 +36,7 @@
 Program: ExtDefList
  ;
 ExtDefList: Specifier ExtDecList SEMI
- | 
+ | { printf("Empty string terminal\n"); }
  ;
 ExtDecList: VarDec
  | Specifier SEMI
@@ -78,7 +78,7 @@ ParamDec: Specifier VarDec
 CompSt: LC DefList StmtList RC
  ;
 StmtList: Stmt StmtList
- | // TODO
+ | { printf("Empty string terminal\n"); }
  ;
 Stmt: Exp SEMI
  | CompSt
@@ -90,7 +90,7 @@ Stmt: Exp SEMI
 
 /* Local definition: declaration and assignment of local variables */
 DefList: Def DefList
- | // TODO
+ | { printf("Empty string terminal\n"); }
  ;
 Def: Specifier DecList SEMI
  ;

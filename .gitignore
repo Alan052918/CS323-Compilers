@@ -5,8 +5,6 @@
 *.log
 peda-session-*
 .gdb_history
-lex.yy.c
-syntax.tab.[hc]
 syntax.output
 bin
 !*/test/*.out
