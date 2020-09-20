@@ -59,7 +59,7 @@ ID      [a-zA-Z_][a-zA-Z0-9_]*
 
 {INT}     { yylval = atoi(yytext); return INT; }
 {FLOAT}   { yylval = atof(yytext); return FLOAT; }
-{CHAR}    { yylval = yytext; return CHAR; }
+{CHAR}    { yylval = yytext[0]; return CHAR; }
 {TYPE}    { yylval = yytext; return TYPE; }
 {ID}      { yylval = yytext; return ID; }
 
