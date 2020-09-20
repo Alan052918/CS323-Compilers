@@ -7,7 +7,7 @@
 %union {
   int int_value;
   float float_value;
-  char *string_value;
+  char char_value;
 }
 
 %token <int_value> INT
@@ -15,7 +15,7 @@
 %token <char_value> CHAR
 %token ID LC RC TYPE STRUCT
 %token COMMA DOT SEMI
-%token RETURN WHILE IF ELSE
+%token RETURN WHILE IF
 
 %right ASSIGN
 %left OR
@@ -23,8 +23,9 @@
 %left LT LE GT GE NE EQ
 %left PLUS MINUS
 %left MUL DIV
-%right NOT 
+%right NOT
 %left LB RB LP RP DOT
+%nonassoc ELSE
 
 %%
 
@@ -35,12 +36,15 @@
  */
 Program: ExtDefList
  ;
-ExtDefList: Specifier ExtDecList SEMI
- | { printf("Empty string terminal\n"); }
+ExtDefList: ExtDef ExtDefList 
+ | %empty
  ;
-ExtDecList: VarDec
+ExtDef: Specifier ExtDecList SEMI
  | Specifier SEMI
  | Specifier FunDec CompSt
+ ;
+ExtDecList: VarDec
+ | VarDec COMMA ExtDecList
  ;
 
 /**
@@ -49,7 +53,8 @@ ExtDecList: VarDec
  * - structure type
  */
 Specifier: TYPE
- | StructSpecifier ;
+ | StructSpecifier
+ ;
 StructSpecifier: STRUCT ID LC DefList RC
  | STRUCT ID
  ;
@@ -78,7 +83,7 @@ ParamDec: Specifier VarDec
 CompSt: LC DefList StmtList RC
  ;
 StmtList: Stmt StmtList
- | { printf("Empty string terminal\n"); }
+ | %empty
  ;
 Stmt: Exp SEMI
  | CompSt
@@ -90,7 +95,7 @@ Stmt: Exp SEMI
 
 /* Local definition: declaration and assignment of local variables */
 DefList: Def DefList
- | { printf("Empty string terminal\n"); }
+ | %empty
  ;
 Def: Specifier DecList SEMI
  ;
@@ -142,5 +147,6 @@ void yyerror(const char *s) {
 }
 
 int main(int argc, char **argv) {
+  yydebug = 1;
   yyparse();
 }

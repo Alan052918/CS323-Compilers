@@ -59,25 +59,25 @@ extern int yydebug;
     RETURN = 269,
     WHILE = 270,
     IF = 271,
-    ELSE = 272,
-    ASSIGN = 273,
-    OR = 274,
-    AND = 275,
-    LT = 276,
-    LE = 277,
-    GT = 278,
-    GE = 279,
-    NE = 280,
-    EQ = 281,
-    PLUS = 282,
-    MINUS = 283,
-    MUL = 284,
-    DIV = 285,
-    NOT = 286,
-    LB = 287,
-    RB = 288,
-    LP = 289,
-    RP = 290
+    ASSIGN = 272,
+    OR = 273,
+    AND = 274,
+    LT = 275,
+    LE = 276,
+    GT = 277,
+    GE = 278,
+    NE = 279,
+    EQ = 280,
+    PLUS = 281,
+    MINUS = 282,
+    MUL = 283,
+    DIV = 284,
+    NOT = 285,
+    LB = 286,
+    RB = 287,
+    LP = 288,
+    RP = 289,
+    ELSE = 290
   };
 #endif
 
@@ -90,7 +90,7 @@ union YYSTYPE
 
   int int_value;
   float float_value;
-  char *string_value;
+  char char_value;
 
 #line 96 "syntax.tab.h" /* yacc.c:1909  */
 };

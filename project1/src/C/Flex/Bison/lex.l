@@ -15,11 +15,11 @@
 %option yylineno
 
 SPC     [ \t\r\f\v]
-INT     -?[0-9][0-9]*|[-+]?0[xX][0-9a-fA-F][0-9a-fA-F]*
+INT     -?[0-9][0-9]*|-?0[xX][0-9a-fA-F][0-9a-fA-F]*
 FLOAT   -?[0-9]+\.[0-9]+
 CHAR    \'[a-zA-Z]\'|\'\\x[0-9a-fA-F]+\'
 TYPE    "int"|"char"|"float"
-ID      [a-zA-Z_][a-zA-Z0-9_]*
+ID      [a-zA-Z_][a-zA-Z0-9_]{0,31}
 
 %%
 
@@ -59,7 +59,7 @@ ID      [a-zA-Z_][a-zA-Z0-9_]*
 
 {INT}     { yylval = atoi(yytext); return INT; }
 {FLOAT}   { yylval = atof(yytext); return FLOAT; }
-{CHAR}    { yylval = yytext[0]; return CHAR; }
+{CHAR}    { yylval = yytext; return CHAR; }
 {TYPE}    { yylval = yytext; return TYPE; }
 {ID}      { yylval = yytext; return ID; }
 
