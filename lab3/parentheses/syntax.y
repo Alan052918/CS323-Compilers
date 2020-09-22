@@ -8,7 +8,7 @@
 
 Program: Exp { result = 1; }
  ;
-Exp: %empty {}
+Exp: %empty
  | Exp LP Exp RP
  | Exp LB Exp RB
  | Exp LC Exp RC
