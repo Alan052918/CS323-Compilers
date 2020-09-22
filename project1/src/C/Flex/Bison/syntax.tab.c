@@ -88,13 +88,10 @@
 # define YYERROR_VERBOSE 0
 #endif
 
-/* In a future release of Bison, this section will be replaced
-   by #include "syntax.tab.h".  */
-#ifndef YY_YY_SYNTAX_TAB_H_INCLUDED
-# define YY_YY_SYNTAX_TAB_H_INCLUDED
+
 /* Debug traces.  */
 #ifndef YYDEBUG
-# define YYDEBUG 0
+# define YYDEBUG 1
 #endif
 #if YYDEBUG
 extern int yydebug;
@@ -153,7 +150,7 @@ union YYSTYPE
   char char_value;
   char *str_value;
 
-#line 157 "syntax.tab.c" /* yacc.c:355  */
+#line 154 "syntax.tab.c" /* yacc.c:355  */
 };
 
 typedef union YYSTYPE YYSTYPE;
@@ -166,11 +163,11 @@ extern YYSTYPE yylval;
 
 int yyparse (void);
 
-#endif /* !YY_YY_SYNTAX_TAB_H_INCLUDED  */
+
 
 /* Copy the second part of user declarations.  */
 
-#line 174 "syntax.tab.c" /* yacc.c:358  */
+#line 171 "syntax.tab.c" /* yacc.c:358  */
 
 #ifdef short
 # undef short
@@ -1353,78 +1350,78 @@ yyreduce:
     {
         case 2:
 #line 40 "syntax.y" /* yacc.c:1646  */
-    { printf("Program\n"); }
-#line 1358 "syntax.tab.c" /* yacc.c:1646  */
+    { printf("Program (%d)\n", yylineno); }
+#line 1355 "syntax.tab.c" /* yacc.c:1646  */
     break;
 
   case 3:
 #line 42 "syntax.y" /* yacc.c:1646  */
     { printf("\tExtDefList\n"); }
-#line 1364 "syntax.tab.c" /* yacc.c:1646  */
+#line 1361 "syntax.tab.c" /* yacc.c:1646  */
     break;
 
   case 4:
 #line 43 "syntax.y" /* yacc.c:1646  */
     { printf("\tExtDefList\n"); }
-#line 1370 "syntax.tab.c" /* yacc.c:1646  */
+#line 1367 "syntax.tab.c" /* yacc.c:1646  */
     break;
 
   case 5:
 #line 45 "syntax.y" /* yacc.c:1646  */
     { printf("\t\tExtDef\n"); }
-#line 1376 "syntax.tab.c" /* yacc.c:1646  */
+#line 1373 "syntax.tab.c" /* yacc.c:1646  */
     break;
 
   case 6:
 #line 46 "syntax.y" /* yacc.c:1646  */
     { printf("\t\tExtDef\n"); }
-#line 1382 "syntax.tab.c" /* yacc.c:1646  */
+#line 1379 "syntax.tab.c" /* yacc.c:1646  */
     break;
 
   case 7:
 #line 47 "syntax.y" /* yacc.c:1646  */
     { printf("\t\tExtDef\n"); }
-#line 1388 "syntax.tab.c" /* yacc.c:1646  */
+#line 1385 "syntax.tab.c" /* yacc.c:1646  */
     break;
 
   case 8:
 #line 49 "syntax.y" /* yacc.c:1646  */
     { printf("\t\t\tExtDecList\n"); }
-#line 1394 "syntax.tab.c" /* yacc.c:1646  */
+#line 1391 "syntax.tab.c" /* yacc.c:1646  */
     break;
 
   case 9:
 #line 50 "syntax.y" /* yacc.c:1646  */
     { printf("\t\t\tExtDecList\n"); }
-#line 1400 "syntax.tab.c" /* yacc.c:1646  */
+#line 1397 "syntax.tab.c" /* yacc.c:1646  */
     break;
 
   case 10:
 #line 58 "syntax.y" /* yacc.c:1646  */
     { printf("\t\t\t\tSpecifier\n"); }
-#line 1406 "syntax.tab.c" /* yacc.c:1646  */
+#line 1403 "syntax.tab.c" /* yacc.c:1646  */
     break;
 
   case 11:
 #line 59 "syntax.y" /* yacc.c:1646  */
     { printf("\t\t\t\tSpecifier\n"); }
-#line 1412 "syntax.tab.c" /* yacc.c:1646  */
+#line 1409 "syntax.tab.c" /* yacc.c:1646  */
     break;
 
   case 12:
 #line 61 "syntax.y" /* yacc.c:1646  */
     { printf("\t\t\t\t\tSpecifier\n"); }
-#line 1418 "syntax.tab.c" /* yacc.c:1646  */
+#line 1415 "syntax.tab.c" /* yacc.c:1646  */
     break;
 
   case 13:
 #line 62 "syntax.y" /* yacc.c:1646  */
     { printf("\t\t\t\t\tSpecifier\n"); }
-#line 1424 "syntax.tab.c" /* yacc.c:1646  */
+#line 1421 "syntax.tab.c" /* yacc.c:1646  */
     break;
 
 
-#line 1428 "syntax.tab.c" /* yacc.c:1646  */
+#line 1425 "syntax.tab.c" /* yacc.c:1646  */
       default: break;
     }
   /* User semantic actions sometimes alter yychar, and that requires

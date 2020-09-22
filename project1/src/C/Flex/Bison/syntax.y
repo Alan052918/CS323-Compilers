@@ -37,7 +37,7 @@
  * - global variable declarations
  * - function definitions
  */
-Program: ExtDefList { printf("Program\n"); }
+Program: ExtDefList { printf("Program (%d)\n", yylineno); }
  ;
 ExtDefList: ExtDef ExtDefList { printf("\tExtDefList\n"); }
  | %empty { printf("\tExtDefList\n"); }
