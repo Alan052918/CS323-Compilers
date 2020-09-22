@@ -68,7 +68,9 @@
 
   void yyerror(const char *);
 
-#line 72 "syntax.tab.c" /* yacc.c:339  */
+  int indent_level = 0;
+
+#line 74 "syntax.tab.c" /* yacc.c:339  */
 
 # ifndef YY_NULLPTR
 #  if defined __cplusplus && 201103L <= __cplusplus
@@ -144,13 +146,14 @@ extern int yydebug;
 
 union YYSTYPE
 {
-#line 7 "syntax.y" /* yacc.c:355  */
+#line 9 "syntax.y" /* yacc.c:355  */
 
   int int_value;
   float float_value;
   char char_value;
+  char *str_value;
 
-#line 154 "syntax.tab.c" /* yacc.c:355  */
+#line 157 "syntax.tab.c" /* yacc.c:355  */
 };
 
 typedef union YYSTYPE YYSTYPE;
@@ -167,7 +170,7 @@ int yyparse (void);
 
 /* Copy the second part of user declarations.  */
 
-#line 171 "syntax.tab.c" /* yacc.c:358  */
+#line 174 "syntax.tab.c" /* yacc.c:358  */
 
 #ifdef short
 # undef short
@@ -468,13 +471,13 @@ static const yytype_uint8 yytranslate[] =
   /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_uint8 yyrline[] =
 {
-       0,    37,    37,    39,    40,    42,    43,    44,    46,    47,
-      55,    56,    58,    59,    66,    67,    69,    70,    72,    73,
-      75,    83,    85,    86,    88,    89,    90,    91,    92,    93,
-      97,    98,   100,   102,   103,   105,   106,   114,   115,   116,
-     117,   118,   119,   120,   121,   122,   123,   124,   125,   126,
-     127,   128,   129,   130,   131,   132,   133,   134,   135,   136,
-     137,   139,   140
+       0,    40,    40,    42,    43,    45,    46,    47,    49,    50,
+      58,    59,    61,    62,    69,    70,    72,    73,    75,    76,
+      78,    86,    88,    89,    91,    92,    93,    94,    95,    96,
+     100,   101,   103,   105,   106,   108,   109,   117,   118,   119,
+     120,   121,   122,   123,   124,   125,   126,   127,   128,   129,
+     130,   131,   132,   133,   134,   135,   136,   137,   138,   139,
+     140,   142,   143
 };
 #endif
 
@@ -1348,8 +1351,80 @@ yyreduce:
   YY_REDUCE_PRINT (yyn);
   switch (yyn)
     {
-      
-#line 1353 "syntax.tab.c" /* yacc.c:1646  */
+        case 2:
+#line 40 "syntax.y" /* yacc.c:1646  */
+    { printf("Program\n"); }
+#line 1358 "syntax.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 3:
+#line 42 "syntax.y" /* yacc.c:1646  */
+    { printf("\tExtDefList\n"); }
+#line 1364 "syntax.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 4:
+#line 43 "syntax.y" /* yacc.c:1646  */
+    { printf("\tExtDefList\n"); }
+#line 1370 "syntax.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 5:
+#line 45 "syntax.y" /* yacc.c:1646  */
+    { printf("\t\tExtDef\n"); }
+#line 1376 "syntax.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 6:
+#line 46 "syntax.y" /* yacc.c:1646  */
+    { printf("\t\tExtDef\n"); }
+#line 1382 "syntax.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 7:
+#line 47 "syntax.y" /* yacc.c:1646  */
+    { printf("\t\tExtDef\n"); }
+#line 1388 "syntax.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 8:
+#line 49 "syntax.y" /* yacc.c:1646  */
+    { printf("\t\t\tExtDecList\n"); }
+#line 1394 "syntax.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 9:
+#line 50 "syntax.y" /* yacc.c:1646  */
+    { printf("\t\t\tExtDecList\n"); }
+#line 1400 "syntax.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 10:
+#line 58 "syntax.y" /* yacc.c:1646  */
+    { printf("\t\t\t\tSpecifier\n"); }
+#line 1406 "syntax.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 11:
+#line 59 "syntax.y" /* yacc.c:1646  */
+    { printf("\t\t\t\tSpecifier\n"); }
+#line 1412 "syntax.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 12:
+#line 61 "syntax.y" /* yacc.c:1646  */
+    { printf("\t\t\t\t\tSpecifier\n"); }
+#line 1418 "syntax.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 13:
+#line 62 "syntax.y" /* yacc.c:1646  */
+    { printf("\t\t\t\t\tSpecifier\n"); }
+#line 1424 "syntax.tab.c" /* yacc.c:1646  */
+    break;
+
+
+#line 1428 "syntax.tab.c" /* yacc.c:1646  */
       default: break;
     }
   /* User semantic actions sometimes alter yychar, and that requires
@@ -1577,7 +1652,7 @@ yyreturn:
 #endif
   return yyresult;
 }
-#line 143 "syntax.y" /* yacc.c:1906  */
+#line 146 "syntax.y" /* yacc.c:1906  */
 
 
 void yyerror(const char *s) {
@@ -1585,6 +1660,5 @@ void yyerror(const char *s) {
 }
 
 int main(int argc, char **argv) {
-  yydebug = 1;
   yyparse();
 }

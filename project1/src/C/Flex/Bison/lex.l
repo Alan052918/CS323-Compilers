@@ -3,13 +3,6 @@
   #include "syntax.tab.h"
 
   int yycolno = 1;
-
-  #define YY_USER_ACTION \
-    yylloc.first_line = yylineno; \
-    yylloc.first_column = yycolno; \
-    yylloc.last_line = yylineno; \
-    yylloc.last_column = yycolno + yyleng; \
-    yycolno += yyleng;
 %}
 
 %option yylineno
@@ -57,11 +50,11 @@ ID      [a-zA-Z_][a-zA-Z0-9_]{0,31}
 "while"   { return WHILE; }
 "return"  { return RETURN; }
 
-{INT}     { yylval = atoi(yytext); return INT; }
-{FLOAT}   { yylval = atof(yytext); return FLOAT; }
-{CHAR}    { yylval = yytext; return CHAR; }
-{TYPE}    { yylval = yytext; return TYPE; }
-{ID}      { yylval = yytext; return ID; }
+{INT}     { yylval.int_value = atoi(yytext); return INT; }
+{FLOAT}   { yylval.float_value = atof(yytext); return FLOAT; }
+{CHAR}    { yylval.char_value = yytext[0]; return CHAR; }
+{TYPE}    { yylval.str_value = yytext; return TYPE; }
+{ID}      { yylval.str_value = yytext; return ID; }
 
 .         {
   printf("Error type A at Line %d: Unknown characters \'%s\'\n", 
@@ -70,21 +63,21 @@ ID      [a-zA-Z_][a-zA-Z0-9_]{0,31}
 
 %%
 
-int main(int argc, char **argv) {
-  char *file_name;
-  if (argc < 2) {
-    fprintf(stderr, "Usage: %s <file_name>\n", argv[0]);
-    return EXIT_FAILURE;
-  } else if (argc == 2) {
-    file_name = argv[1];
-    if (!(yyin = fopen(file_name, "r"))) {
-      perror(argv[1]);
-      return EXIT_FAILURE;
-    }
-    yylex();
-    return EXIT_SUCCESS;
-  } else {
-    fprintf(stderr, "Too many arguments!\n");
-    return EXIT_FAILURE;
-  }
-}
+// int main(int argc, char **argv) {
+//   char *file_name;
+//   if (argc < 2) {
+//     fprintf(stderr, "Usage: %s <file_name>\n", argv[0]);
+//     return EXIT_FAILURE;
+//   } else if (argc == 2) {
+//     file_name = argv[1];
+//     if (!(yyin = fopen(file_name, "r"))) {
+//       perror(argv[1]);
+//       return EXIT_FAILURE;
+//     }
+//     yylex();
+//     return EXIT_SUCCESS;
+//   } else {
+//     fprintf(stderr, "Too many arguments!\n");
+//     return EXIT_FAILURE;
+//   }
+// }

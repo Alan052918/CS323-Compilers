@@ -2,12 +2,15 @@
   #include "lex.yy.c"
 
   void yyerror(const char *);
+
+  int indent_level = 0;
 %}
 
 %union {
   int int_value;
   float float_value;
   char char_value;
+  char *str_value;
 }
 
 %token <int_value> INT
@@ -34,17 +37,17 @@
  * - global variable declarations
  * - function definitions
  */
-Program: ExtDefList
+Program: ExtDefList { printf("Program\n"); }
  ;
-ExtDefList: ExtDef ExtDefList 
- | %empty
+ExtDefList: ExtDef ExtDefList { printf("\tExtDefList\n"); }
+ | %empty { printf("\tExtDefList\n"); }
  ;
-ExtDef: Specifier ExtDecList SEMI
- | Specifier SEMI
- | Specifier FunDec CompSt
+ExtDef: Specifier ExtDecList SEMI { printf("\t\tExtDef\n"); }
+ | Specifier SEMI { printf("\t\tExtDef\n"); }
+ | Specifier FunDec CompSt { printf("\t\tExtDef\n"); }
  ;
-ExtDecList: VarDec
- | VarDec COMMA ExtDecList
+ExtDecList: VarDec { printf("\t\t\tExtDecList\n"); }
+ | VarDec COMMA ExtDecList { printf("\t\t\tExtDecList\n"); }
  ;
 
 /**
@@ -52,11 +55,11 @@ ExtDecList: VarDec
  * - primitive types: int, float, char
  * - structure type
  */
-Specifier: TYPE
- | StructSpecifier
+Specifier: TYPE { printf("\t\t\t\tSpecifier\n"); }
+ | StructSpecifier { printf("\t\t\t\tSpecifier\n"); }
  ;
-StructSpecifier: STRUCT ID LC DefList RC
- | STRUCT ID
+StructSpecifier: STRUCT ID LC DefList RC { printf("\t\t\t\t\tSpecifier\n"); }
+ | STRUCT ID { printf("\t\t\t\t\tSpecifier\n"); }
  ;
 
 /**
@@ -147,6 +150,5 @@ void yyerror(const char *s) {
 }
 
 int main(int argc, char **argv) {
-  yydebug = 1;
   yyparse();
 }
