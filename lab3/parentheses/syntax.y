@@ -6,12 +6,14 @@
 %token LP RP LB RB LC RC
 %%
 
-Program: Exp { result = 1; }
+Program: ExpList { result = 1; }
  ;
-Exp: %empty
- | Exp LP Exp RP
- | Exp LB Exp RB
- | Exp LC Exp RC
+ExpList: Exp ExpList
+ | %empty
+ ;
+Exp: LP ExpList RP
+ | LB ExpList RB
+ | LC ExpList RC
  ;
 
 %%
