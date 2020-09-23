@@ -1,5 +1,5 @@
-%{ 
-  #include "lex.yy.c" 
+%{
+  #include "lex.yy.c"
   #include "astdef.h"
 
   void yyerror(const char *);
@@ -39,17 +39,17 @@
  * - global variable declarations
  * - function definitions
  */
-Program: ExtDefList { $$ = make_ast_node(Program, $1); }
+Program: ExtDefList
  ;
-ExtDefList: ExtDef ExtDefList { $$ = make_ast_node(ExtDefList, $1, $2); }
- | %empty { $$ = make_ast_node(ExtDefList); }
+ExtDefList: ExtDef ExtDefList
+ | %empty
  ;
-ExtDef: Specifier ExtDecList SEMI { $$ = make_ast_node(ExtDef, $1, $2, $3); }
- | Specifier SEMI { $$ = make_ast_node(ExtDef, $1, $2); }
- | Specifier FunDec CompSt { $$ = make_ast_node(ExtDef, $1, $2, $3); }
+ExtDef: Specifier ExtDecList SEMI
+ | Specifier SEMI
+ | Specifier FunDec CompSt
  ;
-ExtDecList: VarDec { $$ = make_ast_node(ExtDecList, $1); }
- | VarDec COMMA ExtDecList { $$ = make_ast_node(ExtDecList, $1, $2, $3); }
+ExtDecList: VarDec
+ | VarDec COMMA ExtDecList
  ;
 
 /**
@@ -57,27 +57,27 @@ ExtDecList: VarDec { $$ = make_ast_node(ExtDecList, $1); }
  * - primitive types: int, float, char
  * - structure type
  */
-Specifier: TYPE { $$ = make_ast_node(Specifier, $1); }
- | StructSpecifier { $$ = make_ast_node(Specifier, $1); }
+Specifier: TYPE
+ | StructSpecifier
  ;
-StructSpecifier: STRUCT ID LC DefList RC { $$ = make_ast_node(StructSpecifier, $1, $2, $3, $4, $5); }
- | STRUCT ID { $$ = make_ast_node(StructSpecifier, $1, $2); }
+StructSpecifier: STRUCT ID LC DefList RC
+ | STRUCT ID
  ;
 
 /**
  * Declarator: variable and function declaration
  * The array type is specified by the declarator
  */
-VarDec: ID { $$ = make_ast_node(VarDec, $1); }
- | VarDec LB INT RB { $$ = make_ast_node(VarDec, $1, $2, $3, $4); }
+VarDec: ID
+ | VarDec LB INT RB
  ;
-FunDec: ID LP VarList RP { $$ = make_ast_node(FunDec, $1, $2, $3, $4); }
- | ID LP RP { $$ = make_ast_node(FunDec, $1, $2, $3); }
+FunDec: ID LP VarList RP
+ | ID LP RP
  ;
-VarList: ParamDec COMMA VarList { $$ = make_ast_node(VarList, $1, $2, $3); }
- | ParamDec { $$ = make_ast_node(VarList, $1); }
+VarList: ParamDec COMMA VarList
+ | ParamDec
  ;
-ParamDec: Specifier VarDec { $$ = make_ast_node(ParamDec, $1, $2); }
+ParamDec: Specifier VarDec
  ;
 
 /**
@@ -85,30 +85,30 @@ ParamDec: Specifier VarDec { $$ = make_ast_node(ParamDec, $1, $2); }
  * - enclosed bny curly braces
  * - end with a semicolon
  */
-CompSt: LC DefList StmtList RC { $$ = make_ast_node(CompSt, $1, $2, $3, $4); }
+CompSt: LC DefList StmtList RC
  ;
-StmtList: Stmt StmtList { $$ = make_ast_node(StmtList, $1, $2); }
- | %empty { $$ = make_ast_node(StmtList); }
+StmtList: Stmt StmtList
+ | %empty
  ;
-Stmt: Exp SEMI { $$ = make_ast_node(Stmt, $1, $2); }
- | CompSt { $$ = make_ast_node(Stmt, $1); }
- | RETURN Exp SEMI { $$ = make_ast_node(Stmt, $1, $2, $3); }
- | IF LP Exp RP Stmt { $$ = make_ast_node(Stmt, $1, $2, $3, $4); }
- | IF LP Exp RP Stmt ELSE Stmt { $$ = make_ast_node(Stmt, $1, $2, $3, $4, $5, $6, $7); }
- | WHILE LP Exp RP Stmt { $$ = make_ast_node(Stmt, $1, $2, $3, $4); }
+Stmt: Exp SEMI
+ | CompSt
+ | RETURN Exp SEMI
+ | IF LP Exp RP Stmt
+ | IF LP Exp RP Stmt ELSE Stmt
+ | WHILE LP Exp RP Stmt
  ;
 
 /* Local definition: declaration and assignment of local variables */
-DefList: Def DefList { $$ = make_ast_node(DefList, $1, $2); }
- | %empty  { $$ = make_ast_node(DefList); }
+DefList: Def DefList
+ | %empty
  ;
-Def: Specifier DecList SEMI { $$ = make_ast_node(Def, $1, $2, $3); }
+Def: Specifier DecList SEMI
  ;
-DecList: Dec { $$ = make_ast_node(DecList, $1); }
- | Dec COMMA DecList { $$ = make_ast_node(DecList, $1, $2, $3); }
+DecList: Dec
+ | Dec COMMA DecList
  ;
-Dec: VarDec { $$ = make_ast_node(Dec, $1); }
- | VarDec ASSIGN Exp { $$ = make_ast_node(Dec, $1, $2, $3); }
+Dec: VarDec
+ | VarDec ASSIGN Exp
  ;
 
 /**
@@ -116,50 +116,36 @@ Dec: VarDec { $$ = make_ast_node(Dec, $1); }
  * - single constant
  * - operations on variables: operators have precedence and associativity
  */
-Exp: Exp ASSIGN Exp { $$ = make_ast_node(Exp, $1, $2, $3); }
- | Exp AND Exp { $$ = make_ast_node(Exp, $1, $2, $3); }
- | Exp OR Exp { $$ = make_ast_node(Exp, $1, $2, $3); }
- | Exp LT Exp { $$ = make_ast_node(Exp, $1, $2, $3); }
- | Exp LE Exp { $$ = make_ast_node(Exp, $1, $2, $3); }
- | Exp GT Exp { $$ = make_ast_node(Exp, $1, $2, $3); }
- | Exp GE Exp { $$ = make_ast_node(Exp, $1, $2, $3); }
- | Exp NE Exp { $$ = make_ast_node(Exp, $1, $2, $3); }
- | Exp EQ Exp { $$ = make_ast_node(Exp, $1, $2, $3); }
- | Exp PLUS Exp { $$ = make_ast_node(Exp, $1, $2, $3); }
- | Exp MINUS Exp { $$ = make_ast_node(Exp, $1, $2, $3); }
- | Exp MUL Exp { $$ = make_ast_node(Exp, $1, $2, $3); }
- | Exp DIV Exp { $$ = make_ast_node(Exp, $1, $2, $3); }
- | LP Exp RP { $$ = make_ast_node(Exp, $1, $2, $3); }
- | MINUS Exp { $$ = make_ast_node(Exp, $1, $2); }
- | NOT Exp { $$ = make_ast_node(Exp, $1, $2); }
- | ID LP Args RP { $$ = make_ast_node(Exp, $1, $2, $3, $4); }
- | ID LP RP { $$ = make_ast_node(Exp, $1, $2, $3); }
- | Exp LB Exp RB { $$ = make_ast_node(Exp, $1, $2, $3, $4); }
- | Exp DOT ID { $$ = make_ast_node(Exp, $1, $2, $3); }
- | ID { $$ = make_ast_node(Exp, $1); }
- | INT { $$ = make_ast_node(Exp, $1); }
- | FLOAT { $$ = make_ast_node(Exp, $1); }
- | CHAR { $$ = make_ast_node(Exp, $1); }
+Exp: Exp ASSIGN Exp
+ | Exp AND Exp
+ | Exp OR Exp
+ | Exp LT Exp
+ | Exp LE Exp
+ | Exp GT Exp
+ | Exp GE Exp
+ | Exp NE Exp
+ | Exp EQ Exp
+ | Exp PLUS Exp
+ | Exp MINUS Exp
+ | Exp MUL Exp
+ | Exp DIV Exp
+ | LP Exp RP
+ | MINUS Exp
+ | NOT Exp
+ | ID LP Args RP
+ | ID LP RP
+ | Exp LB Exp RB
+ | Exp DOT ID
+ | ID
+ | INT
+ | FLOAT
+ | CHAR
  ;
-Args: Exp COMMA Args { $$ = make_ast_node(Args, $1, $2, $3); }
- | Exp { $$ = make_ast_node(Args, $1); }
+Args: Exp COMMA Args
+ | Exp
  ;
 
 %%
-
-struct ast_node *make_ast_node(const char *fmt, ...) {
-  va_list args;
-  va_start(args, fmt);
-
-  while (*fmt != '\0') {
-    if (*fmt == 'd') {
-      int node_type = va_arg(args, int);
-      struct ast_node *node = (struct ast_node *)malloc(sizeof(struct ast_node));
-      node->node_type = node_type;
-    } else if (*fmt
-  }
-  return node;
-}
 
 void yyerror(const char *s) {
   fprintf(stderr, "Error type B at Line %d: %s\n", yylineno, s);
