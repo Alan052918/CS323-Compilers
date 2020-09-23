@@ -63,14 +63,33 @@
 
 /* Copy the first part of user declarations.  */
 #line 1 "syntax.y" /* yacc.c:339  */
-
-  #include "lex.yy.c"
-
-  void yyerror(const char *);
+ #include "lex.yy.c" 
 
   int indent_level = 0;
 
-#line 74 "syntax.tab.c" /* yacc.c:339  */
+  enum node_types {
+    Program,
+    ExtDefList, ExtDef, ExtDecList,
+    Specifier, StructSpecifier,
+    VarDec, FunDec, VarList, ParamDec,
+    CompSt, StmtList, Stmt,
+    DefList, Def, DecList, Dec,
+    Exp, Args
+  };
+
+  struct ast_node {
+    int node_type;
+    struct ast_node *left_operand;
+    struct ast_node *right_operand;
+  };
+
+  struct ast_node *make_node(const int node_type, 
+    struct ast_node *left_operand, 
+    struct ast_node *right_operand);
+
+  void yyerror(const char *);
+
+#line 93 "syntax.tab.c" /* yacc.c:339  */
 
 # ifndef YY_NULLPTR
 #  if defined __cplusplus && 201103L <= __cplusplus
@@ -88,10 +107,13 @@
 # define YYERROR_VERBOSE 0
 #endif
 
-
+/* In a future release of Bison, this section will be replaced
+   by #include "syntax.tab.h".  */
+#ifndef YY_YY_SYNTAX_TAB_H_INCLUDED
+# define YY_YY_SYNTAX_TAB_H_INCLUDED
 /* Debug traces.  */
 #ifndef YYDEBUG
-# define YYDEBUG 1
+# define YYDEBUG 0
 #endif
 #if YYDEBUG
 extern int yydebug;
@@ -143,14 +165,16 @@ extern int yydebug;
 
 union YYSTYPE
 {
-#line 9 "syntax.y" /* yacc.c:355  */
+#line 28 "syntax.y" /* yacc.c:355  */
 
   int int_value;
   float float_value;
   char char_value;
   char *str_value;
+  struct ast_node *terminal_node;
+  struct ast_node *nonterminal_node;
 
-#line 154 "syntax.tab.c" /* yacc.c:355  */
+#line 178 "syntax.tab.c" /* yacc.c:355  */
 };
 
 typedef union YYSTYPE YYSTYPE;
@@ -163,11 +187,11 @@ extern YYSTYPE yylval;
 
 int yyparse (void);
 
-
+#endif /* !YY_YY_SYNTAX_TAB_H_INCLUDED  */
 
 /* Copy the second part of user declarations.  */
 
-#line 171 "syntax.tab.c" /* yacc.c:358  */
+#line 195 "syntax.tab.c" /* yacc.c:358  */
 
 #ifdef short
 # undef short
@@ -468,13 +492,13 @@ static const yytype_uint8 yytranslate[] =
   /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_uint8 yyrline[] =
 {
-       0,    40,    40,    42,    43,    45,    46,    47,    49,    50,
-      58,    59,    61,    62,    69,    70,    72,    73,    75,    76,
-      78,    86,    88,    89,    91,    92,    93,    94,    95,    96,
-     100,   101,   103,   105,   106,   108,   109,   117,   118,   119,
-     120,   121,   122,   123,   124,   125,   126,   127,   128,   129,
-     130,   131,   132,   133,   134,   135,   136,   137,   138,   139,
-     140,   142,   143
+       0,    63,    63,    65,    66,    68,    69,    70,    72,    73,
+      81,    82,    84,    85,    92,    93,    95,    96,    98,    99,
+     101,   109,   111,   112,   114,   115,   116,   117,   118,   119,
+     123,   124,   126,   128,   129,   131,   132,   140,   141,   142,
+     143,   144,   145,   146,   147,   148,   149,   150,   151,   152,
+     153,   154,   155,   156,   157,   158,   159,   160,   161,   162,
+     163,   165,   166
 };
 #endif
 
@@ -1349,79 +1373,25 @@ yyreduce:
   switch (yyn)
     {
         case 2:
-#line 40 "syntax.y" /* yacc.c:1646  */
-    { printf("Program (%d)\n", yylineno); }
-#line 1355 "syntax.tab.c" /* yacc.c:1646  */
-    break;
-
-  case 3:
-#line 42 "syntax.y" /* yacc.c:1646  */
-    { printf("\tExtDefList\n"); }
-#line 1361 "syntax.tab.c" /* yacc.c:1646  */
-    break;
-
-  case 4:
-#line 43 "syntax.y" /* yacc.c:1646  */
-    { printf("\tExtDefList\n"); }
-#line 1367 "syntax.tab.c" /* yacc.c:1646  */
-    break;
-
-  case 5:
-#line 45 "syntax.y" /* yacc.c:1646  */
-    { printf("\t\tExtDef\n"); }
-#line 1373 "syntax.tab.c" /* yacc.c:1646  */
-    break;
-
-  case 6:
-#line 46 "syntax.y" /* yacc.c:1646  */
-    { printf("\t\tExtDef\n"); }
+#line 63 "syntax.y" /* yacc.c:1646  */
+    { (yyval.nonterminal_node) = make_node(Program, null, null); }
 #line 1379 "syntax.tab.c" /* yacc.c:1646  */
     break;
 
-  case 7:
-#line 47 "syntax.y" /* yacc.c:1646  */
-    { printf("\t\tExtDef\n"); }
+  case 3:
+#line 65 "syntax.y" /* yacc.c:1646  */
+    { }
 #line 1385 "syntax.tab.c" /* yacc.c:1646  */
     break;
 
-  case 8:
-#line 49 "syntax.y" /* yacc.c:1646  */
-    { printf("\t\t\tExtDecList\n"); }
+  case 4:
+#line 66 "syntax.y" /* yacc.c:1646  */
+    { }
 #line 1391 "syntax.tab.c" /* yacc.c:1646  */
     break;
 
-  case 9:
-#line 50 "syntax.y" /* yacc.c:1646  */
-    { printf("\t\t\tExtDecList\n"); }
-#line 1397 "syntax.tab.c" /* yacc.c:1646  */
-    break;
 
-  case 10:
-#line 58 "syntax.y" /* yacc.c:1646  */
-    { printf("\t\t\t\tSpecifier\n"); }
-#line 1403 "syntax.tab.c" /* yacc.c:1646  */
-    break;
-
-  case 11:
-#line 59 "syntax.y" /* yacc.c:1646  */
-    { printf("\t\t\t\tSpecifier\n"); }
-#line 1409 "syntax.tab.c" /* yacc.c:1646  */
-    break;
-
-  case 12:
-#line 61 "syntax.y" /* yacc.c:1646  */
-    { printf("\t\t\t\t\tSpecifier\n"); }
-#line 1415 "syntax.tab.c" /* yacc.c:1646  */
-    break;
-
-  case 13:
-#line 62 "syntax.y" /* yacc.c:1646  */
-    { printf("\t\t\t\t\tSpecifier\n"); }
-#line 1421 "syntax.tab.c" /* yacc.c:1646  */
-    break;
-
-
-#line 1425 "syntax.tab.c" /* yacc.c:1646  */
+#line 1395 "syntax.tab.c" /* yacc.c:1646  */
       default: break;
     }
   /* User semantic actions sometimes alter yychar, and that requires
@@ -1649,11 +1619,21 @@ yyreturn:
 #endif
   return yyresult;
 }
-#line 146 "syntax.y" /* yacc.c:1906  */
+#line 169 "syntax.y" /* yacc.c:1906  */
 
+
+struct ast_node *make_node(const int node_type, 
+  struct ast_node *left_operand, 
+  struct ast_node *right_operand) {
+  struct ast_node *node = (struct ast_node *)malloc(sizeof(struct ast_node));
+  node->node_type = node_type;
+  node->left_operand = left_operand;
+  node->right_operand = right_operand;
+  return node;
+}
 
 void yyerror(const char *s) {
-  fprintf(stderr, "%s\n", s);
+  fprintf(stderr, "Error type B at Line %d: %s\n", yylineno, s);
 }
 
 int main(int argc, char **argv) {

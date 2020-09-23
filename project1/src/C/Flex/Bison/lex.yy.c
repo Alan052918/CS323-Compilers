@@ -874,7 +874,7 @@ case 2:
 /* rule 2 can match eol */
 YY_RULE_SETUP
 #line 20 "lex.l"
-{ yycolno = 1; }
+{ yycolno = 1; yylineno++; }
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
@@ -1039,12 +1039,12 @@ YY_RULE_SETUP
 case 35:
 YY_RULE_SETUP
 #line 56 "lex.l"
-{ yylval.str_value = yytext; return TYPE; }
+{ yylval.str_value = strdup(yytext); return TYPE; }
 	YY_BREAK
 case 36:
 YY_RULE_SETUP
 #line 57 "lex.l"
-{ yylval.str_value = yytext; return ID; }
+{ yylval.str_value = strdup(yytext); return ID; }
 	YY_BREAK
 case 37:
 YY_RULE_SETUP
@@ -2079,22 +2079,4 @@ void yyfree (void * ptr )
 #line 64 "lex.l"
 
 
-// int main(int argc, char **argv) {
-//   char *file_name;
-//   if (argc < 2) {
-//     fprintf(stderr, "Usage: %s <file_name>\n", argv[0]);
-//     return EXIT_FAILURE;
-//   } else if (argc == 2) {
-//     file_name = argv[1];
-//     if (!(yyin = fopen(file_name, "r"))) {
-//       perror(argv[1]);
-//       return EXIT_FAILURE;
-//     }
-//     yylex();
-//     return EXIT_SUCCESS;
-//   } else {
-//     fprintf(stderr, "Too many arguments!\n");
-//     return EXIT_FAILURE;
-//   }
-// }
 

@@ -17,7 +17,7 @@ ID      [a-zA-Z_][a-zA-Z0-9_]{0,31}
 %%
 
 {SPC}     { /* whitespace characters, do nothing */ }
-"\n"      { yycolno = 1; }
+"\n"      { yycolno = 1; yylineno++; }
 "."       { return DOT; }
 ";"       { return SEMI; }
 ","       { return COMMA; }
@@ -53,8 +53,8 @@ ID      [a-zA-Z_][a-zA-Z0-9_]{0,31}
 {INT}     { yylval.int_value = atoi(yytext); return INT; }
 {FLOAT}   { yylval.float_value = atof(yytext); return FLOAT; }
 {CHAR}    { yylval.char_value = yytext[0]; return CHAR; }
-{TYPE}    { yylval.str_value = yytext; return TYPE; }
-{ID}      { yylval.str_value = yytext; return ID; }
+{TYPE}    { yylval.str_value = strdup(yytext); return TYPE; }
+{ID}      { yylval.str_value = strdup(yytext); return ID; }
 
 .         {
   printf("Error type A at Line %d: Unknown characters \'%s\'\n", 
@@ -63,21 +63,3 @@ ID      [a-zA-Z_][a-zA-Z0-9_]{0,31}
 
 %%
 
-// int main(int argc, char **argv) {
-//   char *file_name;
-//   if (argc < 2) {
-//     fprintf(stderr, "Usage: %s <file_name>\n", argv[0]);
-//     return EXIT_FAILURE;
-//   } else if (argc == 2) {
-//     file_name = argv[1];
-//     if (!(yyin = fopen(file_name, "r"))) {
-//       perror(argv[1]);
-//       return EXIT_FAILURE;
-//     }
-//     yylex();
-//     return EXIT_SUCCESS;
-//   } else {
-//     fprintf(stderr, "Too many arguments!\n");
-//     return EXIT_FAILURE;
-//   }
-// }
