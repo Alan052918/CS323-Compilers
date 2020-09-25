@@ -17,13 +17,20 @@ struct ast_node {
 };
   
 struct list_node {
-  struct ast_node *ast_content;
+  union {
+    int int_token;
+    float float_token;
+    char char_token;
+    struct ast_node *nonterminal_token;
+  };
   struct list_node *next;
 };
 
-struct ast_node *make_ast_node(const char *fmt, ...);
-struct list_node *make_list_node(const int node_type);
-void push_right(struct ast_node *LHS, struct ast_node *node);
-void print_tree(struct ast_node *root);
+struct ast_node *make_ast_node(const int node_type);
+void push_nonterminal(struct ast_node *LHS, struct ast_node *node);
+void push_int(struct ast_node *LHS, const int int_terminal);
+void push_float(struct ast_node *LHS, const int float_terminal);
+void push_char(struct ast_node *LHS, const int char_terminal);
+char *get_node_type_name(const int node_type_enum);
+void print_tree(const struct ast_node *node, int indent_depth);
 
-int indent_level = 0;

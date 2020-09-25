@@ -63,33 +63,13 @@
 
 /* Copy the first part of user declarations.  */
 #line 1 "syntax.y" /* yacc.c:339  */
- #include "lex.yy.c" 
-
-  int indent_level = 0;
-
-  enum node_types {
-    Program,
-    ExtDefList, ExtDef, ExtDecList,
-    Specifier, StructSpecifier,
-    VarDec, FunDec, VarList, ParamDec,
-    CompSt, StmtList, Stmt,
-    DefList, Def, DecList, Dec,
-    Exp, Args
-  };
-
-  struct ast_node {
-    int node_type;
-    struct ast_node *left_operand;
-    struct ast_node *right_operand;
-  };
-
-  struct ast_node *make_node(const int node_type, 
-    struct ast_node *left_operand, 
-    struct ast_node *right_operand);
+ 
+  #include "lex.yy.c" 
+  #include "astdef.h"
 
   void yyerror(const char *);
 
-#line 93 "syntax.tab.c" /* yacc.c:339  */
+#line 73 "syntax.tab.c" /* yacc.c:339  */
 
 # ifndef YY_NULLPTR
 #  if defined __cplusplus && 201103L <= __cplusplus
@@ -165,7 +145,7 @@ extern int yydebug;
 
 union YYSTYPE
 {
-#line 28 "syntax.y" /* yacc.c:355  */
+#line 8 "syntax.y" /* yacc.c:355  */
 
   int int_value;
   float float_value;
@@ -174,7 +154,7 @@ union YYSTYPE
   struct ast_node *terminal_node;
   struct ast_node *nonterminal_node;
 
-#line 178 "syntax.tab.c" /* yacc.c:355  */
+#line 158 "syntax.tab.c" /* yacc.c:355  */
 };
 
 typedef union YYSTYPE YYSTYPE;
@@ -191,7 +171,7 @@ int yyparse (void);
 
 /* Copy the second part of user declarations.  */
 
-#line 195 "syntax.tab.c" /* yacc.c:358  */
+#line 175 "syntax.tab.c" /* yacc.c:358  */
 
 #ifdef short
 # undef short
@@ -492,13 +472,13 @@ static const yytype_uint8 yytranslate[] =
   /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_uint8 yyrline[] =
 {
-       0,    63,    63,    65,    66,    68,    69,    70,    72,    73,
-      81,    82,    84,    85,    92,    93,    95,    96,    98,    99,
-     101,   109,   111,   112,   114,   115,   116,   117,   118,   119,
-     123,   124,   126,   128,   129,   131,   132,   140,   141,   142,
-     143,   144,   145,   146,   147,   148,   149,   150,   151,   152,
-     153,   154,   155,   156,   157,   158,   159,   160,   161,   162,
-     163,   165,   166
+       0,    44,    44,    46,    47,    49,    50,    51,    53,    54,
+      62,    63,    65,    66,    73,    74,    76,    77,    79,    80,
+      82,    90,    92,    93,    95,    96,    97,    98,    99,   100,
+     104,   105,   107,   109,   110,   112,   113,   121,   122,   123,
+     124,   125,   126,   127,   128,   129,   130,   131,   132,   133,
+     134,   135,   136,   137,   138,   139,   140,   141,   142,   143,
+     144,   146,   147
 };
 #endif
 
@@ -1373,25 +1353,373 @@ yyreduce:
   switch (yyn)
     {
         case 2:
-#line 63 "syntax.y" /* yacc.c:1646  */
-    { (yyval.nonterminal_node) = make_node(Program, null, null); }
-#line 1379 "syntax.tab.c" /* yacc.c:1646  */
+#line 44 "syntax.y" /* yacc.c:1646  */
+    { (yyval.nonterminal_node) = make_ast_node(Program); push_right((yyval.nonterminal_node), (yyvsp[0].nonterminal_node)); }
+#line 1359 "syntax.tab.c" /* yacc.c:1646  */
     break;
 
   case 3:
-#line 65 "syntax.y" /* yacc.c:1646  */
-    { }
-#line 1385 "syntax.tab.c" /* yacc.c:1646  */
+#line 46 "syntax.y" /* yacc.c:1646  */
+    { (yyval.nonterminal_node) = make_ast_node(ExtDefList); push_right((yyval.nonterminal_node), (yyvsp[-1].nonterminal_node)); push_right((yyval.nonterminal_node), (yyvsp[0].nonterminal_node)); }
+#line 1365 "syntax.tab.c" /* yacc.c:1646  */
     break;
 
   case 4:
+#line 47 "syntax.y" /* yacc.c:1646  */
+    { (yyval.nonterminal_node) = make_ast_node(ExtDefList); }
+#line 1371 "syntax.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 5:
+#line 49 "syntax.y" /* yacc.c:1646  */
+    { (yyval.nonterminal_node) = make_ast_node(ExtDef); push_right((yyval.nonterminal_node), (yyvsp[-2].nonterminal_node)); push_right((yyval.nonterminal_node), (yyvsp[-1].nonterminal_node)); push_right((yyval.nonterminal_node), (yyvsp[0].terminal_node)); }
+#line 1377 "syntax.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 6:
+#line 50 "syntax.y" /* yacc.c:1646  */
+    { (yyval.nonterminal_node) = make_ast_node(ExtDef); push_right((yyval.nonterminal_node), (yyvsp[-1].nonterminal_node)); push_right((yyval.nonterminal_node), (yyvsp[0].terminal_node)); }
+#line 1383 "syntax.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 7:
+#line 51 "syntax.y" /* yacc.c:1646  */
+    { (yyval.nonterminal_node) = make_ast_node(ExtDef); push_right((yyval.nonterminal_node), (yyvsp[-2].nonterminal_node)); push_right((yyval.nonterminal_node), (yyvsp[-1].nonterminal_node)); push_right((yyval.nonterminal_node), (yyvsp[0].nonterminal_node)); }
+#line 1389 "syntax.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 8:
+#line 53 "syntax.y" /* yacc.c:1646  */
+    { (yyval.nonterminal_node) = make_ast_node(ExtDecList); push_right((yyval.nonterminal_node), (yyvsp[0].nonterminal_node)); }
+#line 1395 "syntax.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 9:
+#line 54 "syntax.y" /* yacc.c:1646  */
+    { (yyval.nonterminal_node) = make_ast_node(ExtDecList); push_right((yyval.nonterminal_node), (yyvsp[-2].nonterminal_node)); push_right((yyval.nonterminal_node), (yyvsp[-1].terminal_node)); push_right((yyval.nonterminal_node), (yyvsp[0].nonterminal_node)); }
+#line 1401 "syntax.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 10:
+#line 62 "syntax.y" /* yacc.c:1646  */
+    { (yyval.nonterminal_node) = make_ast_node(Specifier); push_right((yyval.nonterminal_node), (yyvsp[0].terminal_node)); }
+#line 1407 "syntax.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 11:
+#line 63 "syntax.y" /* yacc.c:1646  */
+    { (yyval.nonterminal_node) = make_ast_node(Specifier); push_right((yyval.nonterminal_node), (yyvsp[0].nonterminal_node)); }
+#line 1413 "syntax.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 12:
+#line 65 "syntax.y" /* yacc.c:1646  */
+    { (yyval.nonterminal_node) = make_ast_node(StructSpecifier); push_right((yyval.nonterminal_node), (yyvsp[-4].terminal_node)); push_right((yyval.nonterminal_node), (yyvsp[-3].terminal_node)); push_right((yyval.nonterminal_node), (yyvsp[-2].terminal_node)); push_right((yyval.nonterminal_node), (yyvsp[-1].nonterminal_node)); push_right((yyval.nonterminal_node), (yyvsp[0].terminal_node)); }
+#line 1419 "syntax.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 13:
 #line 66 "syntax.y" /* yacc.c:1646  */
-    { }
-#line 1391 "syntax.tab.c" /* yacc.c:1646  */
+    { (yyval.nonterminal_node) = make_ast_node(StructSpecifier); push_right((yyval.nonterminal_node), (yyvsp[-1].terminal_node)); push_right((yyval.nonterminal_node), (yyvsp[0].terminal_node)); }
+#line 1425 "syntax.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 14:
+#line 73 "syntax.y" /* yacc.c:1646  */
+    { (yyval.nonterminal_node) = make_ast_node(VarDec); push_right((yyval.nonterminal_node), (yyvsp[0].terminal_node)); }
+#line 1431 "syntax.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 15:
+#line 74 "syntax.y" /* yacc.c:1646  */
+    { (yyval.nonterminal_node) = make_ast_node(VarDec); push_right((yyval.nonterminal_node), (yyvsp[-3].nonterminal_node)); push_right((yyval.nonterminal_node), (yyvsp[-2].terminal_node)); push_right((yyval.nonterminal_node), (yyvsp[-1].int_value)); push_right((yyval.nonterminal_node), (yyvsp[0].terminal_node)); }
+#line 1437 "syntax.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 16:
+#line 76 "syntax.y" /* yacc.c:1646  */
+    { (yyval.nonterminal_node) = make_ast_node(FunDec); push_right((yyval.nonterminal_node), (yyvsp[-3].terminal_node)); push_right((yyval.nonterminal_node), (yyvsp[-2].terminal_node)); push_right((yyval.nonterminal_node), (yyvsp[-1].nonterminal_node)); push_right((yyval.nonterminal_node), (yyvsp[0].terminal_node)); }
+#line 1443 "syntax.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 17:
+#line 77 "syntax.y" /* yacc.c:1646  */
+    { (yyval.nonterminal_node) = make_ast_node(FunDec); push_right((yyval.nonterminal_node), (yyvsp[-2].terminal_node)); push_right((yyval.nonterminal_node), (yyvsp[-1].terminal_node)); push_right((yyval.nonterminal_node), (yyvsp[0].terminal_node)); }
+#line 1449 "syntax.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 18:
+#line 79 "syntax.y" /* yacc.c:1646  */
+    { (yyval.nonterminal_node) = make_ast_node(VarList); push_right((yyval.nonterminal_node), (yyvsp[-2].nonterminal_node)); push_right((yyval.nonterminal_node), (yyvsp[-1].terminal_node)); push_right((yyval.nonterminal_node), (yyvsp[0].nonterminal_node)); }
+#line 1455 "syntax.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 19:
+#line 80 "syntax.y" /* yacc.c:1646  */
+    { (yyval.nonterminal_node) = make_ast_node(VarList); push_right((yyval.nonterminal_node), (yyvsp[0].nonterminal_node)); }
+#line 1461 "syntax.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 20:
+#line 82 "syntax.y" /* yacc.c:1646  */
+    { (yyval.nonterminal_node) = make_ast_node(ParamDec); push_right((yyval.nonterminal_node), (yyvsp[-1].nonterminal_node)); push_right((yyval.nonterminal_node), (yyvsp[0].nonterminal_node)); }
+#line 1467 "syntax.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 21:
+#line 90 "syntax.y" /* yacc.c:1646  */
+    { (yyval.nonterminal_node) = make_ast_node(CompSt); push_right((yyval.nonterminal_node), (yyvsp[-3].terminal_node)); push_right((yyval.nonterminal_node), (yyvsp[-2].nonterminal_node)); push_right((yyval.nonterminal_node), (yyvsp[-1].nonterminal_node)); push_right((yyval.nonterminal_node), (yyvsp[0].terminal_node)); }
+#line 1473 "syntax.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 22:
+#line 92 "syntax.y" /* yacc.c:1646  */
+    { (yyval.nonterminal_node) = make_ast_node(StmtList); push_right((yyval.nonterminal_node), (yyvsp[-1].nonterminal_node)); push_right((yyval.nonterminal_node), (yyvsp[0].nonterminal_node)); }
+#line 1479 "syntax.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 23:
+#line 93 "syntax.y" /* yacc.c:1646  */
+    { (yyval.nonterminal_node) = make_ast_node(StmtList); }
+#line 1485 "syntax.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 24:
+#line 95 "syntax.y" /* yacc.c:1646  */
+    { (yyval.nonterminal_node) = make_ast_node(Stmt); push_right((yyval.nonterminal_node), (yyvsp[-1].nonterminal_node)); push_right((yyval.nonterminal_node), (yyvsp[0].terminal_node)); }
+#line 1491 "syntax.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 25:
+#line 96 "syntax.y" /* yacc.c:1646  */
+    { (yyval.nonterminal_node) = make_ast_node(Stmt); push_right((yyval.nonterminal_node), (yyvsp[0].nonterminal_node)); }
+#line 1497 "syntax.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 26:
+#line 97 "syntax.y" /* yacc.c:1646  */
+    { (yyval.nonterminal_node) = make_ast_node(Stmt); push_right((yyval.nonterminal_node), (yyvsp[-2].terminal_node)); push_right((yyval.nonterminal_node), (yyvsp[-1].nonterminal_node)); push_right((yyval.nonterminal_node), (yyvsp[0].terminal_node)); }
+#line 1503 "syntax.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 27:
+#line 98 "syntax.y" /* yacc.c:1646  */
+    { (yyval.nonterminal_node) = make_ast_node(Stmt); push_right((yyval.nonterminal_node), (yyvsp[-4].terminal_node)); push_right((yyval.nonterminal_node), (yyvsp[-3].terminal_node)); push_right((yyval.nonterminal_node), (yyvsp[-2].nonterminal_node)); push_right((yyval.nonterminal_node), (yyvsp[-1].terminal_node)); push_right((yyval.nonterminal_node), (yyvsp[0].nonterminal_node)); }
+#line 1509 "syntax.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 28:
+#line 99 "syntax.y" /* yacc.c:1646  */
+    { (yyval.nonterminal_node) = make_ast_node(Stmt); push_right((yyval.nonterminal_node), (yyvsp[-6].terminal_node)); push_right((yyval.nonterminal_node), (yyvsp[-5].terminal_node)); push_right((yyval.nonterminal_node), (yyvsp[-4].nonterminal_node)); push_right((yyval.nonterminal_node), (yyvsp[-3].terminal_node)); push_right((yyval.nonterminal_node), (yyvsp[-2].nonterminal_node)); push_right((yyval.nonterminal_node), (yyvsp[-1].terminal_node)); push_right((yyval.nonterminal_node), (yyvsp[0].nonterminal_node)); }
+#line 1515 "syntax.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 29:
+#line 100 "syntax.y" /* yacc.c:1646  */
+    { (yyval.nonterminal_node) = make_ast_node(Stmt); push_right((yyval.nonterminal_node), (yyvsp[-4].terminal_node)); push_right((yyval.nonterminal_node), (yyvsp[-3].terminal_node)); push_right((yyval.nonterminal_node), (yyvsp[-2].nonterminal_node)); push_right((yyval.nonterminal_node), (yyvsp[-1].terminal_node)); push_right((yyval.nonterminal_node), (yyvsp[0].nonterminal_node)); }
+#line 1521 "syntax.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 30:
+#line 104 "syntax.y" /* yacc.c:1646  */
+    { (yyval.nonterminal_node) = make_ast_node(DefList); push_right((yyval.nonterminal_node), (yyvsp[-1].nonterminal_node)); push_right((yyval.nonterminal_node), (yyvsp[0].nonterminal_node)); }
+#line 1527 "syntax.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 31:
+#line 105 "syntax.y" /* yacc.c:1646  */
+    { (yyval.nonterminal_node) = make_ast_node(DefList); }
+#line 1533 "syntax.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 32:
+#line 107 "syntax.y" /* yacc.c:1646  */
+    { (yyval.nonterminal_node) = make_ast_node(Def); push_right((yyval.nonterminal_node), (yyvsp[-2].nonterminal_node)); push_right((yyval.nonterminal_node), (yyvsp[-1].nonterminal_node)); push_right((yyval.nonterminal_node), (yyvsp[0].terminal_node)); }
+#line 1539 "syntax.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 33:
+#line 109 "syntax.y" /* yacc.c:1646  */
+    { (yyval.nonterminal_node) = make_ast_node(DecList); push_right((yyval.nonterminal_node), (yyvsp[0].nonterminal_node)); }
+#line 1545 "syntax.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 34:
+#line 110 "syntax.y" /* yacc.c:1646  */
+    { (yyval.nonterminal_node) = make_ast_node(DecList); push_right((yyval.nonterminal_node), (yyvsp[-2].nonterminal_node)); push_right((yyval.nonterminal_node), (yyvsp[-1].terminal_node)); push_right((yyval.nonterminal_node), (yyvsp[0].nonterminal_node)); }
+#line 1551 "syntax.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 35:
+#line 112 "syntax.y" /* yacc.c:1646  */
+    { (yyval.nonterminal_node) = make_ast_node(Dec); push_right((yyval.nonterminal_node), (yyvsp[0].nonterminal_node)); }
+#line 1557 "syntax.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 36:
+#line 113 "syntax.y" /* yacc.c:1646  */
+    { (yyval.nonterminal_node) = make_ast_node(Dec); push_right((yyval.nonterminal_node), (yyvsp[-2].nonterminal_node)); push_right((yyval.nonterminal_node), (yyvsp[-1].terminal_node)); push_right((yyval.nonterminal_node), (yyvsp[0].nonterminal_node)); }
+#line 1563 "syntax.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 37:
+#line 121 "syntax.y" /* yacc.c:1646  */
+    { (yyval.nonterminal_node) = make_ast_node(Exp); push_right((yyval.nonterminal_node), (yyvsp[-2].nonterminal_node)); push_right((yyval.nonterminal_node), (yyvsp[-1].terminal_node)); push_right((yyval.nonterminal_node), (yyvsp[0].nonterminal_node)); }
+#line 1569 "syntax.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 38:
+#line 122 "syntax.y" /* yacc.c:1646  */
+    { (yyval.nonterminal_node) = make_ast_node(Exp); push_right((yyval.nonterminal_node), (yyvsp[-2].nonterminal_node)); push_right((yyval.nonterminal_node), (yyvsp[-1].terminal_node)); push_right((yyval.nonterminal_node), (yyvsp[0].nonterminal_node)); }
+#line 1575 "syntax.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 39:
+#line 123 "syntax.y" /* yacc.c:1646  */
+    { (yyval.nonterminal_node) = make_ast_node(Exp); push_right((yyval.nonterminal_node), (yyvsp[-2].nonterminal_node)); push_right((yyval.nonterminal_node), (yyvsp[-1].terminal_node)); push_right((yyval.nonterminal_node), (yyvsp[0].nonterminal_node)); }
+#line 1581 "syntax.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 40:
+#line 124 "syntax.y" /* yacc.c:1646  */
+    { (yyval.nonterminal_node) = make_ast_node(Exp); push_right((yyval.nonterminal_node), (yyvsp[-2].nonterminal_node)); push_right((yyval.nonterminal_node), (yyvsp[-1].terminal_node)); push_right((yyval.nonterminal_node), (yyvsp[0].nonterminal_node)); }
+#line 1587 "syntax.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 41:
+#line 125 "syntax.y" /* yacc.c:1646  */
+    { (yyval.nonterminal_node) = make_ast_node(Exp); push_right((yyval.nonterminal_node), (yyvsp[-2].nonterminal_node)); push_right((yyval.nonterminal_node), (yyvsp[-1].terminal_node)); push_right((yyval.nonterminal_node), (yyvsp[0].nonterminal_node)); }
+#line 1593 "syntax.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 42:
+#line 126 "syntax.y" /* yacc.c:1646  */
+    { (yyval.nonterminal_node) = make_ast_node(Exp); push_right((yyval.nonterminal_node), (yyvsp[-2].nonterminal_node)); push_right((yyval.nonterminal_node), (yyvsp[-1].terminal_node)); push_right((yyval.nonterminal_node), (yyvsp[0].nonterminal_node)); }
+#line 1599 "syntax.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 43:
+#line 127 "syntax.y" /* yacc.c:1646  */
+    { (yyval.nonterminal_node) = make_ast_node(Exp); push_right((yyval.nonterminal_node), (yyvsp[-2].nonterminal_node)); push_right((yyval.nonterminal_node), (yyvsp[-1].terminal_node)); push_right((yyval.nonterminal_node), (yyvsp[0].nonterminal_node)); }
+#line 1605 "syntax.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 44:
+#line 128 "syntax.y" /* yacc.c:1646  */
+    { (yyval.nonterminal_node) = make_ast_node(Exp); push_right((yyval.nonterminal_node), (yyvsp[-2].nonterminal_node)); push_right((yyval.nonterminal_node), (yyvsp[-1].terminal_node)); push_right((yyval.nonterminal_node), (yyvsp[0].nonterminal_node)); }
+#line 1611 "syntax.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 45:
+#line 129 "syntax.y" /* yacc.c:1646  */
+    { (yyval.nonterminal_node) = make_ast_node(Exp); push_right((yyval.nonterminal_node), (yyvsp[-2].nonterminal_node)); push_right((yyval.nonterminal_node), (yyvsp[-1].terminal_node)); push_right((yyval.nonterminal_node), (yyvsp[0].nonterminal_node)); }
+#line 1617 "syntax.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 46:
+#line 130 "syntax.y" /* yacc.c:1646  */
+    { (yyval.nonterminal_node) = make_ast_node(Exp); push_right((yyval.nonterminal_node), (yyvsp[-2].nonterminal_node)); push_right((yyval.nonterminal_node), (yyvsp[-1].terminal_node)); push_right((yyval.nonterminal_node), (yyvsp[0].nonterminal_node)); }
+#line 1623 "syntax.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 47:
+#line 131 "syntax.y" /* yacc.c:1646  */
+    { (yyval.nonterminal_node) = make_ast_node(Exp); push_right((yyval.nonterminal_node), (yyvsp[-2].nonterminal_node)); push_right((yyval.nonterminal_node), (yyvsp[-1].terminal_node)); push_right((yyval.nonterminal_node), (yyvsp[0].nonterminal_node)); }
+#line 1629 "syntax.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 48:
+#line 132 "syntax.y" /* yacc.c:1646  */
+    { (yyval.nonterminal_node) = make_ast_node(Exp); push_right((yyval.nonterminal_node), (yyvsp[-2].nonterminal_node)); push_right((yyval.nonterminal_node), (yyvsp[-1].terminal_node)); push_right((yyval.nonterminal_node), (yyvsp[0].nonterminal_node)); }
+#line 1635 "syntax.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 49:
+#line 133 "syntax.y" /* yacc.c:1646  */
+    { (yyval.nonterminal_node) = make_ast_node(Exp); push_right((yyval.nonterminal_node), (yyvsp[-2].nonterminal_node)); push_right((yyval.nonterminal_node), (yyvsp[-1].terminal_node)); push_right((yyval.nonterminal_node), (yyvsp[0].nonterminal_node)); }
+#line 1641 "syntax.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 50:
+#line 134 "syntax.y" /* yacc.c:1646  */
+    { (yyval.nonterminal_node) = make_ast_node(Exp); push_right((yyval.nonterminal_node), (yyvsp[-2].terminal_node)); push_right((yyval.nonterminal_node), (yyvsp[-1].nonterminal_node)); push_right((yyval.nonterminal_node), (yyvsp[0].terminal_node)); }
+#line 1647 "syntax.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 51:
+#line 135 "syntax.y" /* yacc.c:1646  */
+    { (yyval.nonterminal_node) = make_ast_node(Exp); push_right((yyval.nonterminal_node), (yyvsp[-1].terminal_node)); push_right((yyval.nonterminal_node), (yyvsp[0].nonterminal_node)); }
+#line 1653 "syntax.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 52:
+#line 136 "syntax.y" /* yacc.c:1646  */
+    { (yyval.nonterminal_node) = make_ast_node(Exp); push_right((yyval.nonterminal_node), (yyvsp[-1].terminal_node)); push_right((yyval.nonterminal_node), (yyvsp[0].nonterminal_node)); }
+#line 1659 "syntax.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 53:
+#line 137 "syntax.y" /* yacc.c:1646  */
+    { (yyval.nonterminal_node) = make_ast_node(Exp); push_right((yyval.nonterminal_node), (yyvsp[-3].terminal_node)); push_right((yyval.nonterminal_node), (yyvsp[-2].terminal_node)); push_right((yyval.nonterminal_node), (yyvsp[-1].nonterminal_node)); push_right((yyval.nonterminal_node), (yyvsp[0].terminal_node)); }
+#line 1665 "syntax.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 54:
+#line 138 "syntax.y" /* yacc.c:1646  */
+    { (yyval.nonterminal_node) = make_ast_node(Exp); push_right((yyval.nonterminal_node), (yyvsp[-2].terminal_node)); push_right((yyval.nonterminal_node), (yyvsp[-1].terminal_node)); push_right((yyval.nonterminal_node), (yyvsp[0].terminal_node)); }
+#line 1671 "syntax.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 55:
+#line 139 "syntax.y" /* yacc.c:1646  */
+    { (yyval.nonterminal_node) = make_ast_node(Exp); push_right((yyval.nonterminal_node), (yyvsp[-3].nonterminal_node)); push_right((yyval.nonterminal_node), (yyvsp[-2].terminal_node)); push_right((yyval.nonterminal_node), (yyvsp[-1].nonterminal_node)); push_right((yyval.nonterminal_node), (yyvsp[0].terminal_node)); }
+#line 1677 "syntax.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 56:
+#line 140 "syntax.y" /* yacc.c:1646  */
+    { (yyval.nonterminal_node) = make_ast_node(Exp); push_right((yyval.nonterminal_node), (yyvsp[-2].nonterminal_node)); push_right((yyval.nonterminal_node), (yyvsp[-1].terminal_node)); push_right((yyval.nonterminal_node), (yyvsp[0].terminal_node));}
+#line 1683 "syntax.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 57:
+#line 141 "syntax.y" /* yacc.c:1646  */
+    { (yyval.nonterminal_node) = make_ast_node(Exp); push_right((yyval.nonterminal_node), (yyvsp[0].terminal_node));}
+#line 1689 "syntax.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 58:
+#line 142 "syntax.y" /* yacc.c:1646  */
+    { (yyval.nonterminal_node) = make_ast_node(Exp); push_right((yyval.nonterminal_node), (yyvsp[0].int_value));}
+#line 1695 "syntax.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 59:
+#line 143 "syntax.y" /* yacc.c:1646  */
+    { (yyval.nonterminal_node) = make_ast_node(Exp); push_right((yyval.nonterminal_node), (yyvsp[0].float_value));}
+#line 1701 "syntax.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 60:
+#line 144 "syntax.y" /* yacc.c:1646  */
+    { (yyval.nonterminal_node) = make_ast_node(Exp); push_right((yyval.nonterminal_node), (yyvsp[0].char_value)); }
+#line 1707 "syntax.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 61:
+#line 146 "syntax.y" /* yacc.c:1646  */
+    { (yyval.nonterminal_node) = make_ast_node(Args); push_right((yyval.nonterminal_node), (yyvsp[-2].nonterminal_node)); push_right((yyval.nonterminal_node), (yyvsp[-1].terminal_node)); push_right((yyval.nonterminal_node), (yyvsp[0].nonterminal_node)); }
+#line 1713 "syntax.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 62:
+#line 147 "syntax.y" /* yacc.c:1646  */
+    { (yyval.nonterminal_node) = make_ast_node(Args); push_right((yyval.nonterminal_node), (yyvsp[0].nonterminal_node)); }
+#line 1719 "syntax.tab.c" /* yacc.c:1646  */
     break;
 
 
-#line 1395 "syntax.tab.c" /* yacc.c:1646  */
+#line 1723 "syntax.tab.c" /* yacc.c:1646  */
       default: break;
     }
   /* User semantic actions sometimes alter yychar, and that requires
@@ -1619,17 +1947,66 @@ yyreturn:
 #endif
   return yyresult;
 }
-#line 169 "syntax.y" /* yacc.c:1906  */
+#line 150 "syntax.y" /* yacc.c:1906  */
 
 
-struct ast_node *make_node(const int node_type, 
-  struct ast_node *left_operand, 
-  struct ast_node *right_operand) {
+struct ast_node *make_ast_node(const int node_type) {
   struct ast_node *node = (struct ast_node *)malloc(sizeof(struct ast_node));
   node->node_type = node_type;
-  node->left_operand = left_operand;
-  node->right_operand = right_operand;
+  node->RHS = NULL;
   return node;
+}
+
+struct list_node *make_list_node(const struct ast_node *rhs_node) {
+  struct list_node *node = (struct list_node *)malloc(sizeof(struct list_node));
+  node->ast_content = rhs_node;
+  node->next = NULL;
+  return node;
+}
+
+void push_right(struct ast_node *LHS, struct ast_node *node) {
+  struct list_node *ptr = LHS->RHS;
+  while (ptr->next != NULL) {
+    ptr = ptr->next;
+  }
+  ptr->next = make_list_node(node);
+}
+
+char *get_node_type_name(const int node_type_enum) {
+  switch (node_type_enum) {
+    case Program: return "Program";
+    case ExtDefList: return "ExtDefList";
+    case ExtDef: return "ExtDef";
+    case ExtDecList: return "ExtDecList";
+    case Specifier: return "Specifier";
+    case StructSpecifier: return "StructSpecifier";
+    case VarDec: return "VarDec";
+    case FunDec: return "FunDec";
+    case VarList: return "VarList";
+    case ParamDec: return "ParamDec";
+    case CompSt: return "CompSt";
+    case StmtList: return "StmtList";
+    case Stmt: return "Stmt";
+    case DefList: return "DefList";
+    case Def: return "Def";
+    case DecList: return "DecList";
+    case Dec: return "Dec";
+    case Exp: return "Exp";
+    case Args: return "Args";
+    case Terminal: return "Terminal";
+    default: return "Undefined node type!";
+  }
+}
+
+void print_tree(const struct ast_node *node, int indent_depth) {
+  for (int i = 0; i < indent_depth; i++) {
+    printf(" ");
+  }
+  printf("%s \(%d\)\n", get_node_type_name(node->node_type), yylineno);
+  struct list_node *ptr = node->RHS;
+  while (ptr != NULL) {
+    print_tree(ptr->ast_content, indent_depth + 2);
+  }
 }
 
 void yyerror(const char *s) {
@@ -1637,5 +2014,20 @@ void yyerror(const char *s) {
 }
 
 int main(int argc, char **argv) {
-  yyparse();
+  char *file_name;
+  if (argc < 2) {
+    fprintf(stderr, "Usage: %s <file_name>\n", argv[0]);
+    return EXIT_FAILURE;
+  } else if (argc == 2) {
+    file_name = argv[1];
+    if (!(yyin = fopen(file_name, "r"))) {
+      perror(argv[1]);
+      return EXIT_FAILURE;
+    }
+    yyparse();
+    return EXIT_SUCCESS;
+  } else {
+    fprintf(stderr, "Too many arguments!\n");
+    return EXIT_FAILURE;
+  }
 }
