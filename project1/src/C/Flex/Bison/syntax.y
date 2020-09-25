@@ -2,6 +2,8 @@
   #include "lex.yy.c"
   #include "astdef.h"
 
+  struct node *program_root;
+
   void yyerror(const char *);
 %}
 
@@ -11,7 +13,8 @@
   char char_value;
   char *type_value;
   char *id_value;
-  struct ast_node *nonterminal_node;
+  char *keyword_value;
+  struct node *nonterminal_node;
 }
 
 %type <nonterminal_node> Program ExtDefList ExtDef ExtDecList Specifier StructSpecifier VarDec FunDec VarList ParamDec CompSt StmtList Stmt DefList Def DecList Dec Exp Args
@@ -21,19 +24,20 @@
 %token <char_value> CHAR
 %token <type_value> TYPE
 %token <id_value> ID
-%token LC RC STRUCT
-%token COMMA DOT SEMI
-%token RETURN WHILE IF
 
-%right ASSIGN
-%left OR
-%left AND
-%left LT LE GT GE NE EQ
-%left PLUS MINUS
-%left MUL DIV
-%right NOT
-%left LB RB LP RP DOT
-%nonassoc ELSE
+%token <keyword_value> LC RC STRUCT
+%token <keyword_value> COMMA SEMI
+%token <keyword_value> RETURN WHILE IF
+
+%right <keyword_value> ASSIGN
+%left <keyword_value> OR
+%left <keyword_value> AND
+%left <keyword_value> LT LE GT GE NE EQ
+%left <keyword_value> PLUS MINUS
+%left <keyword_value> MUL DIV
+%right <keyword_value> NOT
+%left <keyword_value> LB RB LP RP DOT
+%nonassoc <keyword_value> ELSE
 
 %%
 
@@ -42,12 +46,12 @@
  * - global variable declarations
  * - function definitions
  */
-Program: ExtDefList { $$ = lfs(Program); push_nonterminal($$, $1); }
+Program: ExtDefList { $$ = lfs(Program); push_nonterminal($$, $1); program_root = $$; }
  ;
 ExtDefList: ExtDef ExtDefList { $$ = lfs(ExtDefList); push_nonterminal($$, $1); push_nonterminal($$, $2); }
- | %empty { $$ = lfs(ExtDefList); }
+ | %empty { $$ = lfs(Nil); }
  ;
-ExtDef: Specifier ExtDecList SEMI { $$ = lfs(ExtDef); push_nonterminal($$, $1); push_nonterminal($$, $2); push_keyword($3); }
+ExtDef: Specifier ExtDecList SEMI { $$ = lfs(ExtDef); push_nonterminal($$, $1); push_nonterminal($$, $2); push_keyword($$, $3); }
  | Specifier SEMI { $$ = lfs(ExtDef); push_nonterminal($$, $1); push_keyword($$, $2); }
  | Specifier FunDec CompSt { $$ = lfs(ExtDef); push_nonterminal($$, $1); push_nonterminal($$, $2); push_nonterminal($$, $3); }
  ;
@@ -91,7 +95,7 @@ ParamDec: Specifier VarDec { $$ = lfs(ParamDec); push_nonterminal($$, $1); push_
 CompSt: LC DefList StmtList RC { $$ = lfs(CompSt); push_keyword($$, $1); push_nonterminal($$, $2); push_nonterminal($$, $3); push_keyword($$, $4); }
  ;
 StmtList: Stmt StmtList { $$ = lfs(StmtList); push_nonterminal($$, $1); push_nonterminal($$, $2); }
- | %empty { $$ = lfs(StmtList); }
+ | %empty { $$ = lfs(Nil); }
  ;
 Stmt: Exp SEMI { $$ = lfs(Stmt); push_nonterminal($$, $1); push_keyword($$, $2); }
  | CompSt { $$ = lfs(Stmt); push_nonterminal($$, $1); }
@@ -103,7 +107,7 @@ Stmt: Exp SEMI { $$ = lfs(Stmt); push_nonterminal($$, $1); push_keyword($$, $2);
 
 /* Local definition: declaration and assignment of local variables */
 DefList: Def DefList { $$ = lfs(DefList); push_nonterminal($$, $1); push_nonterminal($$, $2); }
- | %empty  { $$ = lfs(DefList); }
+ | %empty  { $$ = lfs(Nil); }
  ;
 Def: Specifier DecList SEMI { $$ = lfs(Def); push_nonterminal($$, $1); push_nonterminal($$, $2); push_keyword($$, $3); }
  ;
@@ -150,171 +154,201 @@ Args: Exp COMMA Args { $$ = lfs(Args); push_nonterminal($$, $1); push_keyword($$
 
 %%
 
-struct node *lfs(const int nonterminal_type) {
+struct node *lfs(int nonterminal_type) {
+  // printf("  lfs: %s\n", get_nonterminal_name(nonterminal_type));
   struct node *new_nonterminal_node = (struct node *)malloc(sizeof(struct node));
-  new_nonterminal_node->node_type = NONTERMINAL;
+  new_nonterminal_node->node_type = NONTERMINAL_T;
+  new_nonterminal_node->lineno = yylineno;
+  new_nonterminal_node->coluno = yycoluno;
   new_nonterminal_node->nonterminal_token = nonterminal_type;
   new_nonterminal_node->rhs = NULL;
   return new_nonterminal_node;
 }
 
-void push_int(struct node *lfs_node, const int int_val) {
+void push_int(struct node *lfs_node, int int_val) {
+  // printf("    push int: %d ", int_val);
   struct node *new_int_node = (struct node *)malloc(sizeof(struct node));
-  new_int_node->node_type = INT;
+  new_int_node->node_type = INT_T;
+  new_int_node->lineno = yylineno;
+  new_int_node->coluno = yycoluno;
   new_int_node->int_token = int_val;
   new_int_node->rhs = NULL;
-  struct list_node *new_rhs_node = (struct node *)malloc(sizeof(struct list_node));
+  struct rhs_node *new_rhs_node = (struct rhs_node *)malloc(sizeof(struct rhs_node));
   new_rhs_node->token_node = new_int_node;
+  new_rhs_node->next = NULL;
+  if (yylineno < lfs_node->lineno) {
+    lfs_node->lineno = yylineno;
+  }
   struct rhs_node *ptr = lfs_node->rhs;
   if (ptr == NULL) {
-    ptr = new_rhs_node;
+    lfs_node->rhs = new_rhs_node;
+    // printf("HEAD\n");
     return;
   }
   while (ptr->next != NULL) {
     ptr = ptr->next;
   }
   ptr->next = new_rhs_node;
+  // printf("APPEND\n");
 }
 
-void push_float(struct node *lfs_node, const int float_val) {
+void push_float(struct node *lfs_node, float float_val) {
+  // printf("    push float: %f ", float_val);
   struct node *new_float_node = (struct node *)malloc(sizeof(struct node));
-  new_float_node->node_type = FLOAT;
+  new_float_node->node_type = FLOAT_T;
+  new_float_node->lineno = yylineno;
+  new_float_node->coluno = yycoluno;
   new_float_node->float_token = float_val;
   new_float_node->rhs = NULL;
-  struct list_node *new_rhs_node = (struct node *)malloc(sizeof(struct list_node));
+  struct rhs_node *new_rhs_node = (struct rhs_node *)malloc(sizeof(struct rhs_node));
   new_rhs_node->token_node = new_float_node;
+  new_rhs_node->next = NULL;
+  if (yylineno < lfs_node->lineno) {
+    lfs_node->lineno = yylineno;
+  }
   struct rhs_node *ptr = lfs_node->rhs;
   if (ptr == NULL) {
-    ptr = new_rhs_node;
+    lfs_node->rhs = new_rhs_node;
+    // printf("HEAD\n");
     return;
   }
   while (ptr->next != NULL) {
     ptr = ptr->next;
   }
   ptr->next = new_rhs_node;
+  // printf("APPEND\n");
 }
 
-void push_char(struct node *lfs_node, const char char_val) {
+void push_char(struct node *lfs_node, char char_val) {
+  // printf("    push char: %c ", char_val);
   struct node *new_char_node = (struct node *)malloc(sizeof(struct node));
-  new_char_node->node_type = CHAR;
+  new_char_node->node_type = CHAR_T;
+  new_char_node->lineno = yylineno;
+  new_char_node->coluno = yycoluno;
   new_char_node->char_token = char_val;
   new_char_node->rhs = NULL;
-  struct list_node *new_rhs_node = (struct node *)malloc(sizeof(struct list_node));
+  struct rhs_node *new_rhs_node = (struct rhs_node *)malloc(sizeof(struct rhs_node));
   new_rhs_node->token_node = new_char_node;
+  new_rhs_node->next = NULL;
+  if (yylineno < lfs_node->lineno) {
+    lfs_node->lineno = yylineno;
+  }
   struct rhs_node *ptr = lfs_node->rhs;
   if (ptr == NULL) {
-    ptr = new_rhs_node;
+    lfs_node->rhs = new_rhs_node;
+    // printf("HEAD\n");
     return;
   }
   while (ptr->next != NULL) {
     ptr = ptr->next;
   }
   ptr->next = new_rhs_node;
+  // printf("APPEND\n");
 }
 
-void push_type(struct node *lfs_node, const char *type_val) {
+void push_type(struct node *lfs_node, char *type_val) {
+  // printf("    push type: %s ", type_val);
   struct node *new_type_node = (struct node *)malloc(sizeof(struct node));
-  new_type_node->node_type = TYPE;
+  new_type_node->node_type = TYPE_T;
+  new_type_node->lineno = yylineno;
+  new_type_node->coluno = yycoluno;
   new_type_node->type_token = type_val;
   new_type_node->rhs = NULL;
-  struct list_node *new_rhs_node = (struct node *)malloc(sizeof(struct list_node));
+  struct rhs_node *new_rhs_node = (struct rhs_node *)malloc(sizeof(struct rhs_node));
   new_rhs_node->token_node = new_type_node;
+  new_rhs_node->next = NULL;
+  if (yylineno < lfs_node->lineno) {
+    lfs_node->lineno = yylineno;
+  }
   struct rhs_node *ptr = lfs_node->rhs;
   if (ptr == NULL) {
-    ptr = new_rhs_node;
+    lfs_node->rhs = new_rhs_node;
+    // printf("HEAD\n");
     return;
   }
   while (ptr->next != NULL) {
     ptr = ptr->next;
   }
   ptr->next = new_rhs_node;
+  // printf("APPEND\n");
 }
 
-void push_id(struct node *lfs_node, const char *id_val) {
+void push_id(struct node *lfs_node, char *id_val) {
+  // printf("    push id: %s ", id_val);
   struct node *new_id_node = (struct node *)malloc(sizeof(struct node));
-  new_id_node->node_type = ID;
+  new_id_node->node_type = ID_T;
+  new_id_node->lineno = yylineno;
+  new_id_node->coluno = yycoluno;
   new_id_node->id_token = id_val;
   new_id_node->rhs = NULL;
-  struct list_node *new_rhs_node = (struct node *)malloc(sizeof(struct list_node));
+  struct rhs_node *new_rhs_node = (struct rhs_node *)malloc(sizeof(struct rhs_node));
   new_rhs_node->token_node = new_id_node;
+  new_rhs_node->next = NULL;
+  if (yylineno < lfs_node->lineno) {
+    lfs_node->lineno = yylineno;
+  }
   struct rhs_node *ptr = lfs_node->rhs;
   if (ptr == NULL) {
-    ptr = new_rhs_node;
+    lfs_node->rhs = new_rhs_node;
+    // printf("HEAD\n");
     return;
   }
   while (ptr->next != NULL) {
     ptr = ptr->next;
   }
   ptr->next = new_rhs_node;
+  // printf("APPEND\n");
 }
 
-void push_keyword(struct node *lfs_node, const char *keyword_val) {
+void push_keyword(struct node *lfs_node, char *keyword_val) {
+  // printf("    push keyword: %s ", keyword_val);
   struct node *new_keyword_node = (struct node *)malloc(sizeof(struct node));
-  new_keyword_node->node_type = KEYWORD;
+  new_keyword_node->node_type = KEYWORD_T;
+  new_keyword_node->lineno = yylineno;
+  new_keyword_node->coluno = yycoluno;
   new_keyword_node->keyword_token = keyword_val;
   new_keyword_node->rhs = NULL;
-  struct list_node *new_rhs_node = (struct node *)malloc(sizeof(struct list_node));
+  struct rhs_node *new_rhs_node = (struct rhs_node *)malloc(sizeof(struct rhs_node));
   new_rhs_node->token_node = new_keyword_node;
+  new_rhs_node->next = NULL;
+  if (yylineno < lfs_node->lineno) {
+    lfs_node->lineno = yylineno;
+  }
   struct rhs_node *ptr = lfs_node->rhs;
   if (ptr == NULL) {
-    ptr = new_rhs_node;
+    lfs_node->rhs = new_rhs_node;
+    // printf("HEAD\n");
     return;
   }
   while (ptr->next != NULL) {
     ptr = ptr->next;
   }
   ptr->next = new_rhs_node;
+  // printf("APPEND\n");
 }
 
-void push_nonterminal(struct node *lfs_node, const struct node *nonterminal) {
-  struct list_node *new_rhs_node = (struct node *)malloc(sizeof(struct list_node));
+void push_nonterminal(struct node *lfs_node, struct node *nonterminal) {
+  // printf("    push nonterminal: %s ", get_nonterminal_name(nonterminal->nonterminal_token));
+  struct rhs_node *new_rhs_node = (struct rhs_node *)malloc(sizeof(struct rhs_node));
   new_rhs_node->token_node = nonterminal;
+  new_rhs_node->next = NULL;
+  if (nonterminal->lineno < lfs_node->lineno) {
+    lfs_node->lineno = nonterminal->lineno;
+  }
   struct rhs_node *ptr = lfs_node->rhs;
   if (ptr == NULL) {
-    ptr = new_rhs_node;
+    lfs_node->rhs = new_rhs_node;
+    // printf("HEAD\n");
     return;
   }
   while (ptr->next != NULL) {
     ptr = ptr->next;
   }
   ptr->next = new_rhs_node;
+  // printf("APPEND\n");
 }
 
-char *get_keyword_name(const int keyword_val) {
-  switch (keyword_val) {
-    case DOT: return "DOT";
-    case SEMI: return "SEMI";
-    case COMMA: return "COMMA";
-    case ASSIGN: return "ASSIGN";
-    case LT: return "LT";
-    case GT: return "GT";
-    case PLUS: return "PLUS";
-    case MINUS: return "MINUS";
-    case MUL: return "MUL";
-    case DIV: return "DIV";
-    case NOT: return "NOT";
-    case LP: return "LP";
-    case RP: return "RP";
-    case LB: return "LB";
-    case RB: return "RB";
-    case LC: return "LC";
-    case RC: return "RC";
-    case LE: return "LE";
-    case GE: return "GE";
-    case NE: return "NE";
-    case EQ: return "EQ";
-    case AND: return "AND";
-    case OR: return "OR";
-    case STRUCT: return "STRUCT";
-    case IF: return "IF";
-    case ELSE: return "ELSE";
-    case WHILE: return "WHILE";
-    case RETURN: return "RETURN";
-    default: return "Undefined keyword type!";
-  }
-}
-
-char *get_nonterminal_name(const int nonterminal_val) {
+char *get_nonterminal_name(int nonterminal_val) {
   switch (nonterminal_val) {
     case Program: return "Program";
     case ExtDefList: return "ExtDefList";
@@ -335,26 +369,35 @@ char *get_nonterminal_name(const int nonterminal_val) {
     case Dec: return "Dec";
     case Exp: return "Exp";
     case Args: return "Args";
+    case Nil: return "Nil";
     default: return "Undefined nonterminal type!";
   }
 }
 
-void print_tree(const struct ast_node *node, int indent_depth) {
+void print_tree(struct node *pnode, int indent_depth) {
+  if (pnode->node_type == NONTERMINAL_T && pnode->nonterminal_token == Nil) {
+    return;
+  }
   for (int i = 0; i < indent_depth; i++) {
     printf(" ");
   }
-  switch (node->node_type) {
-    case INT: printf("INT: %d\n", node->int_token); break;
-    case FLOAT: printf("FLOAT: %f\n", node->float_token); break;
-    case CHAR: printf("CHAR: %c\n", node->char_token); break;
-    case TYPE: printf("TYPE: %s\n", node->type_token); break;
-    case ID: printf("ID: %s\n", node->id_token); break;
-    case KEYWORD: printf("%s\n", node->keyword_token); break;
-    case NONTERMINAL: printf("%s (%d)\n", node->nonterminal_token, yylineno); break;
+  switch (pnode->node_type) {
+    case INT_T: printf("INT: %d\n", pnode->int_token); break;
+    case FLOAT_T: printf("FLOAT: %f\n", pnode->float_token); break;
+    case CHAR_T: printf("CHAR: %c\n", pnode->char_token); break;
+    case TYPE_T: printf("TYPE: %s\n", pnode->type_token); break;
+    case ID_T: printf("ID: %s\n", pnode->id_token); break;
+    case KEYWORD_T: printf("%s\n", pnode->keyword_token); break;
+    case NONTERMINAL_T: printf("%s (%d)\n", get_nonterminal_name(pnode->nonterminal_token), pnode->lineno); break;
     default: printf("Undefined node type!\n"); break;
   }
-  struct list_node *ptr = node->rhs;
+  struct rhs_node *ptr = pnode->rhs;
+  if (ptr == NULL) {
+    // printf("empty rhs\n");
+    return;
+  }
   while (ptr != NULL) {
+    // printf("new rhs\n");
     print_tree(ptr->token_node, indent_depth + 2);
     ptr = ptr->next;
   }
@@ -375,7 +418,14 @@ int main(int argc, char **argv) {
       perror(argv[1]);
       return EXIT_FAILURE;
     }
-    yyparse();
+    int result = yyparse();
+    if (result == 0) {
+      print_tree(program_root, 0);
+    } else if (result == 1) {
+      printf("Abort\n");
+    } else {
+      printf("Exhausted\n");
+    }
     return EXIT_SUCCESS;
   } else {
     fprintf(stderr, "Too many arguments!\n");

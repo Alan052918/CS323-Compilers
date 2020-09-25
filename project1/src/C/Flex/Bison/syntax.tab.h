@@ -48,35 +48,35 @@ extern int yydebug;
     INT = 258,
     FLOAT = 259,
     CHAR = 260,
-    ID = 261,
-    LC = 262,
-    RC = 263,
-    TYPE = 264,
+    TYPE = 261,
+    ID = 262,
+    LC = 263,
+    RC = 264,
     STRUCT = 265,
     COMMA = 266,
-    DOT = 267,
-    SEMI = 268,
-    RETURN = 269,
-    WHILE = 270,
-    IF = 271,
-    ASSIGN = 272,
-    OR = 273,
-    AND = 274,
-    LT = 275,
-    LE = 276,
-    GT = 277,
-    GE = 278,
-    NE = 279,
-    EQ = 280,
-    PLUS = 281,
-    MINUS = 282,
-    MUL = 283,
-    DIV = 284,
-    NOT = 285,
-    LB = 286,
-    RB = 287,
-    LP = 288,
-    RP = 289,
+    SEMI = 267,
+    RETURN = 268,
+    WHILE = 269,
+    IF = 270,
+    ASSIGN = 271,
+    OR = 272,
+    AND = 273,
+    LT = 274,
+    LE = 275,
+    GT = 276,
+    GE = 277,
+    NE = 278,
+    EQ = 279,
+    PLUS = 280,
+    MINUS = 281,
+    MUL = 282,
+    DIV = 283,
+    NOT = 284,
+    LB = 285,
+    RB = 286,
+    LP = 287,
+    RP = 288,
+    DOT = 289,
     ELSE = 290
   };
 #endif
@@ -86,16 +86,17 @@ extern int yydebug;
 
 union YYSTYPE
 {
-#line 8 "syntax.y" /* yacc.c:1909  */
+#line 10 "syntax.y" /* yacc.c:1909  */
 
   int int_value;
   float float_value;
   char char_value;
-  char *str_value;
-  struct ast_node *terminal_node;
-  struct ast_node *nonterminal_node;
+  char *type_value;
+  char *id_value;
+  char *keyword_value;
+  struct node *nonterminal_node;
 
-#line 99 "syntax.tab.h" /* yacc.c:1909  */
+#line 100 "syntax.tab.h" /* yacc.c:1909  */
 };
 
 typedef union YYSTYPE YYSTYPE;
