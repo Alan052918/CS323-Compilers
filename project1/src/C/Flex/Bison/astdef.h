@@ -1,36 +1,54 @@
 #include <stdarg.h>
 
-enum node_types {
-  Program,
-  ExtDefList, ExtDef, ExtDecList,
-  Specifier, StructSpecifier,
-  VarDec, FunDec, VarList, ParamDec,
-  CompSt, StmtList, Stmt,
-  DefList, Def, DecList, Dec,
-  Exp, Args,
-  Terminal
+/* syntax tree node types */
+enum node_type { INT, FLOAT, CHAR, TYPE, ID, KEYWORD, NONTERMINAL };
+
+/* operators and reserved words */
+enum keyword_type {
+  DOT, SEMI, COMMA, ASSIGN, LT, GT, PLUS, MINUS, MUL, DIV, NOT, LP, RP, LB, RB,
+  LC, RC, LE, GE, NE, EQ, AND, OR, STRUCT, IF, ELSE, WHILE, RETURN
 };
 
-struct ast_node {
-  int node_type;
-  struct list_node *RHS;
+/* nonterminals */
+enum nonterminal_type {
+  Program, ExtDefList, ExtDef, ExtDecList, Specifier, StructSpecifier, VarDec,
+  FunDec, VarList, ParamDec, CompSt, StmtList, Stmt, DefList, Def, DecList,
+  Dec, Exp, Args
 };
-  
-struct list_node {
+
+/* syntax tree node definition */
+struct node {
+  int node_type;
   union {
     int int_token;
     float float_token;
     char char_token;
-    struct ast_node *nonterminal_token;
+    char *type_token;
+    char *id_token;
+    char *keyword_token;
+    int nonterminal_token;
   };
+  struct rhs_node *rhs;
+};
+
+/* production rule right-hand-side definition */
+struct rhs_node {
+  struct node *token_node;
   struct list_node *next;
 };
 
-struct ast_node *make_ast_node(const int node_type);
-void push_nonterminal(struct ast_node *LHS, struct ast_node *node);
-void push_int(struct ast_node *LHS, const int int_terminal);
-void push_float(struct ast_node *LHS, const int float_terminal);
-void push_char(struct ast_node *LHS, const int char_terminal);
-char *get_node_type_name(const int node_type_enum);
-void print_tree(const struct ast_node *node, int indent_depth);
+/* syntax tree node constructors */
+struct node *lfs(const int nonterminal_type);
 
+/* syntax tree actions */
+void push_int(struct node *lfs_node, const int int_val);
+void push_float(struct node *lfs_node, const float float_val);
+void push_char(struct node *lfs_node, const char char_val);
+void push_type(struct node *lfs_node, const char type_val);
+void push_id(struct node *lfs_node, const char *id_val);
+void push_keyword(struct node *lfs_node, const char *keyword_val);
+void push_nonterminal(struct node *lfs_node, const struct node *nonterminal);
+
+char *get_keyword_name(const int keyword_val);
+char *get_nonterminal_name(const int nonterminal_val);
+void print_tree(const struct node *pnode, int indent_depth);

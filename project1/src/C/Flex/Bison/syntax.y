@@ -1,5 +1,5 @@
-%{ 
-  #include "lex.yy.c" 
+%{
+  #include "lex.yy.c"
   #include "astdef.h"
 
   void yyerror(const char *);
@@ -9,7 +9,8 @@
   int int_value;
   float float_value;
   char char_value;
-  char *str_value;
+  char *type_value;
+  char *id_value;
   struct ast_node *nonterminal_node;
 }
 
@@ -18,7 +19,9 @@
 %token <int_value> INT
 %token <float_value> FLOAT
 %token <char_value> CHAR
-%token ID LC RC TYPE STRUCT
+%token <type_value> TYPE
+%token <id_value> ID
+%token LC RC STRUCT
 %token COMMA DOT SEMI
 %token RETURN WHILE IF
 
@@ -39,17 +42,17 @@
  * - global variable declarations
  * - function definitions
  */
-Program: ExtDefList { $$ = make_ast_node(Program); push_right($$, $1); }
+Program: ExtDefList { $$ = lfs(Program); push_nonterminal($$, $1); }
  ;
-ExtDefList: ExtDef ExtDefList { $$ = make_ast_node(ExtDefList); push_right($$, $1); push_right($$, $2); }
- | %empty { $$ = make_ast_node(ExtDefList); }
+ExtDefList: ExtDef ExtDefList { $$ = lfs(ExtDefList); push_nonterminal($$, $1); push_nonterminal($$, $2); }
+ | %empty { $$ = lfs(ExtDefList); }
  ;
-ExtDef: Specifier ExtDecList SEMI { $$ = make_ast_node(ExtDef); push_right($$, $1); push_right($$, $2); push_right($$, $3); }
- | Specifier SEMI { $$ = make_ast_node(ExtDef); push_right($$, $1); push_right($$, $2); }
- | Specifier FunDec CompSt { $$ = make_ast_node(ExtDef); push_right($$, $1); push_right($$, $2); push_right($$, $3); }
+ExtDef: Specifier ExtDecList SEMI { $$ = lfs(ExtDef); push_nonterminal($$, $1); push_nonterminal($$, $2); push_keyword($3); }
+ | Specifier SEMI { $$ = lfs(ExtDef); push_nonterminal($$, $1); push_keyword($$, $2); }
+ | Specifier FunDec CompSt { $$ = lfs(ExtDef); push_nonterminal($$, $1); push_nonterminal($$, $2); push_nonterminal($$, $3); }
  ;
-ExtDecList: VarDec { $$ = make_ast_node(ExtDecList); push_right($$, $1); }
- | VarDec COMMA ExtDecList { $$ = make_ast_node(ExtDecList); push_right($$, $1); push_right($$, $2); push_right($$, $3); }
+ExtDecList: VarDec { $$ = lfs(ExtDecList); push_nonterminal($$, $1); }
+ | VarDec COMMA ExtDecList { $$ = lfs(ExtDecList); push_nonterminal($$, $1); push_keyword($$, $2); push_nonterminal($$, $3); }
  ;
 
 /**
@@ -57,27 +60,27 @@ ExtDecList: VarDec { $$ = make_ast_node(ExtDecList); push_right($$, $1); }
  * - primitive types: int, float, char
  * - structure type
  */
-Specifier: TYPE { $$ = make_ast_node(Specifier); push_right($$, $1); }
- | StructSpecifier { $$ = make_ast_node(Specifier); push_right($$, $1); }
+Specifier: TYPE { $$ = lfs(Specifier); push_type($$, $1); }
+ | StructSpecifier { $$ = lfs(Specifier); push_nonterminal($$, $1); }
  ;
-StructSpecifier: STRUCT ID LC DefList RC { $$ = make_ast_node(StructSpecifier); push_right($$, $1); push_right($$, $2); push_right($$, $3); push_right($$, $4); push_right($$, $5); }
- | STRUCT ID { $$ = make_ast_node(StructSpecifier); push_right($$, $1); push_right($$, $2); }
+StructSpecifier: STRUCT ID LC DefList RC { $$ = lfs(StructSpecifier); push_keyword($$, $1); push_keyword($$, $2); push_keyword($$, $3); push_nonterminal($$, $4); push_keyword($$, $5); }
+ | STRUCT ID { $$ = lfs(StructSpecifier); push_keyword($$, $1); push_id($$, $2); }
  ;
 
 /**
  * Declarator: variable and function declaration
  * The array type is specified by the declarator
  */
-VarDec: ID { $$ = make_ast_node(VarDec); push_right($$, $1); }
- | VarDec LB INT RB { $$ = make_ast_node(VarDec); push_right($$, $1); push_right($$, $2); push_right($$, $3); push_right($$, $4); }
+VarDec: ID { $$ = lfs(VarDec); push_id($$, $1); }
+ | VarDec LB INT RB { $$ = lfs(VarDec); push_nonterminal($$, $1); push_keyword($$, $2); push_int($$, $3); push_keyword($$, $4); }
  ;
-FunDec: ID LP VarList RP { $$ = make_ast_node(FunDec); push_right($$, $1); push_right($$, $2); push_right($$, $3); push_right($$, $4); }
- | ID LP RP { $$ = make_ast_node(FunDec); push_right($$, $1); push_right($$, $2); push_right($$, $3); }
+FunDec: ID LP VarList RP { $$ = lfs(FunDec); push_id($$, $1); push_keyword($$, $2); push_nonterminal($$, $3); push_keyword($$, $4); }
+ | ID LP RP { $$ = lfs(FunDec); push_id($$, $1); push_keyword($$, $2); push_keyword($$, $3); }
  ;
-VarList: ParamDec COMMA VarList { $$ = make_ast_node(VarList); push_right($$, $1); push_right($$, $2); push_right($$, $3); }
- | ParamDec { $$ = make_ast_node(VarList); push_right($$, $1); }
+VarList: ParamDec COMMA VarList { $$ = lfs(VarList); push_nonterminal($$, $1); push_keyword($$, $2); push_nonterminal($$, $3); }
+ | ParamDec { $$ = lfs(VarList); push_nonterminal($$, $1); }
  ;
-ParamDec: Specifier VarDec { $$ = make_ast_node(ParamDec); push_right($$, $1); push_right($$, $2); }
+ParamDec: Specifier VarDec { $$ = lfs(ParamDec); push_nonterminal($$, $1); push_nonterminal($$, $2); }
  ;
 
 /**
@@ -85,30 +88,30 @@ ParamDec: Specifier VarDec { $$ = make_ast_node(ParamDec); push_right($$, $1); p
  * - enclosed bny curly braces
  * - end with a semicolon
  */
-CompSt: LC DefList StmtList RC { $$ = make_ast_node(CompSt); push_right($$, $1); push_right($$, $2); push_right($$, $3); push_right($$, $4); }
+CompSt: LC DefList StmtList RC { $$ = lfs(CompSt); push_keyword($$, $1); push_nonterminal($$, $2); push_nonterminal($$, $3); push_keyword($$, $4); }
  ;
-StmtList: Stmt StmtList { $$ = make_ast_node(StmtList); push_right($$, $1); push_right($$, $2); }
- | %empty { $$ = make_ast_node(StmtList); }
+StmtList: Stmt StmtList { $$ = lfs(StmtList); push_nonterminal($$, $1); push_nonterminal($$, $2); }
+ | %empty { $$ = lfs(StmtList); }
  ;
-Stmt: Exp SEMI { $$ = make_ast_node(Stmt); push_right($$, $1); push_right($$, $2); }
- | CompSt { $$ = make_ast_node(Stmt); push_right($$, $1); }
- | RETURN Exp SEMI { $$ = make_ast_node(Stmt); push_right($$, $1); push_right($$, $2); push_right($$, $3); }
- | IF LP Exp RP Stmt { $$ = make_ast_node(Stmt); push_right($$, $1); push_right($$, $2); push_right($$, $3); push_right($$, $4); push_right($$, $5); }
- | IF LP Exp RP Stmt ELSE Stmt { $$ = make_ast_node(Stmt); push_right($$, $1); push_right($$, $2); push_right($$, $3); push_right($$, $4); push_right($$, $5); push_right($$, $6); push_right($$, $7); }
- | WHILE LP Exp RP Stmt { $$ = make_ast_node(Stmt); push_right($$, $1); push_right($$, $2); push_right($$, $3); push_right($$, $4); push_right($$, $5); }
+Stmt: Exp SEMI { $$ = lfs(Stmt); push_nonterminal($$, $1); push_keyword($$, $2); }
+ | CompSt { $$ = lfs(Stmt); push_nonterminal($$, $1); }
+ | RETURN Exp SEMI { $$ = lfs(Stmt); push_keyword($$, $1); push_nonterminal($$, $2); push_keyword($$, $3); }
+ | IF LP Exp RP Stmt { $$ = lfs(Stmt); push_keyword($$, $1); push_keyword($$, $2); push_nonterminal($$, $3); push_keyword($$, $4); push_nonterminal($$, $5); }
+ | IF LP Exp RP Stmt ELSE Stmt { $$ = lfs(Stmt); push_keyword($$, $1); push_keyword($$, $2); push_nonterminal($$, $3); push_keyword($$, $4); push_nonterminal($$, $5); push_keyword($$, $6); push_nonterminal($$, $7); }
+ | WHILE LP Exp RP Stmt { $$ = lfs(Stmt); push_keyword($$, $1); push_keyword($$, $2); push_nonterminal($$, $3); push_keyword($$, $4); push_nonterminal($$, $5); }
  ;
 
 /* Local definition: declaration and assignment of local variables */
-DefList: Def DefList { $$ = make_ast_node(DefList); push_right($$, $1); push_right($$, $2); }
- | %empty  { $$ = make_ast_node(DefList); }
+DefList: Def DefList { $$ = lfs(DefList); push_nonterminal($$, $1); push_nonterminal($$, $2); }
+ | %empty  { $$ = lfs(DefList); }
  ;
-Def: Specifier DecList SEMI { $$ = make_ast_node(Def); push_right($$, $1); push_right($$, $2); push_right($$, $3); }
+Def: Specifier DecList SEMI { $$ = lfs(Def); push_nonterminal($$, $1); push_nonterminal($$, $2); push_keyword($$, $3); }
  ;
-DecList: Dec { $$ = make_ast_node(DecList); push_right($$, $1); }
- | Dec COMMA DecList { $$ = make_ast_node(DecList); push_right($$, $1); push_right($$, $2); push_right($$, $3); }
+DecList: Dec { $$ = lfs(DecList); push_nonterminal($$, $1); }
+ | Dec COMMA DecList { $$ = lfs(DecList); push_nonterminal($$, $1); push_keyword($$, $2); push_nonterminal($$, $3); }
  ;
-Dec: VarDec { $$ = make_ast_node(Dec); push_right($$, $1); }
- | VarDec ASSIGN Exp { $$ = make_ast_node(Dec); push_right($$, $1); push_right($$, $2); push_right($$, $3); }
+Dec: VarDec { $$ = lfs(Dec); push_nonterminal($$, $1); }
+ | VarDec ASSIGN Exp { $$ = lfs(Dec); push_nonterminal($$, $1); push_keyword($$, $2); push_nonterminal($$, $3); }
  ;
 
 /**
@@ -116,90 +119,203 @@ Dec: VarDec { $$ = make_ast_node(Dec); push_right($$, $1); }
  * - single constant
  * - operations on variables: operators have precedence and associativity
  */
-Exp: Exp ASSIGN Exp { $$ = make_ast_node(Exp); push_right($$, $1); push_right($$, $2); push_right($$, $3); }
- | Exp AND Exp { $$ = make_ast_node(Exp); push_right($$, $1); push_right($$, $2); push_right($$, $3); }
- | Exp OR Exp { $$ = make_ast_node(Exp); push_right($$, $1); push_right($$, $2); push_right($$, $3); }
- | Exp LT Exp { $$ = make_ast_node(Exp); push_right($$, $1); push_right($$, $2); push_right($$, $3); }
- | Exp LE Exp { $$ = make_ast_node(Exp); push_right($$, $1); push_right($$, $2); push_right($$, $3); }
- | Exp GT Exp { $$ = make_ast_node(Exp); push_right($$, $1); push_right($$, $2); push_right($$, $3); }
- | Exp GE Exp { $$ = make_ast_node(Exp); push_right($$, $1); push_right($$, $2); push_right($$, $3); }
- | Exp NE Exp { $$ = make_ast_node(Exp); push_right($$, $1); push_right($$, $2); push_right($$, $3); }
- | Exp EQ Exp { $$ = make_ast_node(Exp); push_right($$, $1); push_right($$, $2); push_right($$, $3); }
- | Exp PLUS Exp { $$ = make_ast_node(Exp); push_right($$, $1); push_right($$, $2); push_right($$, $3); }
- | Exp MINUS Exp { $$ = make_ast_node(Exp); push_right($$, $1); push_right($$, $2); push_right($$, $3); }
- | Exp MUL Exp { $$ = make_ast_node(Exp); push_right($$, $1); push_right($$, $2); push_right($$, $3); }
- | Exp DIV Exp { $$ = make_ast_node(Exp); push_right($$, $1); push_right($$, $2); push_right($$, $3); }
- | LP Exp RP { $$ = make_ast_node(Exp); push_right($$, $1); push_right($$, $2); push_right($$, $3); }
- | MINUS Exp { $$ = make_ast_node(Exp); push_right($$, $1); push_right($$, $2); }
- | NOT Exp { $$ = make_ast_node(Exp); push_right($$, $1); push_right($$, $2); }
- | ID LP Args RP { $$ = make_ast_node(Exp); push_right($$, $1); push_right($$, $2); push_right($$, $3); push_right($$, $4); }
- | ID LP RP { $$ = make_ast_node(Exp); push_right($$, $1); push_right($$, $2); push_right($$, $3); }
- | Exp LB Exp RB { $$ = make_ast_node(Exp); push_right($$, $1); push_right($$, $2); push_right($$, $3); push_right($$, $4); }
- | Exp DOT ID { $$ = make_ast_node(Exp); push_right($$, $1); push_right($$, $2); push_right($$, $3);}
- | ID { $$ = make_ast_node(Exp); push_right($$, $1);}
- | INT { $$ = make_ast_node(Exp); push_right($$, $1);}
- | FLOAT { $$ = make_ast_node(Exp); push_right($$, $1);}
- | CHAR { $$ = make_ast_node(Exp); push_right($$, $1); }
+Exp: Exp ASSIGN Exp { $$ = lfs(Exp); push_nonterminal($$, $1); push_keyword($$, $2); push_nonterminal($$, $3); }
+ | Exp AND Exp { $$ = lfs(Exp); push_nonterminal($$, $1); push_keyword($$, $2); push_nonterminal($$, $3); }
+ | Exp OR Exp { $$ = lfs(Exp); push_nonterminal($$, $1); push_keyword($$, $2); push_nonterminal($$, $3); }
+ | Exp LT Exp { $$ = lfs(Exp); push_nonterminal($$, $1); push_keyword($$, $2); push_nonterminal($$, $3); }
+ | Exp LE Exp { $$ = lfs(Exp); push_nonterminal($$, $1); push_keyword($$, $2); push_nonterminal($$, $3); }
+ | Exp GT Exp { $$ = lfs(Exp); push_nonterminal($$, $1); push_keyword($$, $2); push_nonterminal($$, $3); }
+ | Exp GE Exp { $$ = lfs(Exp); push_nonterminal($$, $1); push_keyword($$, $2); push_nonterminal($$, $3); }
+ | Exp NE Exp { $$ = lfs(Exp); push_nonterminal($$, $1); push_keyword($$, $2); push_nonterminal($$, $3); }
+ | Exp EQ Exp { $$ = lfs(Exp); push_nonterminal($$, $1); push_keyword($$, $2); push_nonterminal($$, $3); }
+ | Exp PLUS Exp { $$ = lfs(Exp); push_nonterminal($$, $1); push_keyword($$, $2); push_nonterminal($$, $3); }
+ | Exp MINUS Exp { $$ = lfs(Exp); push_nonterminal($$, $1); push_keyword($$, $2); push_nonterminal($$, $3); }
+ | Exp MUL Exp { $$ = lfs(Exp); push_nonterminal($$, $1); push_keyword($$, $2); push_nonterminal($$, $3); }
+ | Exp DIV Exp { $$ = lfs(Exp); push_nonterminal($$, $1); push_keyword($$, $2); push_nonterminal($$, $3); }
+ | LP Exp RP { $$ = lfs(Exp); push_keyword($$, $1); push_nonterminal($$, $2); push_keyword($$, $3); }
+ | MINUS Exp { $$ = lfs(Exp); push_keyword($$, $1); push_nonterminal($$, $2); }
+ | NOT Exp { $$ = lfs(Exp); push_keyword($$, $1); push_nonterminal($$, $2); }
+ | ID LP Args RP { $$ = lfs(Exp); push_keyword($$, $1); push_keyword($$, $2); push_nonterminal($$, $3); push_keyword($$, $4); }
+ | ID LP RP { $$ = lfs(Exp); push_keyword($$, $1); push_keyword($$, $2); push_keyword($$, $3); }
+ | Exp LB Exp RB { $$ = lfs(Exp); push_nonterminal($$, $1); push_keyword($$, $2); push_nonterminal($$, $3); push_keyword($$, $4); }
+ | Exp DOT ID { $$ = lfs(Exp); push_nonterminal($$, $1); push_keyword($$, $2); push_id($$, $3);}
+ | ID { $$ = lfs(Exp); push_id($$, $1);}
+ | INT { $$ = lfs(Exp); push_int($$, $1);}
+ | FLOAT { $$ = lfs(Exp); push_float($$, $1);}
+ | CHAR { $$ = lfs(Exp); push_char($$, $1); }
  ;
-Args: Exp COMMA Args { $$ = make_ast_node(Args); push_right($$, $1); push_right($$, $2); push_right($$, $3); }
- | Exp { $$ = make_ast_node(Args); push_right($$, $1); }
+Args: Exp COMMA Args { $$ = lfs(Args); push_nonterminal($$, $1); push_keyword($$, $2); push_nonterminal($$, $3); }
+ | Exp { $$ = lfs(Args); push_nonterminal($$, $1); }
  ;
 
 %%
 
-struct ast_node *make_ast_node(const int node_type) {
-  struct ast_node *node = (struct ast_node *)malloc(sizeof(struct ast_node));
-  node->node_type = node_type;
-  node->RHS = NULL;
-  return node;
+struct node *lfs(const int nonterminal_type) {
+  struct node *new_nonterminal_node = (struct node *)malloc(sizeof(struct node));
+  new_nonterminal_node->node_type = NONTERMINAL;
+  new_nonterminal_node->nonterminal_token = nonterminal_type;
+  new_nonterminal_node->rhs = NULL;
+  return new_nonterminal_node;
 }
 
-void push_nonterminal(struct ast_node *LHS, struct ast_node *node) {
-  struct list_node *ptr = LHS->RHS;
+void push_int(struct node *lfs_node, const int int_val) {
+  struct node *new_int_node = (struct node *)malloc(sizeof(struct node));
+  new_int_node->node_type = INT;
+  new_int_node->int_token = int_val;
+  new_int_node->rhs = NULL;
+  struct list_node *new_rhs_node = (struct node *)malloc(sizeof(struct list_node));
+  new_rhs_node->token_node = new_int_node;
+  struct rhs_node *ptr = lfs_node->rhs;
+  if (ptr == NULL) {
+    ptr = new_rhs_node;
+    return;
+  }
   while (ptr->next != NULL) {
     ptr = ptr->next;
   }
-  struct list_node *ln = (struct list_node *)malloc(sizeof(struct list_node));
-  ln->nonterminal_token = node;
-  ln->next = NULL;
-  ptr->next = ln;
+  ptr->next = new_rhs_node;
 }
 
-void push_int(struct ast_node *LHS, const int int_terminal) {
-  struct list_node *ptr = LHS->RHS;
+void push_float(struct node *lfs_node, const int float_val) {
+  struct node *new_float_node = (struct node *)malloc(sizeof(struct node));
+  new_float_node->node_type = FLOAT;
+  new_float_node->float_token = float_val;
+  new_float_node->rhs = NULL;
+  struct list_node *new_rhs_node = (struct node *)malloc(sizeof(struct list_node));
+  new_rhs_node->token_node = new_float_node;
+  struct rhs_node *ptr = lfs_node->rhs;
+  if (ptr == NULL) {
+    ptr = new_rhs_node;
+    return;
+  }
   while (ptr->next != NULL) {
     ptr = ptr->next;
   }
-  struct list_node *ln = (struct list_node *)malloc(sizeof(struct list_node));
-  ln->int_token = int_terminal;
-  ln->next = NULL;
-  ptr->next = ln;
+  ptr->next = new_rhs_node;
 }
 
-void push_float(struct ast_node *LHS, const float float_terminal) {
-  struct list_node *ptr = LHS->RHS;
+void push_char(struct node *lfs_node, const char char_val) {
+  struct node *new_char_node = (struct node *)malloc(sizeof(struct node));
+  new_char_node->node_type = CHAR;
+  new_char_node->char_token = char_val;
+  new_char_node->rhs = NULL;
+  struct list_node *new_rhs_node = (struct node *)malloc(sizeof(struct list_node));
+  new_rhs_node->token_node = new_char_node;
+  struct rhs_node *ptr = lfs_node->rhs;
+  if (ptr == NULL) {
+    ptr = new_rhs_node;
+    return;
+  }
   while (ptr->next != NULL) {
     ptr = ptr->next;
   }
-  struct list_node *ln = (struct list_node *)malloc(sizeof(struct list_node));
-  ln->float_token = float_terminal;
-  ln->next = NULL;
-  ptr->next = ln;
+  ptr->next = new_rhs_node;
 }
 
-void push_char(struct ast_node *LHS, const char char_terminal) {
-  struct list_node *ptr = LHS->RHS;
+void push_type(struct node *lfs_node, const char *type_val) {
+  struct node *new_type_node = (struct node *)malloc(sizeof(struct node));
+  new_type_node->node_type = TYPE;
+  new_type_node->type_token = type_val;
+  new_type_node->rhs = NULL;
+  struct list_node *new_rhs_node = (struct node *)malloc(sizeof(struct list_node));
+  new_rhs_node->token_node = new_type_node;
+  struct rhs_node *ptr = lfs_node->rhs;
+  if (ptr == NULL) {
+    ptr = new_rhs_node;
+    return;
+  }
   while (ptr->next != NULL) {
     ptr = ptr->next;
   }
-  struct list_node *ln = (struct list_node *)malloc(sizeof(struct list_node));
-  ln->char_token = char_terminal;
-  ln->next = NULL;
-  ptr->next = ln;
+  ptr->next = new_rhs_node;
 }
 
-char *get_node_type_name(const int node_type_enum) {
-  switch (node_type_enum) {
+void push_id(struct node *lfs_node, const char *id_val) {
+  struct node *new_id_node = (struct node *)malloc(sizeof(struct node));
+  new_id_node->node_type = ID;
+  new_id_node->id_token = id_val;
+  new_id_node->rhs = NULL;
+  struct list_node *new_rhs_node = (struct node *)malloc(sizeof(struct list_node));
+  new_rhs_node->token_node = new_id_node;
+  struct rhs_node *ptr = lfs_node->rhs;
+  if (ptr == NULL) {
+    ptr = new_rhs_node;
+    return;
+  }
+  while (ptr->next != NULL) {
+    ptr = ptr->next;
+  }
+  ptr->next = new_rhs_node;
+}
+
+void push_keyword(struct node *lfs_node, const char *keyword_val) {
+  struct node *new_keyword_node = (struct node *)malloc(sizeof(struct node));
+  new_keyword_node->node_type = KEYWORD;
+  new_keyword_node->keyword_token = keyword_val;
+  new_keyword_node->rhs = NULL;
+  struct list_node *new_rhs_node = (struct node *)malloc(sizeof(struct list_node));
+  new_rhs_node->token_node = new_keyword_node;
+  struct rhs_node *ptr = lfs_node->rhs;
+  if (ptr == NULL) {
+    ptr = new_rhs_node;
+    return;
+  }
+  while (ptr->next != NULL) {
+    ptr = ptr->next;
+  }
+  ptr->next = new_rhs_node;
+}
+
+void push_nonterminal(struct node *lfs_node, const struct node *nonterminal) {
+  struct list_node *new_rhs_node = (struct node *)malloc(sizeof(struct list_node));
+  new_rhs_node->token_node = nonterminal;
+  struct rhs_node *ptr = lfs_node->rhs;
+  if (ptr == NULL) {
+    ptr = new_rhs_node;
+    return;
+  }
+  while (ptr->next != NULL) {
+    ptr = ptr->next;
+  }
+  ptr->next = new_rhs_node;
+}
+
+char *get_keyword_name(const int keyword_val) {
+  switch (keyword_val) {
+    case DOT: return "DOT";
+    case SEMI: return "SEMI";
+    case COMMA: return "COMMA";
+    case ASSIGN: return "ASSIGN";
+    case LT: return "LT";
+    case GT: return "GT";
+    case PLUS: return "PLUS";
+    case MINUS: return "MINUS";
+    case MUL: return "MUL";
+    case DIV: return "DIV";
+    case NOT: return "NOT";
+    case LP: return "LP";
+    case RP: return "RP";
+    case LB: return "LB";
+    case RB: return "RB";
+    case LC: return "LC";
+    case RC: return "RC";
+    case LE: return "LE";
+    case GE: return "GE";
+    case NE: return "NE";
+    case EQ: return "EQ";
+    case AND: return "AND";
+    case OR: return "OR";
+    case STRUCT: return "STRUCT";
+    case IF: return "IF";
+    case ELSE: return "ELSE";
+    case WHILE: return "WHILE";
+    case RETURN: return "RETURN";
+    default: return "Undefined keyword type!";
+  }
+}
+
+char *get_nonterminal_name(const int nonterminal_val) {
+  switch (nonterminal_val) {
     case Program: return "Program";
     case ExtDefList: return "ExtDefList";
     case ExtDef: return "ExtDef";
@@ -219,8 +335,7 @@ char *get_node_type_name(const int node_type_enum) {
     case Dec: return "Dec";
     case Exp: return "Exp";
     case Args: return "Args";
-    case Terminal: return "Terminal";
-    default: return "Undefined node type!";
+    default: return "Undefined nonterminal type!";
   }
 }
 
@@ -228,9 +343,19 @@ void print_tree(const struct ast_node *node, int indent_depth) {
   for (int i = 0; i < indent_depth; i++) {
     printf(" ");
   }
-  printf("%s \(%d\)\n", get_node_type_name(node->node_type), yylineno);
-  struct list_node *ptr = node->RHS;
+  switch (node->node_type) {
+    case INT: printf("INT: %d\n", node->int_token); break;
+    case FLOAT: printf("FLOAT: %f\n", node->float_token); break;
+    case CHAR: printf("CHAR: %c\n", node->char_token); break;
+    case TYPE: printf("TYPE: %s\n", node->type_token); break;
+    case ID: printf("ID: %s\n", node->id_token); break;
+    case KEYWORD: printf("%s\n", node->keyword_token); break;
+    case NONTERMINAL: printf("%s (%d)\n", node->nonterminal_token, yylineno); break;
+    default: printf("Undefined node type!\n"); break;
+  }
+  struct list_node *ptr = node->rhs;
   while (ptr != NULL) {
+    print_tree(ptr->token_node, indent_depth + 2);
     ptr = ptr->next;
   }
 }

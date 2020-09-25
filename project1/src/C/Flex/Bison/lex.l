@@ -53,8 +53,8 @@ ID      [a-zA-Z_][a-zA-Z0-9_]{0,31}
 {INT}     { yylval.int_value = atoi(yytext); return INT; }
 {FLOAT}   { yylval.float_value = atof(yytext); return FLOAT; }
 {CHAR}    { yylval.char_value = yytext[0]; return CHAR; }
-{TYPE}    { yylval.str_value = strdup(yytext); return TYPE; }
-{ID}      { yylval.str_value = strdup(yytext); return ID; }
+{TYPE}    { yylval.type_value = strdup(yytext); return TYPE; }
+{ID}      { yylval.id_value = strdup(yytext); return ID; }
 
 .         {
   printf("Error type A at Line %d: Unknown characters \'%s\'\n", 
