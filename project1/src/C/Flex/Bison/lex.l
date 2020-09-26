@@ -3,6 +3,13 @@
   #include "syntax.tab.h"
 
   int yycoluno = 1;
+
+  #define YY_USER_ACTION \
+    yylloc.first_line = yylineno; \
+    yylloc.first_column = yycoluno; \
+    yylloc.last_line = yylineno; \
+    yylloc.last_column = yycoluno + yyleng; \
+    yycoluno += yyleng;
 %}
 
 %option yylineno
