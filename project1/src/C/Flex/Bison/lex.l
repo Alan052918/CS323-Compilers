@@ -8,9 +8,9 @@
 %option yylineno
 
 SPC     [ \t\r\f\v]
-INT     -?[0-9][0-9]*|-?0[xX][0-9a-fA-F][0-9a-fA-F]*
-FLOAT   -?[0-9]+\.[0-9]+
-CHAR    \'[a-zA-Z]\'|\'\\x[0-9a-fA-F]+\'
+INT     -?[1-9][0-9]{0,9}|-?0[xX][1-9a-fA-F][0-9a-fA-F]*
+FLOAT   -?[1-9][0-9]*\.[0-9]+
+CHAR    \'[a-zA-Z]\'|\\x[1-9a-fA-F][0-9a-fA-F]*
 TYPE    "int"|"char"|"float"
 ID      [a-zA-Z_][a-zA-Z0-9_]{0,31}
 
@@ -50,9 +50,24 @@ ID      [a-zA-Z_][a-zA-Z0-9_]{0,31}
 "while"   { yylval.keyword_value = "WHILE"; return WHILE; }
 "return"  { yylval.keyword_value = "RETURN"; return RETURN; }
 
-{INT}     { yylval.int_value = atoi(yytext); return INT; }
+{INT}     {
+  if (yytext[0] == '0' && yytext[1] == 'x') {
+    yylval.int_value = strtol(yytext, NULL, 0);
+  } else {
+    yylval.int_value = atoi(yytext); 
+  }
+  return INT;
+}
 {FLOAT}   { yylval.float_value = atof(yytext); return FLOAT; }
-{CHAR}    { yylval.char_value = yytext[0]; return CHAR; }
+{CHAR}    {
+  if (yytext[0] == '\'' && yytext[yyleng - 1] == '\'') {
+    yylval.char_value = yytext[1];
+  } else {
+    yytext[0] = '0';
+    yylval.char_value = strtol(yytext, NULL, 0);
+  }
+  return CHAR;
+}
 {TYPE}    { yylval.type_value = strdup(yytext); return TYPE; }
 {ID}      { yylval.id_value = strdup(yytext); return ID; }
 

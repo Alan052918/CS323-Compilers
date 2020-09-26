@@ -88,7 +88,7 @@ union YYSTYPE
 {
 #line 10 "syntax.y" /* yacc.c:1909  */
 
-  int int_value;
+  long int_value;
   float float_value;
   char char_value;
   char *type_value;

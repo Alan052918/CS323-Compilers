@@ -149,7 +149,7 @@ union YYSTYPE
 {
 #line 10 "syntax.y" /* yacc.c:355  */
 
-  int int_value;
+  long int_value;
   float float_value;
   char char_value;
   char *type_value;
@@ -2102,7 +2102,7 @@ void push_id(struct node *lfs_node, char *id_val) {
 }
 
 void push_keyword(struct node *lfs_node, char *keyword_val) {
-  // printf("    push keyword: %s ", keyword_val);
+  printf("    push keyword: %s, line %d\n", keyword_val, yylineno);
   struct node *new_keyword_node = (struct node *)malloc(sizeof(struct node));
   new_keyword_node->node_type = KEYWORD_T;
   new_keyword_node->lineno = yylineno;
@@ -2118,14 +2118,12 @@ void push_keyword(struct node *lfs_node, char *keyword_val) {
   struct rhs_node *ptr = lfs_node->rhs;
   if (ptr == NULL) {
     lfs_node->rhs = new_rhs_node;
-    // printf("HEAD\n");
     return;
   }
   while (ptr->next != NULL) {
     ptr = ptr->next;
   }
   ptr->next = new_rhs_node;
-  // printf("APPEND\n");
 }
 
 void push_nonterminal(struct node *lfs_node, struct node *nonterminal) {
@@ -2139,14 +2137,12 @@ void push_nonterminal(struct node *lfs_node, struct node *nonterminal) {
   struct rhs_node *ptr = lfs_node->rhs;
   if (ptr == NULL) {
     lfs_node->rhs = new_rhs_node;
-    // printf("HEAD\n");
     return;
   }
   while (ptr->next != NULL) {
     ptr = ptr->next;
   }
   ptr->next = new_rhs_node;
-  // printf("APPEND\n");
 }
 
 char *get_nonterminal_name(int nonterminal_val) {
@@ -2183,7 +2179,7 @@ void print_tree(struct node *pnode, int indent_depth) {
     printf(" ");
   }
   switch (pnode->node_type) {
-    case INT_T: printf("INT: %d\n", pnode->int_token); break;
+    case INT_T: printf("INT: %ld\n", pnode->int_token); break;
     case FLOAT_T: printf("FLOAT: %f\n", pnode->float_token); break;
     case CHAR_T: printf("CHAR: %c\n", pnode->char_token); break;
     case TYPE_T: printf("TYPE: %s\n", pnode->type_token); break;
@@ -2194,11 +2190,9 @@ void print_tree(struct node *pnode, int indent_depth) {
   }
   struct rhs_node *ptr = pnode->rhs;
   if (ptr == NULL) {
-    // printf("empty rhs\n");
     return;
   }
   while (ptr != NULL) {
-    // printf("new rhs\n");
     print_tree(ptr->token_node, indent_depth + 2);
     ptr = ptr->next;
   }
@@ -2221,7 +2215,7 @@ int main(int argc, char **argv) {
     }
     int result = yyparse();
     if (result == 0) {
-      print_tree(program_root, 0);
+      // print_tree(program_root, 0);
     } else if (result == 1) {
       printf("Abort\n");
     } else {

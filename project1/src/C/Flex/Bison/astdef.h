@@ -18,7 +18,7 @@ struct node {
   int lineno;
   int coluno;
   union {
-    int int_token;
+    long int_token;
     float float_token;
     char char_token;
     char *type_token;
