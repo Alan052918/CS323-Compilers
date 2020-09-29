@@ -26,6 +26,7 @@ Object:
       LC RC
     | LC Members RC
     | LC Members RC Value error { puts("Extra value after close, recovered"); }
+    | LC Members COMMA error { puts("Comma instead of closing brace, recovered"); }
     ;
 Members:
       Member
@@ -49,6 +50,8 @@ Values:
       Value
     | Value COMMA Values
     | Value COMMA error { puts("Extra comma, recovered"); }
+    | Value COMMA COMMA error { puts("Double extra comma, recovered"); }
+    | Value COLON Values error { puts("Colon instead of comma, recovered"); }
     | COMMA Values error { puts("Missing value, recovered"); }
     ;
 %%
