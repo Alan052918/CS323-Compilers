@@ -1,4 +1,7 @@
 int test_spl()
 {
-  float l = 1.0;
+  int an_int = 0x1A;
+  float a_float = 1.0;
+  char a_char = \x41;
 }
+

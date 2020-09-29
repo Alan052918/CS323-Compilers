@@ -1,6 +1,6 @@
 %{
-  #include "lex.yy.c"
   #include "astdef.h"
+  #include "lex.yy.c"
 
   struct node *program_root;
 
@@ -420,7 +420,7 @@ int main(int argc, char **argv) {
     }
     int result = yyparse();
     if (result == 0) {
-      // print_tree(program_root, 0);
+      print_tree(program_root, 0);
     } else if (result == 1) {
       printf("Abort\n");
     } else {

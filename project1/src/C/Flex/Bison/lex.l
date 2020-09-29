@@ -4,7 +4,7 @@
 
   int yycoluno = 1;
 
-  #define YY_USER_ACTION \
+  // #define YY_USER_ACTION \
     yylloc.first_line = yylineno; \
     yylloc.first_column = yycoluno; \
     yylloc.last_line = yylineno; \
