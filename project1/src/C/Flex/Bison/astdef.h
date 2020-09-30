@@ -12,6 +12,13 @@ enum nonterminal_type {
   Dec, Exp, Args, Nil
 };
 
+typedef struct YYLTYPE {
+  int first_line;
+  int first_column;
+  int last_line;
+  int last_column;
+} YYLTYPE;
+
 /* syntax tree node definition */
 struct node {
   int node_type;

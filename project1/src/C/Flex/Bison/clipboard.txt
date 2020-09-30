@@ -18,3 +18,12 @@ int main(int argc, char **argv) {
   }
 }
 
+%type <nonterminal_node> Program
+%type <nonterminal_node> ExtDefList ExtDef ExtDecList
+%type <nonterminal_node> Specifier StructSpecifier
+%type <nonterminal_node> VarDec FunDec VarList ParamDec
+%type <nonterminal_node> CompSt StmtList Stmt
+%type <nonterminal_node> DefList Def DecList Dec
+%type <nonterminal_node> Exp Args
+
+
