@@ -58,26 +58,27 @@ extern int yydebug;
     RETURN = 268,
     WHILE = 269,
     IF = 270,
-    ASSIGN = 271,
-    OR = 272,
-    AND = 273,
-    LT = 274,
-    LE = 275,
-    GT = 276,
-    GE = 277,
-    NE = 278,
-    EQ = 279,
-    PLUS = 280,
-    MINUS = 281,
-    MUL = 282,
-    DIV = 283,
-    NOT = 284,
-    LB = 285,
-    RB = 286,
-    LP = 287,
-    RP = 288,
-    DOT = 289,
-    ELSE = 290
+    LOWER_ELSE = 271,
+    ELSE = 272,
+    ASSIGN = 273,
+    OR = 274,
+    AND = 275,
+    LT = 276,
+    LE = 277,
+    GT = 278,
+    GE = 279,
+    NE = 280,
+    EQ = 281,
+    PLUS = 282,
+    MINUS = 283,
+    MUL = 284,
+    DIV = 285,
+    NOT = 286,
+    LB = 287,
+    RB = 288,
+    LP = 289,
+    RP = 290,
+    DOT = 291
   };
 #endif
 
@@ -96,7 +97,7 @@ union YYSTYPE
   char *keyword_value;
   struct node *nonterminal_node;
 
-#line 100 "syntax.tab.h" /* yacc.c:1909  */
+#line 101 "syntax.tab.h" /* yacc.c:1909  */
 };
 
 typedef union YYSTYPE YYSTYPE;

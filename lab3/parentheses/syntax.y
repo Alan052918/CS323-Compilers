@@ -8,10 +8,10 @@
 
 Program: ExpList { result = 1; }
  ;
-ExpList: Exp ExpList
+ExpList: ExpNest ExpList
  | %empty
  ;
-Exp: LP ExpList RP
+ExpNest: LP ExpList RP
  | LB ExpList RB
  | LC ExpList RC
  ;

@@ -35,6 +35,9 @@
 %token <keyword_value> LC RC COMMA SEMI
 %token <keyword_value> RETURN WHILE IF
 
+%nonassoc LOWER_ELSE
+%nonassoc <keyword_value> ELSE
+
 %right <keyword_value> ASSIGN
 %left <keyword_value> OR
 %left <keyword_value> AND
@@ -43,7 +46,6 @@
 %left <keyword_value> MUL DIV
 %right <keyword_value> NOT
 %left <keyword_value> LB RB LP RP DOT
-%nonassoc <keyword_value> ELSE
 
 %%
 
@@ -106,7 +108,7 @@ StmtList: Stmt StmtList { $$ = lfs(StmtList); push_nonterminal($$, $1); push_non
 Stmt: Exp SEMI { $$ = lfs(Stmt); push_nonterminal($$, $1); push_keyword($$, $2); }
  | CompSt { $$ = lfs(Stmt); push_nonterminal($$, $1); }
  | RETURN Exp SEMI { $$ = lfs(Stmt); push_keyword($$, $1); push_nonterminal($$, $2); push_keyword($$, $3); }
- | IF LP Exp RP Stmt { $$ = lfs(Stmt); push_keyword($$, $1); push_keyword($$, $2); push_nonterminal($$, $3); push_keyword($$, $4); push_nonterminal($$, $5); }
+ | IF LP Exp RP Stmt %prec LOWER_ELSE { $$ = lfs(Stmt); push_keyword($$, $1); push_keyword($$, $2); push_nonterminal($$, $3); push_keyword($$, $4); push_nonterminal($$, $5); }
  | IF LP Exp RP Stmt ELSE Stmt { $$ = lfs(Stmt); push_keyword($$, $1); push_keyword($$, $2); push_nonterminal($$, $3); push_keyword($$, $4); push_nonterminal($$, $5); push_keyword($$, $6); push_nonterminal($$, $7); }
  | WHILE LP Exp RP Stmt { $$ = lfs(Stmt); push_keyword($$, $1); push_keyword($$, $2); push_nonterminal($$, $3); push_keyword($$, $4); push_nonterminal($$, $5); }
  ;
