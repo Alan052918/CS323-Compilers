@@ -215,7 +215,7 @@ Stmt:
       push_keyword($$, $2);
     }
   | Exp error {
-      perror("Error type B at Line %d: Missing semicolon at the end of statement\n", 
+      fprintf(stderr, "Error type B at Line %d: Missing semicolon at the end of statement\n", 
         @$.first_line);
     }
   | CompSt {
@@ -229,7 +229,7 @@ Stmt:
       push_keyword($$, $3);
     }
   | RETURN Exp error {
-      perror("Error type B at Line %d: Missing semicolon at the end of return statement\n", 
+      fprintf(stderr, "Error type B at Line %d: Missing semicolon at the end of return statement\n", 
         @$.first_line);
     }
   | IF LP Exp RP Stmt %prec LOWER_ELSE {
@@ -471,7 +471,7 @@ struct node *lfs(int nonterminal_type) {
 }
 
 void push_int(struct node *lfs_node, int int_val) {
-  printf("    push int: %d ", int_val);
+  printf("    push int: %d, line %d ", int_val, yylloc.first_line);
   struct node *new_int_node = (struct node *)malloc(sizeof(struct node));
   new_int_node->node_type = INT_T;
   new_int_node->int_token = int_val;
@@ -493,7 +493,7 @@ void push_int(struct node *lfs_node, int int_val) {
 }
 
 void push_float(struct node *lfs_node, float float_val) {
-  printf("    push float: %f ", float_val);
+  printf("    push float: %f, line %d ", float_val, yylloc.first_line);
   struct node *new_float_node = (struct node *)malloc(sizeof(struct node));
   new_float_node->node_type = FLOAT_T;
   new_float_node->float_token = float_val;
@@ -515,7 +515,7 @@ void push_float(struct node *lfs_node, float float_val) {
 }
 
 void push_char(struct node *lfs_node, char char_val) {
-  printf("    push char: %c ", char_val);
+  printf("    push char: %c, line %d ", char_val, yylloc.first_line);
   struct node *new_char_node = (struct node *)malloc(sizeof(struct node));
   new_char_node->node_type = CHAR_T;
   new_char_node->char_token = char_val;
@@ -537,7 +537,7 @@ void push_char(struct node *lfs_node, char char_val) {
 }
 
 void push_type(struct node *lfs_node, char *type_val) {
-  printf("    push type: %s ", type_val);
+  printf("    push type: %s, line %d ", type_val, yylloc.first_line);
   struct node *new_type_node = (struct node *)malloc(sizeof(struct node));
   new_type_node->node_type = TYPE_T;
   new_type_node->type_token = type_val;
@@ -559,7 +559,7 @@ void push_type(struct node *lfs_node, char *type_val) {
 }
 
 void push_id(struct node *lfs_node, char *id_val) {
-  printf("    push id: %s ", id_val);
+  printf("    push id: %s, line %d ", id_val, yylloc.first_line);
   struct node *new_id_node = (struct node *)malloc(sizeof(struct node));
   new_id_node->node_type = ID_T;
   new_id_node->id_token = id_val;
@@ -581,7 +581,7 @@ void push_id(struct node *lfs_node, char *id_val) {
 }
 
 void push_keyword(struct node *lfs_node, char *keyword_val) {
-  printf("    push keyword: %s, line %d\n", keyword_val, yylloc.first_line);
+  printf("    push keyword: %s, line %d ", keyword_val, yylloc.first_line);
   struct node *new_keyword_node = (struct node *)malloc(sizeof(struct node));
   new_keyword_node->node_type = KEYWORD_T;
   new_keyword_node->keyword_token = keyword_val;
@@ -603,7 +603,7 @@ void push_keyword(struct node *lfs_node, char *keyword_val) {
 }
 
 void push_nonterminal(struct node *lfs_node, struct node *nonterminal) {
-  printf("    push nonterminal: %s ", get_nonterminal_name(nonterminal->nonterminal_token));
+  printf("    push nonterminal: %s, line %d ", get_nonterminal_name(nonterminal->nonterminal_token), yylloc.first_line);
   struct rhs_node *new_rhs_node = (struct rhs_node *)malloc(sizeof(struct rhs_node));
   new_rhs_node->token_node = nonterminal;
   new_rhs_node->next = NULL;
@@ -690,6 +690,7 @@ int main(int argc, char **argv) {
     }
     int result = yyparse();
     if (result == 0) {
+      printf("\n*********************\n");
       print_tree(program_root, 0);
     } else if (result == 1) {
       printf("Abort\n");
