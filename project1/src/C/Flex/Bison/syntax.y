@@ -465,8 +465,6 @@ struct node *lfs(int nonterminal_type) {
   printf("  lfs: %s\n", get_nonterminal_name(nonterminal_type));
   struct node *new_nonterminal_node = (struct node *)malloc(sizeof(struct node));
   new_nonterminal_node->node_type = NONTERMINAL_T;
-  new_nonterminal_node->lineno = yylloc.first_line;
-  new_nonterminal_node->coluno = yycoluno;
   new_nonterminal_node->nonterminal_token = nonterminal_type;
   new_nonterminal_node->rhs = NULL;
   return new_nonterminal_node;
@@ -476,16 +474,11 @@ void push_int(struct node *lfs_node, int int_val) {
   printf("    push int: %d ", int_val);
   struct node *new_int_node = (struct node *)malloc(sizeof(struct node));
   new_int_node->node_type = INT_T;
-  new_int_node->lineno = yylloc.first_line;
-  new_int_node->coluno = yycoluno;
   new_int_node->int_token = int_val;
   new_int_node->rhs = NULL;
   struct rhs_node *new_rhs_node = (struct rhs_node *)malloc(sizeof(struct rhs_node));
   new_rhs_node->token_node = new_int_node;
   new_rhs_node->next = NULL;
-  if (new_int_node->lineno < lfs_node->lineno) {
-    lfs_node->lineno = new_int_node->lineno;
-  }
   struct rhs_node *ptr = lfs_node->rhs;
   if (ptr == NULL) {
     lfs_node->rhs = new_rhs_node;
@@ -503,16 +496,11 @@ void push_float(struct node *lfs_node, float float_val) {
   printf("    push float: %f ", float_val);
   struct node *new_float_node = (struct node *)malloc(sizeof(struct node));
   new_float_node->node_type = FLOAT_T;
-  new_float_node->lineno = yylloc.first_line;
-  new_float_node->coluno = yycoluno;
   new_float_node->float_token = float_val;
   new_float_node->rhs = NULL;
   struct rhs_node *new_rhs_node = (struct rhs_node *)malloc(sizeof(struct rhs_node));
   new_rhs_node->token_node = new_float_node;
   new_rhs_node->next = NULL;
-  if (new_float_node->lineno < lfs_node->lineno) {
-    lfs_node->lineno = new_float_node->lineno;
-  }
   struct rhs_node *ptr = lfs_node->rhs;
   if (ptr == NULL) {
     lfs_node->rhs = new_rhs_node;
@@ -530,16 +518,11 @@ void push_char(struct node *lfs_node, char char_val) {
   printf("    push char: %c ", char_val);
   struct node *new_char_node = (struct node *)malloc(sizeof(struct node));
   new_char_node->node_type = CHAR_T;
-  new_char_node->lineno = yylloc.first_line;
-  new_char_node->coluno = yycoluno;
   new_char_node->char_token = char_val;
   new_char_node->rhs = NULL;
   struct rhs_node *new_rhs_node = (struct rhs_node *)malloc(sizeof(struct rhs_node));
   new_rhs_node->token_node = new_char_node;
   new_rhs_node->next = NULL;
-  if (new_char_node->lineno < lfs_node->lineno) {
-    lfs_node->lineno = new_char_node->lineno;
-  }
   struct rhs_node *ptr = lfs_node->rhs;
   if (ptr == NULL) {
     lfs_node->rhs = new_rhs_node;
@@ -557,16 +540,11 @@ void push_type(struct node *lfs_node, char *type_val) {
   printf("    push type: %s ", type_val);
   struct node *new_type_node = (struct node *)malloc(sizeof(struct node));
   new_type_node->node_type = TYPE_T;
-  new_type_node->lineno = yylloc.first_line;
-  new_type_node->coluno = yycoluno;
   new_type_node->type_token = type_val;
   new_type_node->rhs = NULL;
   struct rhs_node *new_rhs_node = (struct rhs_node *)malloc(sizeof(struct rhs_node));
   new_rhs_node->token_node = new_type_node;
   new_rhs_node->next = NULL;
-  if (new_type_node->lineno < lfs_node->lineno) {
-    lfs_node->lineno = new_type_node->lineno;
-  }
   struct rhs_node *ptr = lfs_node->rhs;
   if (ptr == NULL) {
     lfs_node->rhs = new_rhs_node;
@@ -584,16 +562,11 @@ void push_id(struct node *lfs_node, char *id_val) {
   printf("    push id: %s ", id_val);
   struct node *new_id_node = (struct node *)malloc(sizeof(struct node));
   new_id_node->node_type = ID_T;
-  new_id_node->lineno = yylloc.first_line;
-  new_id_node->coluno = yycoluno;
   new_id_node->id_token = id_val;
   new_id_node->rhs = NULL;
   struct rhs_node *new_rhs_node = (struct rhs_node *)malloc(sizeof(struct rhs_node));
   new_rhs_node->token_node = new_id_node;
   new_rhs_node->next = NULL;
-  if (new_id_node->lineno < lfs_node->lineno) {
-    lfs_node->lineno = new_id_node->lineno;
-  }
   struct rhs_node *ptr = lfs_node->rhs;
   if (ptr == NULL) {
     lfs_node->rhs = new_rhs_node;
@@ -611,16 +584,11 @@ void push_keyword(struct node *lfs_node, char *keyword_val) {
   printf("    push keyword: %s, line %d\n", keyword_val, yylloc.first_line);
   struct node *new_keyword_node = (struct node *)malloc(sizeof(struct node));
   new_keyword_node->node_type = KEYWORD_T;
-  new_keyword_node->lineno = yylloc.first_line;
-  new_keyword_node->coluno = yycoluno;
   new_keyword_node->keyword_token = keyword_val;
   new_keyword_node->rhs = NULL;
   struct rhs_node *new_rhs_node = (struct rhs_node *)malloc(sizeof(struct rhs_node));
   new_rhs_node->token_node = new_keyword_node;
   new_rhs_node->next = NULL;
-  if (new_keyword_node->lineno < lfs_node->lineno) {
-    lfs_node->lineno = new_keyword_node->lineno;
-  }
   struct rhs_node *ptr = lfs_node->rhs;
   if (ptr == NULL) {
     lfs_node->rhs = new_rhs_node;
@@ -639,9 +607,6 @@ void push_nonterminal(struct node *lfs_node, struct node *nonterminal) {
   struct rhs_node *new_rhs_node = (struct rhs_node *)malloc(sizeof(struct rhs_node));
   new_rhs_node->token_node = nonterminal;
   new_rhs_node->next = NULL;
-  if (nonterminal->lineno < lfs_node->lineno) {
-    lfs_node->lineno = nonterminal->lineno;
-  }
   struct rhs_node *ptr = lfs_node->rhs;
   if (ptr == NULL) {
     lfs_node->rhs = new_rhs_node;
@@ -695,7 +660,7 @@ void print_tree(struct node *pnode, int indent_depth) {
     case TYPE_T: printf("TYPE: %s\n", pnode->type_token); break;
     case ID_T: printf("ID: %s\n", pnode->id_token); break;
     case KEYWORD_T: printf("%s\n", pnode->keyword_token); break;
-    case NONTERMINAL_T: printf("%s (%d)\n", get_nonterminal_name(pnode->nonterminal_token), pnode->lineno); break;
+    case NONTERMINAL_T: printf("%s (%d)\n", get_nonterminal_name(pnode->nonterminal_token), yylineno); break;
     default: printf("Undefined node type!\n"); break;
   }
   struct rhs_node *ptr = pnode->rhs;
