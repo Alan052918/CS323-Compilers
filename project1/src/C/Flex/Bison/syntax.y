@@ -1,6 +1,5 @@
 %{
   #include "astdef.h"
-  #include "parse.h"
   #include "lex.yy.c"
 
   struct node *program_root;
@@ -215,6 +214,10 @@ Stmt:
       push_nonterminal($$, $1);
       push_keyword($$, $2);
     }
+  | Exp error {
+      perror("Error type B at Line %d: Missing semicolon at the end of statement\n", 
+        @$.first_line);
+    }
   | CompSt {
       $$ = lfs(Stmt);
       push_nonterminal($$, $1);
@@ -224,6 +227,10 @@ Stmt:
       push_keyword($$, $1);
       push_nonterminal($$, $2);
       push_keyword($$, $3);
+    }
+  | RETURN Exp error {
+      perror("Error type B at Line %d: Missing semicolon at the end of return statement\n", 
+        @$.first_line);
     }
   | IF LP Exp RP Stmt %prec LOWER_ELSE {
       $$ = lfs(Stmt);
