@@ -1,8 +1,14 @@
 CC=gcc
-splc:
+FLEX=flex
+BISON=bison
+
+.syntax: src/C/Flex/Bison/syntax.y
+	$(BISON) -dtv src/C/Flex/Bison/syntax.y
+.lex: src/C/Flex/Bison/lex.l
+	$(FLEX) src/C/Flex/Bison/lex.l
+splc: .syntax .lex
 	@mkdir bin
-	touch bin/splc
-	@chmod +x bin/splc
+	$(CC) src/C/Flex/Bison/syntax.tab.c -lfl -ly -o bin/splc
 clean:
 	@rm -rf bin/
 .PHONY: splc

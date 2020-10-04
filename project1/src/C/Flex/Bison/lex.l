@@ -3,9 +3,8 @@
   #include "syntax.tab.h"
 
   int yycoluno = 1;
-  extern YYLTYPE yylloc;
 
-  // #define YY_USER_ACTION \
+  #define YY_USER_ACTION \
     yylloc.first_line = yylineno; \
     yylloc.first_column = yycoluno; \
     yylloc.last_line = yylineno; \
@@ -60,7 +59,7 @@ ID      [a-zA-Z_][a-zA-Z0-9_]{0,31}
             if (yytext[0] == '0' && yytext[1] == 'x') {
               yylval.int_value = strtol(yytext, NULL, 0);
             } else {
-              yylval.int_value = atoi(yytext); 
+              yylval.int_value = atoi(yytext);
             }
             return INT;
           }
@@ -78,9 +77,8 @@ ID      [a-zA-Z_][a-zA-Z0-9_]{0,31}
 {ID}      { yylval.id_value = strdup(yytext); return ID; }
 
 .         {
-            printf("Error type A at Line %d: Unknown characters \'%s\'\n", 
+            printf("Error type A at Line %d: Unknown characters \'%s\'\n",
               yylineno, yytext);
           }
 
 %%
-

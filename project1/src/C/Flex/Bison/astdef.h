@@ -2,22 +2,38 @@
 
 /* syntax tree node types */
 enum node_type {
-  INT_T, FLOAT_T, CHAR_T, TYPE_T, ID_T, KEYWORD_T, NONTERMINAL_T
+  INT_T,
+  FLOAT_T,
+  CHAR_T,
+  TYPE_T,
+  ID_T,
+  KEYWORD_T,
+  NONTERMINAL_T
 };
 
 /* nonterminals */
 enum nonterminal_type {
-  Program, ExtDefList, ExtDef, ExtDecList, Specifier, StructSpecifier, VarDec,
-  FunDec, VarList, ParamDec, CompSt, StmtList, Stmt, DefList, Def, DecList,
-  Dec, Exp, Args, Nil
+  Program,
+  ExtDefList,
+  ExtDef,
+  ExtDecList,
+  Specifier,
+  StructSpecifier,
+  VarDec,
+  FunDec,
+  VarList,
+  ParamDec,
+  CompSt,
+  StmtList,
+  Stmt,
+  DefList,
+  Def,
+  DecList,
+  Dec,
+  Exp,
+  Args,
+  Nil
 };
-
-typedef struct YYLTYPE {
-  int first_line;
-  int first_column;
-  int last_line;
-  int last_column;
-} YYLTYPE;
 
 /* syntax tree node definition */
 struct node {
