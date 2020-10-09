@@ -198,6 +198,7 @@ CompSt:
       push_nonterminal($$, $2);
       push_nonterminal($$, $3);
       push_keyword($$, $4);
+      printf("CompSt: first line of first token [%d], last line of last token [%d]\n", @1.first_line, @4.last_line);
     }
   ;
 StmtList:
@@ -461,14 +462,14 @@ Args:
 
 %%
 
-struct node *lfs(int nonterminal_type) {
+struct node *lfs(int nonterminal_type, int first_line, int last_line, int first_column, int last_column) {
   struct node *new_nonterminal_node = (struct node *)malloc(sizeof(struct node));
   new_nonterminal_node->node_type = NONTERMINAL_T;
   new_nonterminal_node->nonterminal_token = nonterminal_type;
-  new_nonterminal_node->first_line = yylloc.first_line;
-  new_nonterminal_node->last_line = yylloc.last_line;
-  new_nonterminal_node->first_column = yylloc.first_column;
-  new_nonterminal_node->last_column = yylloc.last_column;
+  new_nonterminal_node->first_line = first_line;
+  new_nonterminal_node->last_line = last_line;
+  new_nonterminal_node->first_column = first_column;
+  new_nonterminal_node->last_column = last_column;
   new_nonterminal_node->rhs = NULL;
   printf("  lfs: %s, line %d\n", get_nonterminal_name(nonterminal_type), new_nonterminal_node->first_line);
   return new_nonterminal_node;
@@ -632,10 +633,6 @@ void push_keyword(struct node *lfs_node, char *keyword_val) {
 
 void push_nonterminal(struct node *lfs_node, struct node *nonterminal) {
   printf("    push nonterminal: %s, line %d ", get_nonterminal_name(nonterminal->nonterminal_token), yylloc.first_line);
-  if (nonterminal->first_line < lfs_node->first_line) lfs_node->first_line = nonterminal->first_line;
-  if (nonterminal->last_line > lfs_node->last_line) lfs_node->last_line = nonterminal->last_line;
-  if (nonterminal->first_column < lfs_node->first_column) lfs_node->first_column = nonterminal->first_column;
-  if (nonterminal->last_column > lfs_node->last_column) lfs_node->last_column = nonterminal->last_column;
   struct rhs_node *new_rhs_node = (struct rhs_node *)malloc(sizeof(struct rhs_node));
   new_rhs_node->token_node = nonterminal;
   new_rhs_node->next = NULL;
@@ -688,10 +685,10 @@ void print_tree(struct node *pnode, int indent_depth) {
   switch (pnode->node_type) {
     case INT_T: printf("INT: %ld\n", pnode->int_token); break;
     case FLOAT_T: printf("FLOAT: %f\n", pnode->float_token); break;
-    case CHAR_T: printf("CHAR: %c\n", pnode->char_token); break;
+    case CHAR_T: printf("CHAR: '%c'\n", pnode->char_token); break;
     case TYPE_T: printf("TYPE: %s\n", pnode->type_token); break;
     case ID_T: printf("ID: %s\n", pnode->id_token); break;
-    case KEYWORD_T: printf("%s\n", pnode->keyword_token); break;
+    case KEYWORD_T: printf("%s (%d)\n", pnode->keyword_token, pnode->first_line); break;
     case NONTERMINAL_T: printf("%s (%d)\n", get_nonterminal_name(pnode->nonterminal_token), pnode->first_line); break;
     default: printf("Undefined node type!\n"); break;
   }
