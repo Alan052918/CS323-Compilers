@@ -1,4 +1,4 @@
-int test_spl()
+int test_1_r01(int a, int b)
 {
   int an_int = 0x1A;
   float a_float = 1.0;

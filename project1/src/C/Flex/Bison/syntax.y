@@ -483,6 +483,7 @@ void push_int(struct node *lfs_node, int int_val) {
   new_int_node->last_line = yylloc.last_line;
   new_int_node->first_column = yylloc.first_column;
   new_int_node->last_column = yylloc.last_column;
+  update_nonterminal_location(lfs_node, yylloc.first_line, yylloc.last_line, yylloc.first_column, yylloc.last_column);
   new_int_node->rhs = NULL;
   struct rhs_node *new_rhs_node = (struct rhs_node *)malloc(sizeof(struct rhs_node));
   new_rhs_node->token_node = new_int_node;
@@ -509,6 +510,7 @@ void push_float(struct node *lfs_node, float float_val) {
   new_float_node->last_line = yylloc.last_line;
   new_float_node->first_column = yylloc.first_column;
   new_float_node->last_column = yylloc.last_column;
+  update_nonterminal_location(lfs_node, yylloc.first_line, yylloc.last_line, yylloc.first_column, yylloc.last_column);
   new_float_node->rhs = NULL;
   struct rhs_node *new_rhs_node = (struct rhs_node *)malloc(sizeof(struct rhs_node));
   new_rhs_node->token_node = new_float_node;
@@ -535,6 +537,7 @@ void push_char(struct node *lfs_node, char char_val) {
   new_char_node->last_line = yylloc.last_line;
   new_char_node->first_column = yylloc.first_column;
   new_char_node->last_column = yylloc.last_column;
+  update_nonterminal_location(lfs_node, yylloc.first_line, yylloc.last_line, yylloc.first_column, yylloc.last_column);
   new_char_node->rhs = NULL;
   struct rhs_node *new_rhs_node = (struct rhs_node *)malloc(sizeof(struct rhs_node));
   new_rhs_node->token_node = new_char_node;
@@ -561,6 +564,7 @@ void push_type(struct node *lfs_node, char *type_val) {
   new_type_node->last_line = yylloc.last_line;
   new_type_node->first_column = yylloc.first_column;
   new_type_node->last_column = yylloc.last_column;
+  update_nonterminal_location(lfs_node, yylloc.first_line, yylloc.last_line, yylloc.first_column, yylloc.last_column);
   new_type_node->rhs = NULL;
   struct rhs_node *new_rhs_node = (struct rhs_node *)malloc(sizeof(struct rhs_node));
   new_rhs_node->token_node = new_type_node;
@@ -587,6 +591,7 @@ void push_id(struct node *lfs_node, char *id_val) {
   new_id_node->last_line = yylloc.last_line;
   new_id_node->first_column = yylloc.first_column;
   new_id_node->last_column = yylloc.last_column;
+  update_nonterminal_location(lfs_node, yylloc.first_line, yylloc.last_line, yylloc.first_column, yylloc.last_column);
   new_id_node->rhs = NULL;
   struct rhs_node *new_rhs_node = (struct rhs_node *)malloc(sizeof(struct rhs_node));
   new_rhs_node->token_node = new_id_node;
@@ -613,6 +618,7 @@ void push_keyword(struct node *lfs_node, char *keyword_val) {
   new_keyword_node->last_line = yylloc.last_line;
   new_keyword_node->first_column = yylloc.first_column;
   new_keyword_node->last_column = yylloc.last_column;
+  update_nonterminal_location(lfs_node, yylloc.first_line, yylloc.last_line, yylloc.first_column, yylloc.last_column);
   new_keyword_node->rhs = NULL;
   struct rhs_node *new_rhs_node = (struct rhs_node *)malloc(sizeof(struct rhs_node));
   new_rhs_node->token_node = new_keyword_node;
@@ -632,10 +638,7 @@ void push_keyword(struct node *lfs_node, char *keyword_val) {
 
 void push_nonterminal(struct node *lfs_node, struct node *nonterminal) {
   printf("    push nonterminal: %s, line %d ", get_nonterminal_name(nonterminal->nonterminal_token), yylloc.first_line);
-  if (nonterminal->first_line < lfs_node->first_line) lfs_node->first_line = nonterminal->first_line;
-  if (nonterminal->last_line > lfs_node->last_line) lfs_node->last_line = nonterminal->last_line;
-  if (nonterminal->first_column < lfs_node->first_column) lfs_node->first_column = nonterminal->first_column;
-  if (nonterminal->last_column > lfs_node->last_column) lfs_node->last_column = nonterminal->last_column;
+  update_nonterminal_location(lfs_node, nonterminal->first_line, nonterminal->last_line, nonterminal->first_column, nonterminal->last_column);
   struct rhs_node *new_rhs_node = (struct rhs_node *)malloc(sizeof(struct rhs_node));
   new_rhs_node->token_node = nonterminal;
   new_rhs_node->next = NULL;
@@ -678,6 +681,13 @@ char *get_nonterminal_name(int nonterminal_val) {
   }
 }
 
+void update_nonterminal_location(struct node *nonterminal, int first_line, int last_line, int first_column, int last_column) {
+  if (first_line < nonterminal->first_line) nonterminal->first_line = first_line;
+  if (last_line > nonterminal->last_line) nonterminal->last_line = last_line;
+  if (first_column < nonterminal->first_column) nonterminal->first_column = first_column;
+  if (last_column > nonterminal->last_column) nonterminal->last_column = last_column;
+}
+
 void print_tree(struct node *pnode, int indent_depth) {
   if (pnode->node_type == NONTERMINAL_T && pnode->nonterminal_token == Nil) {
     return;
@@ -688,10 +698,10 @@ void print_tree(struct node *pnode, int indent_depth) {
   switch (pnode->node_type) {
     case INT_T: printf("INT: %ld\n", pnode->int_token); break;
     case FLOAT_T: printf("FLOAT: %f\n", pnode->float_token); break;
-    case CHAR_T: printf("CHAR: %c\n", pnode->char_token); break;
+    case CHAR_T: printf("CHAR: '%c'\n", pnode->char_token); break;
     case TYPE_T: printf("TYPE: %s\n", pnode->type_token); break;
     case ID_T: printf("ID: %s\n", pnode->id_token); break;
-    case KEYWORD_T: printf("%s\n", pnode->keyword_token); break;
+    case KEYWORD_T: printf("%s (%d)\n", pnode->keyword_token, pnode->first_line); break;
     case NONTERMINAL_T: printf("%s (%d)\n", get_nonterminal_name(pnode->nonterminal_token), pnode->first_line); break;
     default: printf("Undefined node type!\n"); break;
   }
