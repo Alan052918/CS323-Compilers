@@ -63,7 +63,7 @@ Program:
   ;
 ExtDefList:
     ExtDef ExtDefList {
-      $$ = lfs(ExtDefList, @1.first_line, @2.last_line, @1.first_column, $2.last_column);
+      $$ = lfs(ExtDefList, @1.first_line, @2.last_line, @1.first_column, @2.last_column);
       push_nonterminal($$, $1);
       push_nonterminal($$, $2);
     }
@@ -144,7 +144,7 @@ VarDec:
       push_id($$, $1);
    }
  | VarDec LB INT RB {
-    $$ = lfs(VarDec);
+    $$ = lfs(VarDec, @1.first_line, @4.last_line, @1.first_column, @4.last_column);
     push_nonterminal($$, $1);
     push_keyword($$, $2);
     push_int($$, $3);
@@ -394,12 +394,12 @@ Exp:
       push_keyword($$, $3);
     }
   | MINUS Exp {
-      $$ = lfs(Exp, @1.first_line, @3.last_line, @1.first_column, @3.last_column);
+      $$ = lfs(Exp, @1.first_line, @2.last_line, @1.first_column, @2.last_column);
       push_keyword($$, $1);
       push_nonterminal($$, $2);
     }
   | NOT Exp {
-      $$ = lfs(Exp, @1.first_line, @3.last_line, @1.first_column, @3.last_column);
+      $$ = lfs(Exp, @1.first_line, @2.last_line, @1.first_column, @2.last_column);
       push_keyword($$, $1);
       push_nonterminal($$, $2);
     }
