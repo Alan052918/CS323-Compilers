@@ -198,7 +198,6 @@ CompSt:
       push_nonterminal($$, $2);
       push_nonterminal($$, $3);
       push_keyword($$, $4);
-      printf("CompSt: first line of first token [%d], last line of last token [%d]\n", @1.first_line, @4.last_line);
     }
   ;
 StmtList:
@@ -470,12 +469,16 @@ Node *lfs(int nonterminal_type, int first_line, int last_line, int first_column,
   new_nonterminal_node->first_column = first_column;
   new_nonterminal_node->last_column = last_column;
   new_nonterminal_node->rhs = NULL;
+#ifdef DEBUG
   printf("  lfs: %s, line %d\n", get_nonterminal_name(nonterminal_type), new_nonterminal_node->first_line);
+#endif
   return new_nonterminal_node;
 }
 
 void push_int(Node *lfs_node, int int_val) {
+#ifdef DEBUG
   printf("    push int: %d, line %d ", int_val, yylloc.first_line);
+#endif
   Node *new_int_node = (Node *)malloc(sizeof(Node));
   new_int_node->node_type = INT_T;
   new_int_node->int_token = int_val;
@@ -486,18 +489,18 @@ void push_int(Node *lfs_node, int int_val) {
   Rhs_node *ptr = lfs_node->rhs;
   if (ptr == NULL) {
     lfs_node->rhs = new_rhs_node;
-    printf("HEAD\n");
     return;
   }
   while (ptr->next != NULL) {
     ptr = ptr->next;
   }
   ptr->next = new_rhs_node;
-  printf("APPEND\n");
 }
 
 void push_float(Node *lfs_node, float float_val) {
+#ifdef DEBUG
   printf("    push float: %f, line %d ", float_val, yylloc.first_line);
+#endif
   Node *new_float_node = (Node *)malloc(sizeof(Node));
   new_float_node->node_type = FLOAT_T;
   new_float_node->float_token = float_val;
@@ -508,18 +511,18 @@ void push_float(Node *lfs_node, float float_val) {
   Rhs_node *ptr = lfs_node->rhs;
   if (ptr == NULL) {
     lfs_node->rhs = new_rhs_node;
-    printf("HEAD\n");
     return;
   }
   while (ptr->next != NULL) {
     ptr = ptr->next;
   }
   ptr->next = new_rhs_node;
-  printf("APPEND\n");
 }
 
 void push_char(Node *lfs_node, char char_val) {
+#ifdef DEBUG
   printf("    push char: %c, line %d ", char_val, yylloc.first_line);
+#endif
   Node *new_char_node = (Node *)malloc(sizeof(Node));
   new_char_node->node_type = CHAR_T;
   new_char_node->char_token = char_val;
@@ -530,18 +533,18 @@ void push_char(Node *lfs_node, char char_val) {
   Rhs_node *ptr = lfs_node->rhs;
   if (ptr == NULL) {
     lfs_node->rhs = new_rhs_node;
-    printf("HEAD\n");
     return;
   }
   while (ptr->next != NULL) {
     ptr = ptr->next;
   }
   ptr->next = new_rhs_node;
-  printf("APPEND\n");
 }
 
 void push_type(Node *lfs_node, char *type_val) {
+#ifdef DEBUG
   printf("    push type: %s, line %d ", type_val, yylloc.first_line);
+#endif
   Node *new_type_node = (Node *)malloc(sizeof(Node));
   new_type_node->node_type = TYPE_T;
   new_type_node->type_token = type_val;
@@ -552,18 +555,18 @@ void push_type(Node *lfs_node, char *type_val) {
   Rhs_node *ptr = lfs_node->rhs;
   if (ptr == NULL) {
     lfs_node->rhs = new_rhs_node;
-    printf("HEAD\n");
     return;
   }
   while (ptr->next != NULL) {
     ptr = ptr->next;
   }
   ptr->next = new_rhs_node;
-  printf("APPEND\n");
 }
 
 void push_id(Node *lfs_node, char *id_val) {
+#ifdef DEBUG
   printf("    push id: %s, line %d ", id_val, yylloc.first_line);
+#endif
   Node *new_id_node = (Node *)malloc(sizeof(Node));
   new_id_node->node_type = ID_T;
   new_id_node->id_token = id_val;
@@ -574,18 +577,18 @@ void push_id(Node *lfs_node, char *id_val) {
   Rhs_node *ptr = lfs_node->rhs;
   if (ptr == NULL) {
     lfs_node->rhs = new_rhs_node;
-    printf("HEAD\n");
     return;
   }
   while (ptr->next != NULL) {
     ptr = ptr->next;
   }
   ptr->next = new_rhs_node;
-  printf("APPEND\n");
 }
 
 void push_keyword(Node *lfs_node, char *keyword_val) {
+#ifdef DEBUG
   printf("    push keyword: %s, line %d ", keyword_val, yylloc.first_line);
+#endif
   Node *new_keyword_node = (Node *)malloc(sizeof(Node));
   new_keyword_node->node_type = KEYWORD_T;
   new_keyword_node->keyword_token = keyword_val;
@@ -596,32 +599,30 @@ void push_keyword(Node *lfs_node, char *keyword_val) {
   Rhs_node *ptr = lfs_node->rhs;
   if (ptr == NULL) {
     lfs_node->rhs = new_rhs_node;
-    printf("HEAD\n");
     return;
   }
   while (ptr->next != NULL) {
     ptr = ptr->next;
   }
   ptr->next = new_rhs_node;
-  printf("APPEND\n");
 }
 
 void push_nonterminal(Node *lfs_node, Node *nonterminal) {
+#ifdef DEBUG
   printf("    push nonterminal: %s, line %d ", get_nonterminal_name(nonterminal->nonterminal_token), yylloc.first_line);
+#endif
   Rhs_node *new_rhs_node = (Rhs_node *)malloc(sizeof(Rhs_node));
   new_rhs_node->token_node = nonterminal;
   new_rhs_node->next = NULL;
   Rhs_node *ptr = lfs_node->rhs;
   if (ptr == NULL) {
     lfs_node->rhs = new_rhs_node;
-    printf("HEAD\n");
     return;
   }
   while (ptr->next != NULL) {
     ptr = ptr->next;
   }
   ptr->next = new_rhs_node;
-  printf("APPEND\n");
 }
 
 char *get_nonterminal_name(int nonterminal_val) {
@@ -694,7 +695,9 @@ int main(int argc, char **argv) {
     }
     int result = yyparse();
     if (result == 0) {
+#ifdef DEBUG
       printf("\n*********************\n");
+#endif
       print_tree(program_root, 0);
     } else if (result == 1) {
       printf("Abort\n");
