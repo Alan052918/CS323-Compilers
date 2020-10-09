@@ -1,5 +1,5 @@
 %{
-  #include "astdef.h"
+  #include "include/astdef.h"
   #include "lex.yy.c"
 
   Node *program_root;
@@ -122,7 +122,7 @@ StructSpecifier:
     STRUCT ID LC DefList RC {
       $$ = lfs(StructSpecifier, @1.first_line, @5.last_line, @1.first_column, @5.last_column);
       push_keyword($$, $1);
-      push_keyword($$, $2);
+      push_id($$, $2);
       push_keyword($$, $3);
       push_nonterminal($$, $4);
       push_keyword($$, $5);
@@ -229,8 +229,7 @@ Stmt:
       push_keyword($$, $3);
     }
   | RETURN Exp error {
-      fprintf(stderr, "Error type B at Line %d: Missing semicolon at the end of return statement\n",
-        @$.first_line);
+      fprintf(stderr, "Error type B at line %d: Missing semicolon ';' at the end of return statement\n", @$.first_line);
     }
   | IF LP Exp RP Stmt %prec LOWER_ELSE {
       $$ = lfs(Stmt, @1.first_line, @5.last_line, @1.first_column, @5.last_column);
@@ -299,6 +298,9 @@ Dec:
       push_nonterminal($$, $1);
       push_keyword($$, $2);
       push_nonterminal($$, $3);
+    }
+  | VarDec ASSIGN error {
+      fprintf(stderr, "Error type B at line %d: missing expression at the end of declaration\n", yylloc.first_line);
     }
   ;
 
@@ -403,20 +405,20 @@ Exp:
       push_nonterminal($$, $2);
     }
   | ID LP Args RP {
-      $$ = lfs(Exp, @1.first_line, @3.last_line, @1.first_column, @3.last_column);
-      push_keyword($$, $1);
+      $$ = lfs(Exp, @1.first_line, @4.last_line, @1.first_column, @4.last_column);
+      push_id($$, $1);
       push_keyword($$, $2);
       push_nonterminal($$, $3);
       push_keyword($$, $4);
     }
   | ID LP RP {
       $$ = lfs(Exp, @1.first_line, @3.last_line, @1.first_column, @3.last_column);
-      push_keyword($$, $1);
+      push_id($$, $1);
       push_keyword($$, $2);
       push_keyword($$, $3);
     }
   | Exp LB Exp RB {
-      $$ = lfs(Exp, @1.first_line, @3.last_line, @1.first_column, @3.last_column);
+      $$ = lfs(Exp, @1.first_line, @4.last_line, @1.first_column, @4.last_column);
       push_nonterminal($$, $1);
       push_keyword($$, $2);
       push_nonterminal($$, $3);
@@ -661,7 +663,7 @@ void print_tree(Node *pnode, int indent_depth) {
   switch (pnode->node_type) {
     case INT_T: printf("INT: %ld\n", pnode->int_token); break;
     case FLOAT_T: printf("FLOAT: %f\n", pnode->float_token); break;
-    case CHAR_T: printf("CHAR: '%c'\n", pnode->char_token); break;
+    case CHAR_T: printf("CHAR: %c\n", pnode->char_token); break;
     case TYPE_T: printf("TYPE: %s\n", pnode->type_token); break;
     case ID_T: printf("ID: %s\n", pnode->id_token); break;
     case KEYWORD_T: printf("%s\n", pnode->keyword_token); break;
@@ -700,9 +702,13 @@ int main(int argc, char **argv) {
 #endif
       print_tree(program_root, 0);
     } else if (result == 1) {
-      printf("Abort\n");
+#ifdef DEBUG
+      fprintf(stderr, "Abort\n");
+#endif
     } else {
-      printf("Exhausted\n");
+#ifdef DEBUG
+      fprintf(stderr, "Exhausted\n");
+#endif
     }
     return EXIT_SUCCESS;
   } else {

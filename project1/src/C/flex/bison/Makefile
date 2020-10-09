@@ -3,10 +3,10 @@ FLEX=flex
 BISON=bison
 
 
-.lex: lex.l
-	$(FLEX) lex.l
 .syntax: syntax.y
 	$(BISON) -dvt syntax.y
+.lex: lex.l
+	$(FLEX) lex.l
 splc: .syntax .lex
 	$(CC) syntax.tab.c -lfl -ly -o splc.out
 debug: .syntax .lex
