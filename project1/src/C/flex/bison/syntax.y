@@ -127,6 +127,9 @@ StructSpecifier:
       push_nonterminal($$, $4);
       push_keyword($$, $5);
     }
+  | STRUCT ID LC DefList error {
+      puts("Missing closing curly brace '}'");
+    }
   | STRUCT ID {
       $$ = lfs(StructSpecifier, @1.first_line, @2.last_line, @1.first_column, @2.last_column);
       push_keyword($$, $1);
@@ -139,17 +142,17 @@ StructSpecifier:
  * The array type is specified by the declarator
  */
 VarDec:
-   ID {
+    ID {
       $$ = lfs(VarDec, @1.first_line, @1.last_line, @1.first_column, @1.last_column);
       push_id($$, $1);
-   }
- | VarDec LB INT RB {
-    $$ = lfs(VarDec, @1.first_line, @4.last_line, @1.first_column, @4.last_column);
-    push_nonterminal($$, $1);
-    push_keyword($$, $2);
-    push_int($$, $3);
-    push_keyword($$, $4);
-   }
+    }
+  | VarDec LB INT RB {
+     $$ = lfs(VarDec, @1.first_line, @4.last_line, @1.first_column, @4.last_column);
+     push_nonterminal($$, $1);
+     push_keyword($$, $2);
+     push_int($$, $3);
+     push_keyword($$, $4);
+    }
   ;
 FunDec:
     ID LP VarList RP {
@@ -160,7 +163,7 @@ FunDec:
       push_keyword($$, $4);
     }
   | ID LP VarList error {
-      fprintf(stderr, "Error type B at Line %d: Missing closing parenthesis ')'\n", yylloc.first_line);
+      puts("Missing closing parenthesis ')'");
     }
   | ID LP RP {
       $$ = lfs(FunDec, @1.first_line, @3.last_line, @1.first_column, @3.last_column);
@@ -169,7 +172,7 @@ FunDec:
       push_keyword($$, $3);
     }
   | ID LP error {
-      fprintf(stderr, "Error type B at Line %d: Missing closing parenthesis ')'\n", yylloc.first_line);
+      puts("Missing closing parenthesis ')'");
     }
   ;
 VarList:
@@ -205,6 +208,9 @@ CompSt:
       push_nonterminal($$, $3);
       push_keyword($$, $4);
     }
+  | LC DefList StmtList error {
+      puts("Missing closing curly brace '}'");
+    }
   ;
 StmtList:
     Stmt StmtList {
@@ -221,8 +227,7 @@ Stmt:
       push_keyword($$, $2);
     }
   | Exp error {
-      fprintf(stderr, "Error type B at Line %d: Missing semicolon at the end of statement\n",
-        @$.first_line);
+      puts("Missing semicolon ';' at the end of statement");
     }
   | CompSt {
       $$ = lfs(Stmt, @1.first_line, @1.last_line, @1.first_column, @1.last_column);
@@ -235,7 +240,7 @@ Stmt:
       push_keyword($$, $3);
     }
   | RETURN Exp error {
-      fprintf(stderr, "Error type B at line %d: Missing semicolon ';' at the end of return statement\n", @$.first_line);
+      puts("Missing semicolon ';' at the end of return statement");
     }
   | IF LP Exp RP Stmt %prec LOWER_ELSE {
       $$ = lfs(Stmt, @1.first_line, @5.last_line, @1.first_column, @5.last_column);
@@ -281,6 +286,9 @@ Def:
       push_nonterminal($$, $2);
       push_keyword($$, $3);
     }
+  | Specifier DecList error {
+      puts("Missing semicolon ';' at the end of definition");
+    }
   ;
 DecList:
     Dec {
@@ -306,7 +314,7 @@ Dec:
       push_nonterminal($$, $3);
     }
   | VarDec ASSIGN error {
-      fprintf(stderr, "Error type B at line %d: missing expression at the end of declaration\n", yylloc.first_line);
+      puts("Missing expression at the end of declaration");
     }
   ;
 
@@ -398,8 +406,7 @@ Exp:
       $$ = lfs(Exp, @1.first_line, @3.last_line, @1.first_column, @3.last_column);
       push_keyword($$, $1);
       push_nonterminal($$, $2);
-      push_keyword($$, $3);
-    }
+      push_keyword($$, $3); }
   | MINUS Exp {
       $$ = lfs(Exp, @1.first_line, @2.last_line, @1.first_column, @2.last_column);
       push_keyword($$, $1);
@@ -687,7 +694,7 @@ void print_tree(Node *pnode, int indent_depth) {
 }
 
 void yyerror(const char *s) {
-  // fprintf(stderr, "Error type B at Line %d: %s\n", yylineno, s);
+  printf("Error type B at Line %d: ", yylineno);
 }
 
 int main(int argc, char **argv) {
