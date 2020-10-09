@@ -638,6 +638,13 @@ void push_keyword(struct node *lfs_node, char *keyword_val) {
 
 void push_nonterminal(struct node *lfs_node, struct node *nonterminal) {
   printf("    push nonterminal: %s, line %d ", get_nonterminal_name(nonterminal->nonterminal_token), yylloc.first_line);
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+=======
+  update_nonterminal_location(lfs_node, nonterminal->first_line, nonterminal->last_line, nonterminal->first_column, nonterminal->last_column);
+>>>>>>> bd3280005dcbb16894371391a34c0c598fa3b4b2
+>>>>>>> 4683eb8448890806a37fa82324667b1867fb16b0
   struct rhs_node *new_rhs_node = (struct rhs_node *)malloc(sizeof(struct rhs_node));
   new_rhs_node->token_node = nonterminal;
   new_rhs_node->next = NULL;
