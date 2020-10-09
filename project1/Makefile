@@ -2,13 +2,21 @@ CC=gcc
 FLEX=flex
 BISON=bison
 
-.syntax: src/C/Flex/Bison/syntax.y
-	$(BISON) -dtv src/C/Flex/Bison/syntax.y
-.lex: src/C/Flex/Bison/lex.l
-	$(FLEX) src/C/Flex/Bison/lex.l
+
+.syntax: src/C/flex/bison/syntax.y
+	$(BISON) -dtv src/C/flex/bison/syntax.y
+.lex: src/C/flex/bison/lex.l
+	$(FLEX) src/C/flex/bison/lex.l
 splc: .syntax .lex
-	@mkdir bin
-	$(CC) src/C/Flex/Bison/syntax.tab.c -lfl -ly -o bin/splc
+	@if ! test -d "./bin"; then \
+		mkdir bin; \
+	fi
+	$(CC) syntax.tab.c -lfl -ly -o bin/splc
+debug: .syntax .lex
+	@if ! test -d "./bin"; then \
+		mkdir bin; \
+	fi
+	$(CC) syntax.tab.c -lfl -ly -DDEBUG -o bin/debug
 clean:
 	@rm -rf bin/
-.PHONY: splc
+	@rm lex.yy.c syntax.tab.* syntax.output

@@ -15,7 +15,7 @@
 %option yylineno
 
 SPC     [ \t\r\f\v]
-INT     -?[1-9][0-9]{0,9}|-?0[xX][1-9a-fA-F][0-9a-fA-F]*
+INT     0|-?[1-9][0-9]{0,9}|-?0[xX][1-9a-fA-F][0-9a-fA-F]*
 FLOAT   -?[1-9][0-9]*\.[0-9]+
 CHAR    \'[a-zA-Z]\'|\\x[1-9a-fA-F][0-9a-fA-F]*
 TYPE    "int"|"char"|"float"
@@ -274,8 +274,7 @@ ID      [a-zA-Z_][a-zA-Z0-9_]{0,31}
       }
 
 . {
-    printf("Error type A at Line %d: Unknown characters \'%s\'\n",
-      yylineno, yytext);
+    printf("Error type A at Line %d: unknown lexeme %s\n", yylineno, yytext);
   }
 
 %%
