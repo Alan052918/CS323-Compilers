@@ -56,35 +56,35 @@
  */
 Program:
     ExtDefList {
-      $$ = lfs(Program);
+      $$ = lfs(Program, @1.first_line, @1.last_line, @1.first_column, @1.last_column);
       push_nonterminal($$, $1);
       program_root = $$;
     }
   ;
 ExtDefList:
     ExtDef ExtDefList {
-      $$ = lfs(ExtDefList);
+      $$ = lfs(ExtDefList, @1.first_line, @2.last_line, @1.first_column, $2.last_column);
       push_nonterminal($$, $1);
       push_nonterminal($$, $2);
     }
   | %empty {
-      $$ = lfs(Nil);
+      $$ = lfs(Nil, 0, 0, 0, 0);
     }
   ;
 ExtDef:
     Specifier ExtDecList SEMI {
-      $$ = lfs(ExtDef);
+      $$ = lfs(ExtDef, @1.first_line, @3.last_line, @1.first_column, @3.last_column);
       push_nonterminal($$, $1);
       push_nonterminal($$, $2);
       push_keyword($$, $3);
     }
   | Specifier SEMI {
-      $$ = lfs(ExtDef);
+      $$ = lfs(ExtDef, @1.first_line, @2.last_line, @1.first_column, @2.last_column);
       push_nonterminal($$, $1);
       push_keyword($$, $2);
     }
   | Specifier FunDec CompSt {
-      $$ = lfs(ExtDef);
+      $$ = lfs(ExtDef, @1.first_line, @3.last_line, @1.first_column, @3.last_column);
       push_nonterminal($$, $1);
       push_nonterminal($$, $2);
       push_nonterminal($$, $3);
@@ -92,11 +92,11 @@ ExtDef:
   ;
 ExtDecList:
     VarDec {
-      $$ = lfs(ExtDecList);
+      $$ = lfs(ExtDecList, @1.first_line, @1.last_line, @1.first_column, @1.last_column);
       push_nonterminal($$, $1);
     }
   | VarDec COMMA ExtDecList {
-      $$ = lfs(ExtDecList);
+      $$ = lfs(ExtDecList, @1.first_line, @3.last_line, @1.first_column, @3.last_column);
       push_nonterminal($$, $1);
       push_keyword($$, $2);
       push_nonterminal($$, $3);
@@ -110,17 +110,17 @@ ExtDecList:
  */
 Specifier:
     TYPE {
-      $$ = lfs(Specifier);
+      $$ = lfs(Specifier, @1.first_line, @1.last_line, @1.first_column, @1.last_column);
       push_type($$, $1);
     }
   | StructSpecifier {
-      $$ = lfs(Specifier);
+      $$ = lfs(Specifier, @1.first_line, @1.last_line, @1.first_column, @1.last_column);
       push_nonterminal($$, $1);
     }
   ;
 StructSpecifier:
     STRUCT ID LC DefList RC {
-      $$ = lfs(StructSpecifier);
+      $$ = lfs(StructSpecifier, @1.first_line, @5.last_line, @1.first_column, @5.last_column);
       push_keyword($$, $1);
       push_keyword($$, $2);
       push_keyword($$, $3);
@@ -128,7 +128,7 @@ StructSpecifier:
       push_keyword($$, $5);
     }
   | STRUCT ID {
-      $$ = lfs(StructSpecifier);
+      $$ = lfs(StructSpecifier, @1.first_line, @2.last_line, @1.first_column, @2.last_column);
       push_keyword($$, $1);
       push_id($$, $2);
     }
@@ -140,7 +140,7 @@ StructSpecifier:
  */
 VarDec:
    ID {
-      $$ = lfs(VarDec);
+      $$ = lfs(VarDec, @1.first_line, @1.last_line, @1.first_column, @1.last_column);
       push_id($$, $1);
    }
  | VarDec LB INT RB {
@@ -153,14 +153,14 @@ VarDec:
   ;
 FunDec:
     ID LP VarList RP {
-      $$ = lfs(FunDec);
+      $$ = lfs(FunDec, @1.first_line, @4.last_line, @1.first_column, @4.last_column);
       push_id($$, $1);
       push_keyword($$, $2);
       push_nonterminal($$, $3);
       push_keyword($$, $4);
     }
   | ID LP RP {
-      $$ = lfs(FunDec);
+      $$ = lfs(FunDec, @1.first_line, @3.last_line, @1.first_column, @3.last_column);
       push_id($$, $1);
       push_keyword($$, $2);
       push_keyword($$, $3);
@@ -168,19 +168,19 @@ FunDec:
   ;
 VarList:
     ParamDec COMMA VarList {
-      $$ = lfs(VarList);
+      $$ = lfs(VarList, @1.first_line, @3.last_line, @1.first_column, @3.last_column);
       push_nonterminal($$, $1);
       push_keyword($$, $2);
       push_nonterminal($$, $3);
     }
   | ParamDec {
-      $$ = lfs(VarList);
+      $$ = lfs(VarList, @1.first_line, @1.last_line, @1.first_column, @1.last_column);
       push_nonterminal($$, $1);
     }
   ;
 ParamDec:
     Specifier VarDec {
-      $$ = lfs(ParamDec);
+      $$ = lfs(ParamDec, @1.first_line, @2.last_line, @1.first_column, @2.last_column);
       push_nonterminal($$, $1);
       push_nonterminal($$, $2);
     }
@@ -193,7 +193,7 @@ ParamDec:
  */
 CompSt:
     LC DefList StmtList RC {
-      $$ = lfs(CompSt);
+      $$ = lfs(CompSt, @1.first_line, @4.last_line, @1.first_column, @4.last_column);
       push_keyword($$, $1);
       push_nonterminal($$, $2);
       push_nonterminal($$, $3);
@@ -203,38 +203,38 @@ CompSt:
   ;
 StmtList:
     Stmt StmtList {
-      $$ = lfs(StmtList);
+      $$ = lfs(StmtList, @1.first_line, @2.last_line, @1.first_column, @2.last_column);
       push_nonterminal($$, $1);
       push_nonterminal($$, $2);
     }
-  | %empty { $$ = lfs(Nil); }
+  | %empty { $$ = lfs(Nil, 0, 0, 0, 0); }
   ;
 Stmt:
     Exp SEMI {
-      $$ = lfs(Stmt);
+      $$ = lfs(Stmt, @1.first_line, @2.last_line, @1.first_column, @2.last_column);
       push_nonterminal($$, $1);
       push_keyword($$, $2);
     }
   | Exp error {
-      fprintf(stderr, "Error type B at Line %d: Missing semicolon at the end of statement\n", 
+      fprintf(stderr, "Error type B at Line %d: Missing semicolon at the end of statement\n",
         @$.first_line);
     }
   | CompSt {
-      $$ = lfs(Stmt);
+      $$ = lfs(Stmt, @1.first_line, @1.last_line, @1.first_column, @1.last_column);
       push_nonterminal($$, $1);
     }
   | RETURN Exp SEMI {
-      $$ = lfs(Stmt);
+      $$ = lfs(Stmt, @1.first_line, @3.last_line, @1.first_column, @3.last_column);
       push_keyword($$, $1);
       push_nonterminal($$, $2);
       push_keyword($$, $3);
     }
   | RETURN Exp error {
-      fprintf(stderr, "Error type B at Line %d: Missing semicolon at the end of return statement\n", 
+      fprintf(stderr, "Error type B at Line %d: Missing semicolon at the end of return statement\n",
         @$.first_line);
     }
   | IF LP Exp RP Stmt %prec LOWER_ELSE {
-      $$ = lfs(Stmt);
+      $$ = lfs(Stmt, @1.first_line, @5.last_line, @1.first_column, @5.last_column);
       push_keyword($$, $1);
       push_keyword($$, $2);
       push_nonterminal($$, $3);
@@ -242,7 +242,7 @@ Stmt:
       push_nonterminal($$, $5);
     }
   | IF LP Exp RP Stmt ELSE Stmt {
-      $$ = lfs(Stmt);
+      $$ = lfs(Stmt, @1.first_line, @7.last_line, @1.first_column, @7.last_column);
       push_keyword($$, $1);
       push_keyword($$, $2);
       push_nonterminal($$, $3);
@@ -252,12 +252,11 @@ Stmt:
       push_nonterminal($$, $7);
     }
   | WHILE LP Exp RP Stmt {
-      $$ = lfs(Stmt);
+      $$ = lfs(Stmt, @1.first_line, @5.last_line, @1.first_column, @5.last_column);
       push_keyword($$, $1);
       push_keyword($$, $2);
       push_nonterminal($$, $3);
       push_keyword($$, $4);
-
       push_nonterminal($$, $5);
     }
   ;
@@ -265,15 +264,15 @@ Stmt:
 /* Local definition: declaration and assignment of local variables */
 DefList:
     Def DefList {
-      $$ = lfs(DefList);
+      $$ = lfs(DefList, @1.first_line, @2.last_line, @1.first_column, @2.last_column);
       push_nonterminal($$, $1);
       push_nonterminal($$, $2);
     }
-  | %empty  { $$ = lfs(Nil); }
+  | %empty  { $$ = lfs(Nil, 0, 0, 0, 0); }
   ;
 Def:
     Specifier DecList SEMI {
-      $$ = lfs(Def);
+      $$ = lfs(Def, @1.first_line, @3.last_line, @1.first_column, @3.last_column);
       push_nonterminal($$, $1);
       push_nonterminal($$, $2);
       push_keyword($$, $3);
@@ -281,11 +280,11 @@ Def:
   ;
 DecList:
     Dec {
-      $$ = lfs(DecList);
+      $$ = lfs(DecList, @1.first_line, @1.last_line, @1.first_column, @1.last_column);
       push_nonterminal($$, $1);
     }
   | Dec COMMA DecList {
-      $$ = lfs(DecList);
+      $$ = lfs(DecList, @1.first_line, @3.last_line, @1.first_column, @3.last_column);
       push_nonterminal($$, $1);
       push_keyword($$, $2);
       push_nonterminal($$, $3);
@@ -293,11 +292,11 @@ DecList:
   ;
 Dec:
     VarDec {
-      $$ = lfs(Dec);
+      $$ = lfs(Dec, @1.first_line, @1.last_line, @1.first_column, @1.last_column);
       push_nonterminal($$, $1);
     }
   | VarDec ASSIGN Exp {
-      $$ = lfs(Dec);
+      $$ = lfs(Dec, @1.first_line, @3.last_line, @1.first_column, @3.last_column);
       push_nonterminal($$, $1);
       push_keyword($$, $2);
       push_nonterminal($$, $3);
@@ -311,151 +310,151 @@ Dec:
  */
 Exp:
     Exp ASSIGN Exp {
-      $$ = lfs(Exp);
+      $$ = lfs(Exp, @1.first_line, @3.last_line, @1.first_column, @3.last_column);
       push_nonterminal($$, $1);
       push_keyword($$, $2);
       push_nonterminal($$, $3);
     }
   | Exp AND Exp {
-      $$ = lfs(Exp);
+      $$ = lfs(Exp, @1.first_line, @3.last_line, @1.first_column, @3.last_column);
       push_nonterminal($$, $1);
       push_keyword($$, $2);
       push_nonterminal($$, $3);
     }
   | Exp OR Exp {
-      $$ = lfs(Exp);
+      $$ = lfs(Exp, @1.first_line, @3.last_line, @1.first_column, @3.last_column);
       push_nonterminal($$, $1);
       push_keyword($$, $2);
       push_nonterminal($$, $3);
     }
   | Exp LT Exp {
-      $$ = lfs(Exp);
+      $$ = lfs(Exp, @1.first_line, @3.last_line, @1.first_column, @3.last_column);
       push_nonterminal($$, $1);
       push_keyword($$, $2);
       push_nonterminal($$, $3);
     }
   | Exp LE Exp {
-      $$ = lfs(Exp);
+      $$ = lfs(Exp, @1.first_line, @3.last_line, @1.first_column, @3.last_column);
       push_nonterminal($$, $1);
       push_keyword($$, $2);
       push_nonterminal($$, $3);
     }
   | Exp GT Exp {
-      $$ = lfs(Exp);
+      $$ = lfs(Exp, @1.first_line, @3.last_line, @1.first_column, @3.last_column);
       push_nonterminal($$, $1);
       push_keyword($$, $2);
       push_nonterminal($$, $3);
     }
   | Exp GE Exp {
-      $$ = lfs(Exp);
+      $$ = lfs(Exp, @1.first_line, @3.last_line, @1.first_column, @3.last_column);
       push_nonterminal($$, $1);
       push_keyword($$, $2);
       push_nonterminal($$, $3);
     }
   | Exp NE Exp {
-      $$ = lfs(Exp);
+      $$ = lfs(Exp, @1.first_line, @3.last_line, @1.first_column, @3.last_column);
       push_nonterminal($$, $1);
       push_keyword($$, $2);
       push_nonterminal($$, $3);
     }
   | Exp EQ Exp {
-      $$ = lfs(Exp);
+      $$ = lfs(Exp, @1.first_line, @3.last_line, @1.first_column, @3.last_column);
       push_nonterminal($$, $1);
       push_keyword($$, $2);
       push_nonterminal($$, $3);
     }
   | Exp PLUS Exp {
-      $$ = lfs(Exp);
+      $$ = lfs(Exp, @1.first_line, @3.last_line, @1.first_column, @3.last_column);
       push_nonterminal($$, $1);
       push_keyword($$, $2);
       push_nonterminal($$, $3);
     }
   | Exp MINUS Exp {
-      $$ = lfs(Exp);
+      $$ = lfs(Exp, @1.first_line, @3.last_line, @1.first_column, @3.last_column);
       push_nonterminal($$, $1);
       push_keyword($$, $2);
       push_nonterminal($$, $3);
     }
   | Exp MUL Exp {
-      $$ = lfs(Exp);
+      $$ = lfs(Exp, @1.first_line, @3.last_line, @1.first_column, @3.last_column);
       push_nonterminal($$, $1);
       push_keyword($$, $2);
       push_nonterminal($$, $3);
     }
   | Exp DIV Exp {
-      $$ = lfs(Exp);
+      $$ = lfs(Exp, @1.first_line, @3.last_line, @1.first_column, @3.last_column);
       push_nonterminal($$, $1);
       push_keyword($$, $2);
       push_nonterminal($$, $3);
     }
   | LP Exp RP {
-      $$ = lfs(Exp);
+      $$ = lfs(Exp, @1.first_line, @3.last_line, @1.first_column, @3.last_column);
       push_keyword($$, $1);
       push_nonterminal($$, $2);
       push_keyword($$, $3);
     }
   | MINUS Exp {
-      $$ = lfs(Exp);
+      $$ = lfs(Exp, @1.first_line, @3.last_line, @1.first_column, @3.last_column);
       push_keyword($$, $1);
       push_nonterminal($$, $2);
     }
   | NOT Exp {
-      $$ = lfs(Exp);
+      $$ = lfs(Exp, @1.first_line, @3.last_line, @1.first_column, @3.last_column);
       push_keyword($$, $1);
       push_nonterminal($$, $2);
     }
   | ID LP Args RP {
-      $$ = lfs(Exp);
+      $$ = lfs(Exp, @1.first_line, @3.last_line, @1.first_column, @3.last_column);
       push_keyword($$, $1);
       push_keyword($$, $2);
       push_nonterminal($$, $3);
       push_keyword($$, $4);
     }
   | ID LP RP {
-      $$ = lfs(Exp);
+      $$ = lfs(Exp, @1.first_line, @3.last_line, @1.first_column, @3.last_column);
       push_keyword($$, $1);
       push_keyword($$, $2);
       push_keyword($$, $3);
     }
   | Exp LB Exp RB {
-      $$ = lfs(Exp);
+      $$ = lfs(Exp, @1.first_line, @3.last_line, @1.first_column, @3.last_column);
       push_nonterminal($$, $1);
       push_keyword($$, $2);
       push_nonterminal($$, $3);
       push_keyword($$, $4);
     }
   | Exp DOT ID {
-      $$ = lfs(Exp);
+      $$ = lfs(Exp, @1.first_line, @3.last_line, @1.first_column, @3.last_column);
       push_nonterminal($$, $1);
       push_keyword($$, $2);
       push_id($$, $3);
     }
   | ID {
-      $$ = lfs(Exp);
+      $$ = lfs(Exp, @1.first_line, @1.last_line, @1.first_column, @1.last_column);
       push_id($$, $1);
     }
   | INT {
-      $$ = lfs(Exp);
+      $$ = lfs(Exp, @1.first_line, @1.last_line, @1.first_column, @1.last_column);
       push_int($$, $1);
     }
   | FLOAT {
-      $$ = lfs(Exp);
+      $$ = lfs(Exp, @1.first_line, @1.last_line, @1.first_column, @1.last_column);
       push_float($$, $1);
     }
   | CHAR {
-      $$ = lfs(Exp);
+      $$ = lfs(Exp, @1.first_line, @1.last_line, @1.first_column, @1.last_column);
       push_char($$, $1);
     }
   ;
 Args:
     Exp COMMA Args {
-      $$ = lfs(Args);
+      $$ = lfs(Args, @1.first_line, @3.last_line, @1.first_column, @3.last_column);
       push_nonterminal($$, $1);
       push_keyword($$, $2);
       push_nonterminal($$, $3);
     }
   | Exp {
-      $$ = lfs(Args);
+      $$ = lfs(Args, @1.first_line, @1.last_line, @1.first_column, @1.last_column);
       push_nonterminal($$, $1);
     }
   ;
@@ -484,6 +483,7 @@ void push_int(struct node *lfs_node, int int_val) {
   new_int_node->last_line = yylloc.last_line;
   new_int_node->first_column = yylloc.first_column;
   new_int_node->last_column = yylloc.last_column;
+  update_nonterminal_location(lfs_node, yylloc.first_line, yylloc.last_line, yylloc.first_column, yylloc.last_column);
   new_int_node->rhs = NULL;
   struct rhs_node *new_rhs_node = (struct rhs_node *)malloc(sizeof(struct rhs_node));
   new_rhs_node->token_node = new_int_node;
@@ -510,6 +510,7 @@ void push_float(struct node *lfs_node, float float_val) {
   new_float_node->last_line = yylloc.last_line;
   new_float_node->first_column = yylloc.first_column;
   new_float_node->last_column = yylloc.last_column;
+  update_nonterminal_location(lfs_node, yylloc.first_line, yylloc.last_line, yylloc.first_column, yylloc.last_column);
   new_float_node->rhs = NULL;
   struct rhs_node *new_rhs_node = (struct rhs_node *)malloc(sizeof(struct rhs_node));
   new_rhs_node->token_node = new_float_node;
@@ -536,6 +537,7 @@ void push_char(struct node *lfs_node, char char_val) {
   new_char_node->last_line = yylloc.last_line;
   new_char_node->first_column = yylloc.first_column;
   new_char_node->last_column = yylloc.last_column;
+  update_nonterminal_location(lfs_node, yylloc.first_line, yylloc.last_line, yylloc.first_column, yylloc.last_column);
   new_char_node->rhs = NULL;
   struct rhs_node *new_rhs_node = (struct rhs_node *)malloc(sizeof(struct rhs_node));
   new_rhs_node->token_node = new_char_node;
@@ -562,6 +564,7 @@ void push_type(struct node *lfs_node, char *type_val) {
   new_type_node->last_line = yylloc.last_line;
   new_type_node->first_column = yylloc.first_column;
   new_type_node->last_column = yylloc.last_column;
+  update_nonterminal_location(lfs_node, yylloc.first_line, yylloc.last_line, yylloc.first_column, yylloc.last_column);
   new_type_node->rhs = NULL;
   struct rhs_node *new_rhs_node = (struct rhs_node *)malloc(sizeof(struct rhs_node));
   new_rhs_node->token_node = new_type_node;
@@ -588,6 +591,7 @@ void push_id(struct node *lfs_node, char *id_val) {
   new_id_node->last_line = yylloc.last_line;
   new_id_node->first_column = yylloc.first_column;
   new_id_node->last_column = yylloc.last_column;
+  update_nonterminal_location(lfs_node, yylloc.first_line, yylloc.last_line, yylloc.first_column, yylloc.last_column);
   new_id_node->rhs = NULL;
   struct rhs_node *new_rhs_node = (struct rhs_node *)malloc(sizeof(struct rhs_node));
   new_rhs_node->token_node = new_id_node;
@@ -614,6 +618,7 @@ void push_keyword(struct node *lfs_node, char *keyword_val) {
   new_keyword_node->last_line = yylloc.last_line;
   new_keyword_node->first_column = yylloc.first_column;
   new_keyword_node->last_column = yylloc.last_column;
+  update_nonterminal_location(lfs_node, yylloc.first_line, yylloc.last_line, yylloc.first_column, yylloc.last_column);
   new_keyword_node->rhs = NULL;
   struct rhs_node *new_rhs_node = (struct rhs_node *)malloc(sizeof(struct rhs_node));
   new_rhs_node->token_node = new_keyword_node;
@@ -673,6 +678,13 @@ char *get_nonterminal_name(int nonterminal_val) {
     case Nil: return "Nil";
     default: return "Undefined nonterminal type!";
   }
+}
+
+void update_nonterminal_location(struct node *nonterminal, int first_line, int last_line, int first_column, int last_column) {
+  if (first_line < nonterminal->first_line) nonterminal->first_line = first_line;
+  if (last_line > nonterminal->last_line) nonterminal->last_line = last_line;
+  if (first_column < nonterminal->first_column) nonterminal->first_column = first_column;
+  if (last_column > nonterminal->last_column) nonterminal->last_column = last_column;
 }
 
 void print_tree(struct node *pnode, int indent_depth) {

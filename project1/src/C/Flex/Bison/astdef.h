@@ -1,4 +1,4 @@
-#include <stdarg.h> 
+#include <stdarg.h>
 /* syntax tree node types */
 enum node_type {
   INT_T,
@@ -60,7 +60,8 @@ struct rhs_node {
 };
 
 /* syntax tree node constructors */
-struct node *lfs(int nonterminal_type);
+struct node *lfs(int nonterminal_type, int first_line, int last_line,
+                 int first_column, int last_column);
 
 /* syntax tree actions */
 void push_int(struct node *lfs_node, int int_val);
@@ -72,5 +73,7 @@ void push_keyword(struct node *lfs_node, char *keyword_val);
 void push_nonterminal(struct node *lfs_node, struct node *nonterminal);
 
 char *get_nonterminal_name(int nonterminal_val);
-void update_nonterminal_location(struct node *nonterminal, int first_line, int last_line, int first_column, int last_column);
+void update_nonterminal_location(struct node *nonterminal, int first_line,
+                                 int last_line, int first_column,
+                                 int last_column);
 void print_tree(struct node *pnode, int indent_depth);
