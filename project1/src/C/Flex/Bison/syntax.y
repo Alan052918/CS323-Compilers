@@ -477,7 +477,7 @@ Node *lfs(int nonterminal_type, int first_line, int last_line, int first_column,
 
 void push_int(Node *lfs_node, int int_val) {
 #ifdef DEBUG
-  printf("    push int: %d, line %d ", int_val, yylloc.first_line);
+  printf("    push int: %d, line %d\n", int_val, yylloc.first_line);
 #endif
   Node *new_int_node = (Node *)malloc(sizeof(Node));
   new_int_node->node_type = INT_T;
@@ -499,7 +499,7 @@ void push_int(Node *lfs_node, int int_val) {
 
 void push_float(Node *lfs_node, float float_val) {
 #ifdef DEBUG
-  printf("    push float: %f, line %d ", float_val, yylloc.first_line);
+  printf("    push float: %f, line %d\n", float_val, yylloc.first_line);
 #endif
   Node *new_float_node = (Node *)malloc(sizeof(Node));
   new_float_node->node_type = FLOAT_T;
@@ -521,7 +521,7 @@ void push_float(Node *lfs_node, float float_val) {
 
 void push_char(Node *lfs_node, char char_val) {
 #ifdef DEBUG
-  printf("    push char: %c, line %d ", char_val, yylloc.first_line);
+  printf("    push char: %c, line %d\n", char_val, yylloc.first_line);
 #endif
   Node *new_char_node = (Node *)malloc(sizeof(Node));
   new_char_node->node_type = CHAR_T;
@@ -543,7 +543,7 @@ void push_char(Node *lfs_node, char char_val) {
 
 void push_type(Node *lfs_node, char *type_val) {
 #ifdef DEBUG
-  printf("    push type: %s, line %d ", type_val, yylloc.first_line);
+  printf("    push type: %s, line %d\n", type_val, yylloc.first_line);
 #endif
   Node *new_type_node = (Node *)malloc(sizeof(Node));
   new_type_node->node_type = TYPE_T;
@@ -565,7 +565,7 @@ void push_type(Node *lfs_node, char *type_val) {
 
 void push_id(Node *lfs_node, char *id_val) {
 #ifdef DEBUG
-  printf("    push id: %s, line %d ", id_val, yylloc.first_line);
+  printf("    push id: %s, line %d\n", id_val, yylloc.first_line);
 #endif
   Node *new_id_node = (Node *)malloc(sizeof(Node));
   new_id_node->node_type = ID_T;
@@ -587,7 +587,7 @@ void push_id(Node *lfs_node, char *id_val) {
 
 void push_keyword(Node *lfs_node, char *keyword_val) {
 #ifdef DEBUG
-  printf("    push keyword: %s, line %d ", keyword_val, yylloc.first_line);
+  printf("    push keyword: %s, line %d\n", keyword_val, yylloc.first_line);
 #endif
   Node *new_keyword_node = (Node *)malloc(sizeof(Node));
   new_keyword_node->node_type = KEYWORD_T;
@@ -609,7 +609,7 @@ void push_keyword(Node *lfs_node, char *keyword_val) {
 
 void push_nonterminal(Node *lfs_node, Node *nonterminal) {
 #ifdef DEBUG
-  printf("    push nonterminal: %s, line %d ", get_nonterminal_name(nonterminal->nonterminal_token), yylloc.first_line);
+  printf("    push nonterminal: %s, line %d\n", get_nonterminal_name(nonterminal->nonterminal_token), yylloc.first_line);
 #endif
   Rhs_node *new_rhs_node = (Rhs_node *)malloc(sizeof(Rhs_node));
   new_rhs_node->token_node = nonterminal;
