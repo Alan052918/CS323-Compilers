@@ -38,8 +38,10 @@ enum nonterminal_type {
 /* syntax tree node definition */
 struct node {
   int node_type;
-  int lineno;
-  int coluno;
+  int first_line;
+  int last_line;
+  int first_column;
+  int last_column;
   union {
     long int_token;
     float float_token;
