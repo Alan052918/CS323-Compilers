@@ -2,7 +2,7 @@
   #include "astdef.h"
   #include "lex.yy.c"
 
-  struct node *program_root;
+  Node *program_root;
 
   void yyerror(const char *);
 %}
@@ -14,7 +14,7 @@
   char *type_value;
   char *id_value;
   char *keyword_value;
-  struct node *nonterminal_node;
+  Node *nonterminal_node;
 }
 
 %type <nonterminal_node> Program
@@ -461,8 +461,8 @@ Args:
 
 %%
 
-struct node *lfs(int nonterminal_type, int first_line, int last_line, int first_column, int last_column) {
-  struct node *new_nonterminal_node = (struct node *)malloc(sizeof(struct node));
+Node *lfs(int nonterminal_type, int first_line, int last_line, int first_column, int last_column) {
+  Node *new_nonterminal_node = (Node *)malloc(sizeof(Node));
   new_nonterminal_node->node_type = NONTERMINAL_T;
   new_nonterminal_node->nonterminal_token = nonterminal_type;
   new_nonterminal_node->first_line = first_line;
@@ -474,21 +474,16 @@ struct node *lfs(int nonterminal_type, int first_line, int last_line, int first_
   return new_nonterminal_node;
 }
 
-void push_int(struct node *lfs_node, int int_val) {
+void push_int(Node *lfs_node, int int_val) {
   printf("    push int: %d, line %d ", int_val, yylloc.first_line);
-  struct node *new_int_node = (struct node *)malloc(sizeof(struct node));
+  Node *new_int_node = (Node *)malloc(sizeof(Node));
   new_int_node->node_type = INT_T;
   new_int_node->int_token = int_val;
-  new_int_node->first_line = yylloc.first_line;
-  new_int_node->last_line = yylloc.last_line;
-  new_int_node->first_column = yylloc.first_column;
-  new_int_node->last_column = yylloc.last_column;
-  update_nonterminal_location(lfs_node, yylloc.first_line, yylloc.last_line, yylloc.first_column, yylloc.last_column);
   new_int_node->rhs = NULL;
-  struct rhs_node *new_rhs_node = (struct rhs_node *)malloc(sizeof(struct rhs_node));
+  Rhs_node *new_rhs_node = (Rhs_node *)malloc(sizeof(Rhs_node));
   new_rhs_node->token_node = new_int_node;
   new_rhs_node->next = NULL;
-  struct rhs_node *ptr = lfs_node->rhs;
+  Rhs_node *ptr = lfs_node->rhs;
   if (ptr == NULL) {
     lfs_node->rhs = new_rhs_node;
     printf("HEAD\n");
@@ -501,21 +496,16 @@ void push_int(struct node *lfs_node, int int_val) {
   printf("APPEND\n");
 }
 
-void push_float(struct node *lfs_node, float float_val) {
+void push_float(Node *lfs_node, float float_val) {
   printf("    push float: %f, line %d ", float_val, yylloc.first_line);
-  struct node *new_float_node = (struct node *)malloc(sizeof(struct node));
+  Node *new_float_node = (Node *)malloc(sizeof(Node));
   new_float_node->node_type = FLOAT_T;
   new_float_node->float_token = float_val;
-  new_float_node->first_line = yylloc.first_line;
-  new_float_node->last_line = yylloc.last_line;
-  new_float_node->first_column = yylloc.first_column;
-  new_float_node->last_column = yylloc.last_column;
-  update_nonterminal_location(lfs_node, yylloc.first_line, yylloc.last_line, yylloc.first_column, yylloc.last_column);
   new_float_node->rhs = NULL;
-  struct rhs_node *new_rhs_node = (struct rhs_node *)malloc(sizeof(struct rhs_node));
+  Rhs_node *new_rhs_node = (Rhs_node *)malloc(sizeof(Rhs_node));
   new_rhs_node->token_node = new_float_node;
   new_rhs_node->next = NULL;
-  struct rhs_node *ptr = lfs_node->rhs;
+  Rhs_node *ptr = lfs_node->rhs;
   if (ptr == NULL) {
     lfs_node->rhs = new_rhs_node;
     printf("HEAD\n");
@@ -528,21 +518,16 @@ void push_float(struct node *lfs_node, float float_val) {
   printf("APPEND\n");
 }
 
-void push_char(struct node *lfs_node, char char_val) {
+void push_char(Node *lfs_node, char char_val) {
   printf("    push char: %c, line %d ", char_val, yylloc.first_line);
-  struct node *new_char_node = (struct node *)malloc(sizeof(struct node));
+  Node *new_char_node = (Node *)malloc(sizeof(Node));
   new_char_node->node_type = CHAR_T;
   new_char_node->char_token = char_val;
-  new_char_node->first_line = yylloc.first_line;
-  new_char_node->last_line = yylloc.last_line;
-  new_char_node->first_column = yylloc.first_column;
-  new_char_node->last_column = yylloc.last_column;
-  update_nonterminal_location(lfs_node, yylloc.first_line, yylloc.last_line, yylloc.first_column, yylloc.last_column);
   new_char_node->rhs = NULL;
-  struct rhs_node *new_rhs_node = (struct rhs_node *)malloc(sizeof(struct rhs_node));
+  Rhs_node *new_rhs_node = (Rhs_node *)malloc(sizeof(Rhs_node));
   new_rhs_node->token_node = new_char_node;
   new_rhs_node->next = NULL;
-  struct rhs_node *ptr = lfs_node->rhs;
+  Rhs_node *ptr = lfs_node->rhs;
   if (ptr == NULL) {
     lfs_node->rhs = new_rhs_node;
     printf("HEAD\n");
@@ -555,21 +540,16 @@ void push_char(struct node *lfs_node, char char_val) {
   printf("APPEND\n");
 }
 
-void push_type(struct node *lfs_node, char *type_val) {
+void push_type(Node *lfs_node, char *type_val) {
   printf("    push type: %s, line %d ", type_val, yylloc.first_line);
-  struct node *new_type_node = (struct node *)malloc(sizeof(struct node));
+  Node *new_type_node = (Node *)malloc(sizeof(Node));
   new_type_node->node_type = TYPE_T;
   new_type_node->type_token = type_val;
-  new_type_node->first_line = yylloc.first_line;
-  new_type_node->last_line = yylloc.last_line;
-  new_type_node->first_column = yylloc.first_column;
-  new_type_node->last_column = yylloc.last_column;
-  update_nonterminal_location(lfs_node, yylloc.first_line, yylloc.last_line, yylloc.first_column, yylloc.last_column);
   new_type_node->rhs = NULL;
-  struct rhs_node *new_rhs_node = (struct rhs_node *)malloc(sizeof(struct rhs_node));
+  Rhs_node *new_rhs_node = (Rhs_node *)malloc(sizeof(Rhs_node));
   new_rhs_node->token_node = new_type_node;
   new_rhs_node->next = NULL;
-  struct rhs_node *ptr = lfs_node->rhs;
+  Rhs_node *ptr = lfs_node->rhs;
   if (ptr == NULL) {
     lfs_node->rhs = new_rhs_node;
     printf("HEAD\n");
@@ -582,21 +562,16 @@ void push_type(struct node *lfs_node, char *type_val) {
   printf("APPEND\n");
 }
 
-void push_id(struct node *lfs_node, char *id_val) {
+void push_id(Node *lfs_node, char *id_val) {
   printf("    push id: %s, line %d ", id_val, yylloc.first_line);
-  struct node *new_id_node = (struct node *)malloc(sizeof(struct node));
+  Node *new_id_node = (Node *)malloc(sizeof(Node));
   new_id_node->node_type = ID_T;
   new_id_node->id_token = id_val;
-  new_id_node->first_line = yylloc.first_line;
-  new_id_node->last_line = yylloc.last_line;
-  new_id_node->first_column = yylloc.first_column;
-  new_id_node->last_column = yylloc.last_column;
-  update_nonterminal_location(lfs_node, yylloc.first_line, yylloc.last_line, yylloc.first_column, yylloc.last_column);
   new_id_node->rhs = NULL;
-  struct rhs_node *new_rhs_node = (struct rhs_node *)malloc(sizeof(struct rhs_node));
+  Rhs_node *new_rhs_node = (Rhs_node *)malloc(sizeof(Rhs_node));
   new_rhs_node->token_node = new_id_node;
   new_rhs_node->next = NULL;
-  struct rhs_node *ptr = lfs_node->rhs;
+  Rhs_node *ptr = lfs_node->rhs;
   if (ptr == NULL) {
     lfs_node->rhs = new_rhs_node;
     printf("HEAD\n");
@@ -609,21 +584,16 @@ void push_id(struct node *lfs_node, char *id_val) {
   printf("APPEND\n");
 }
 
-void push_keyword(struct node *lfs_node, char *keyword_val) {
+void push_keyword(Node *lfs_node, char *keyword_val) {
   printf("    push keyword: %s, line %d ", keyword_val, yylloc.first_line);
-  struct node *new_keyword_node = (struct node *)malloc(sizeof(struct node));
+  Node *new_keyword_node = (Node *)malloc(sizeof(Node));
   new_keyword_node->node_type = KEYWORD_T;
   new_keyword_node->keyword_token = keyword_val;
-  new_keyword_node->first_line = yylloc.first_line;
-  new_keyword_node->last_line = yylloc.last_line;
-  new_keyword_node->first_column = yylloc.first_column;
-  new_keyword_node->last_column = yylloc.last_column;
-  update_nonterminal_location(lfs_node, yylloc.first_line, yylloc.last_line, yylloc.first_column, yylloc.last_column);
   new_keyword_node->rhs = NULL;
-  struct rhs_node *new_rhs_node = (struct rhs_node *)malloc(sizeof(struct rhs_node));
+  Rhs_node *new_rhs_node = (Rhs_node *)malloc(sizeof(Rhs_node));
   new_rhs_node->token_node = new_keyword_node;
   new_rhs_node->next = NULL;
-  struct rhs_node *ptr = lfs_node->rhs;
+  Rhs_node *ptr = lfs_node->rhs;
   if (ptr == NULL) {
     lfs_node->rhs = new_rhs_node;
     printf("HEAD\n");
@@ -636,22 +606,12 @@ void push_keyword(struct node *lfs_node, char *keyword_val) {
   printf("APPEND\n");
 }
 
-void push_nonterminal(struct node *lfs_node, struct node *nonterminal) {
+void push_nonterminal(Node *lfs_node, Node *nonterminal) {
   printf("    push nonterminal: %s, line %d ", get_nonterminal_name(nonterminal->nonterminal_token), yylloc.first_line);
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
-=======
-  update_nonterminal_location(lfs_node, nonterminal->first_line, nonterminal->last_line, nonterminal->first_column, nonterminal->last_column);
->>>>>>> bd3280005dcbb16894371391a34c0c598fa3b4b2
->>>>>>> 4683eb8448890806a37fa82324667b1867fb16b0
->>>>>>> f888cef82c99d9023df27d8c4582ff6092cb5837
-  struct rhs_node *new_rhs_node = (struct rhs_node *)malloc(sizeof(struct rhs_node));
+  Rhs_node *new_rhs_node = (Rhs_node *)malloc(sizeof(Rhs_node));
   new_rhs_node->token_node = nonterminal;
   new_rhs_node->next = NULL;
-  struct rhs_node *ptr = lfs_node->rhs;
+  Rhs_node *ptr = lfs_node->rhs;
   if (ptr == NULL) {
     lfs_node->rhs = new_rhs_node;
     printf("HEAD\n");
@@ -690,14 +650,7 @@ char *get_nonterminal_name(int nonterminal_val) {
   }
 }
 
-void update_nonterminal_location(struct node *nonterminal, int first_line, int last_line, int first_column, int last_column) {
-  if (first_line < nonterminal->first_line) nonterminal->first_line = first_line;
-  if (last_line > nonterminal->last_line) nonterminal->last_line = last_line;
-  if (first_column < nonterminal->first_column) nonterminal->first_column = first_column;
-  if (last_column > nonterminal->last_column) nonterminal->last_column = last_column;
-}
-
-void print_tree(struct node *pnode, int indent_depth) {
+void print_tree(Node *pnode, int indent_depth) {
   if (pnode->node_type == NONTERMINAL_T && pnode->nonterminal_token == Nil) {
     return;
   }
@@ -710,11 +663,11 @@ void print_tree(struct node *pnode, int indent_depth) {
     case CHAR_T: printf("CHAR: '%c'\n", pnode->char_token); break;
     case TYPE_T: printf("TYPE: %s\n", pnode->type_token); break;
     case ID_T: printf("ID: %s\n", pnode->id_token); break;
-    case KEYWORD_T: printf("%s (%d)\n", pnode->keyword_token, pnode->first_line); break;
+    case KEYWORD_T: printf("%s\n", pnode->keyword_token); break;
     case NONTERMINAL_T: printf("%s (%d)\n", get_nonterminal_name(pnode->nonterminal_token), pnode->first_line); break;
     default: printf("Undefined node type!\n"); break;
   }
-  struct rhs_node *ptr = pnode->rhs;
+  Rhs_node *ptr = pnode->rhs;
   if (ptr == NULL) {
     return;
   }

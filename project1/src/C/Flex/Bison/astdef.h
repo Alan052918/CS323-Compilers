@@ -35,7 +35,7 @@ enum nonterminal_type {
 };
 
 /* syntax tree node definition */
-struct node {
+typedef struct Node {
   int node_type;
   int first_line;
   int last_line;
@@ -50,30 +50,27 @@ struct node {
     char *keyword_token;
     int nonterminal_token;
   };
-  struct rhs_node *rhs;
-};
+  struct Rhs_node *rhs;
+} Node;
 
 /* production rule right-hand-side definition */
-struct rhs_node {
-  struct node *token_node;
-  struct rhs_node *next;
-};
+typedef struct Rhs_node {
+  struct Node *token_node;
+  struct Rhs_node *next;
+} Rhs_node;
 
 /* syntax tree node constructors */
-struct node *lfs(int nonterminal_type, int first_line, int last_line,
-                 int first_column, int last_column);
+Node *lfs(int nonterminal_type, int first_line, int last_line, int first_column,
+          int last_column);
 
 /* syntax tree actions */
-void push_int(struct node *lfs_node, int int_val);
-void push_float(struct node *lfs_node, float float_val);
-void push_char(struct node *lfs_node, char char_val);
-void push_type(struct node *lfs_node, char *type_val);
-void push_id(struct node *lfs_node, char *id_val);
-void push_keyword(struct node *lfs_node, char *keyword_val);
-void push_nonterminal(struct node *lfs_node, struct node *nonterminal);
+void push_int(Node *lfs_node, int int_val);
+void push_float(Node *lfs_node, float float_val);
+void push_char(Node *lfs_node, char char_val);
+void push_type(Node *lfs_node, char *type_val);
+void push_id(Node *lfs_node, char *id_val);
+void push_keyword(Node *lfs_node, char *keyword_val);
+void push_nonterminal(Node *lfs_node, Node *nonterminal);
 
 char *get_nonterminal_name(int nonterminal_val);
-void update_nonterminal_location(struct node *nonterminal, int first_line,
-                                 int last_line, int first_column,
-                                 int last_column);
-void print_tree(struct node *pnode, int indent_depth);
+void print_tree(Node *pnode, int indent_depth);
