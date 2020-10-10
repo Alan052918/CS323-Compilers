@@ -276,7 +276,7 @@ ERR_ID  [0-9][a-zA-Z_]{0-30}
 
 . {
     printf("Error type A at Line %d: unknown lexeme %s\n", yylineno, yytext);
-    // return *yytext;
+    return UNKNOWN_LEXEME;
   }
 
 %%

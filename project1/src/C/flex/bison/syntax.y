@@ -2,9 +2,9 @@
   #include "include/astdef.h"
   #include "lex.yy.c"
 
-  Node *program_root;
-
   void yyerror(const char *);
+
+  Node *program_root;
 %}
 
 %union {
@@ -30,6 +30,8 @@
 %token <char_value> CHAR
 %token <type_value> TYPE
 %token <id_value> ID
+
+%token UNKNOWN_LEXEME
 
 %token <keyword_value> STRUCT
 %token <keyword_value> LC RC COMMA SEMI
@@ -89,6 +91,10 @@ ExtDef:
       push_nonterminal($$, $2);
       push_nonterminal($$, $3);
     }
+  | Specifier ExtDecList error {
+      printf("%d: ", @$.first_line);
+      puts("Missing semicolon ';' at the end of extended definition specifier extdeclist semi");
+    }
   ;
 ExtDecList:
     VarDec {
@@ -127,9 +133,6 @@ StructSpecifier:
       push_nonterminal($$, $4);
       push_keyword($$, $5);
     }
-  | STRUCT ID LC DefList error {
-      puts("Missing closing curly brace '}'");
-    }
   | STRUCT ID {
       $$ = lfs(StructSpecifier, @1.first_line, @2.last_line, @1.first_column, @2.last_column);
       push_keyword($$, $1);
@@ -162,17 +165,19 @@ FunDec:
       push_nonterminal($$, $3);
       push_keyword($$, $4);
     }
-  | ID LP VarList error {
-      puts("Missing closing parenthesis ')'");
-    }
   | ID LP RP {
       $$ = lfs(FunDec, @1.first_line, @3.last_line, @1.first_column, @3.last_column);
       push_id($$, $1);
       push_keyword($$, $2);
       push_keyword($$, $3);
     }
+  | ID LP VarList error {
+      printf("%d: ", @$.first_line);
+      puts("Missing closing parenthesis ')' at the end of function declaration");
+    }
   | ID LP error {
-      puts("Missing closing parenthesis ')'");
+      printf("%d: ", @$.first_line);
+      puts("Missing closing parenthesis ')' at the end of function declaration");
     }
   ;
 VarList:
@@ -209,7 +214,8 @@ CompSt:
       push_keyword($$, $4);
     }
   | LC DefList StmtList error {
-      puts("Missing closing curly brace '}'");
+      printf("%d: ", @$.first_line);
+      puts("Missing closing curly brace '}' at the end of composite statement");
     }
   ;
 StmtList:
@@ -226,9 +232,6 @@ Stmt:
       push_nonterminal($$, $1);
       push_keyword($$, $2);
     }
-  | Exp error {
-      puts("Missing semicolon ';' at the end of statement");
-    }
   | CompSt {
       $$ = lfs(Stmt, @1.first_line, @1.last_line, @1.first_column, @1.last_column);
       push_nonterminal($$, $1);
@@ -238,9 +241,6 @@ Stmt:
       push_keyword($$, $1);
       push_nonterminal($$, $2);
       push_keyword($$, $3);
-    }
-  | RETURN Exp error {
-      puts("Missing semicolon ';' at the end of return statement");
     }
   | IF LP Exp RP Stmt %prec LOWER_ELSE {
       $$ = lfs(Stmt, @1.first_line, @5.last_line, @1.first_column, @5.last_column);
@@ -268,6 +268,14 @@ Stmt:
       push_keyword($$, $4);
       push_nonterminal($$, $5);
     }
+  | Exp error {
+      printf("%d: ", @$.first_line);
+      puts("Missing semicolon ';' at the end of statement");
+    }
+  | RETURN Exp error {
+      printf("%d: ", @$.first_line);
+      puts("Missing semicolon ';' at the end of return statement");
+    }
   ;
 
 /* Local definition: declaration and assignment of local variables */
@@ -287,6 +295,7 @@ Def:
       push_keyword($$, $3);
     }
   | Specifier DecList error {
+      printf("%d: ", @$.first_line);
       puts("Missing semicolon ';' at the end of definition");
     }
   ;
@@ -301,6 +310,10 @@ DecList:
       push_keyword($$, $2);
       push_nonterminal($$, $3);
     }
+  | Dec COMMA error {
+      printf("%d: ", @$.first_line);
+      puts("Redundant comma ',' at the end of declaration list");
+    }
   ;
 Dec:
     VarDec {
@@ -313,7 +326,9 @@ Dec:
       push_keyword($$, $2);
       push_nonterminal($$, $3);
     }
+  | VarDec ASSIGN UNKNOWN_LEXEME
   | VarDec ASSIGN error {
+      printf("%d: ", @$.first_line);
       puts("Missing expression at the end of declaration");
     }
   ;
@@ -459,6 +474,18 @@ Exp:
       $$ = lfs(Exp, @1.first_line, @1.last_line, @1.first_column, @1.last_column);
       push_char($$, $1);
     }
+  | ID LP Args error {
+      printf("%d: ", @$.first_line);
+      puts("Missing closing parenthesis ')' at the end of expression");
+    }
+  | ID LP error {
+      printf("%d: ", @$.first_line);
+      puts("Missing closing parenthesis ')' at the end of expression");
+    }
+  | Exp LB Exp error {
+      printf("%d ", @$.first_line);
+      puts("Missing closing bracket ']' at the end of expression");
+    }
   ;
 Args:
     Exp COMMA Args {
@@ -470,6 +497,10 @@ Args:
   | Exp {
       $$ = lfs(Args, @1.first_line, @1.last_line, @1.first_column, @1.last_column);
       push_nonterminal($$, $1);
+    }
+  | Exp COMMA error {
+      printf("%d ", @$.first_line);
+      puts("Redundant comma ',' at the end of argument");
     }
   ;
 
@@ -485,7 +516,7 @@ Node *lfs(int nonterminal_type, int first_line, int last_line, int first_column,
   new_nonterminal_node->last_column = last_column;
   new_nonterminal_node->rhs = NULL;
 #ifdef DEBUG
-  printf("  lfs: %s, line %d\n", get_nonterminal_name(nonterminal_type), new_nonterminal_node->first_line);
+  printf("  lfs: %s[%d], line %d\n", get_nonterminal_name(nonterminal_type), nonterminal_type, new_nonterminal_node->first_line);
 #endif
   return new_nonterminal_node;
 }
@@ -676,12 +707,12 @@ void print_tree(Node *pnode, int indent_depth) {
   switch (pnode->node_type) {
     case INT_T: printf("INT: %ld\n", pnode->int_token); break;
     case FLOAT_T: printf("FLOAT: %f\n", pnode->float_token); break;
-    case CHAR_T: printf("CHAR: %c\n", pnode->char_token); break;
+    case CHAR_T: printf("CHAR: '%c'\n", pnode->char_token); break;
     case TYPE_T: printf("TYPE: %s\n", pnode->type_token); break;
     case ID_T: printf("ID: %s\n", pnode->id_token); break;
     case KEYWORD_T: printf("%s\n", pnode->keyword_token); break;
     case NONTERMINAL_T: printf("%s (%d)\n", get_nonterminal_name(pnode->nonterminal_token), pnode->first_line); break;
-    default: printf("Undefined node type!\n"); return;
+    default: printf("Undefined node type %d\n", pnode->node_type); return;
   }
   Rhs_node *ptr = pnode->rhs;
   if (ptr == NULL) {
@@ -694,7 +725,7 @@ void print_tree(Node *pnode, int indent_depth) {
 }
 
 void yyerror(const char *s) {
-  printf("Error type B at Line %d: ", yylineno);
+  printf("Error type B at Line ");
 }
 
 int main(int argc, char **argv) {

@@ -1,0 +1,6 @@
+int foo()
+{
+  int i = @;
+  int i = ;
+}
+
