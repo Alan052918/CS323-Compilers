@@ -262,19 +262,16 @@ ERR_CHAR  \'\\x[0-9a-zA-Z]+\'
             // hexadecimal-form char
             yytext[1] = '0';
             int c = strtol(yytext + 1, NULL, 16);
+            yytext[1] = '\\';
             if (c == 0 || c > 255) {
-              yytext[1] = '\\';
 #ifdef DEBUG
               printf("flex: found invalid CHAR %d[%s], line %d\n", c, yytext, yylineno);
 #endif
               printf("Error type A at Line %d: unknown lexeme %s\n", yylineno, yytext);
               return UNKNOWN_LEXEME;
             }
-            yylval.char_value = c;
-          } else {
-            // char literal
-            yylval.char_value = yytext[1];
           }
+          yylval.char_value = strdup(yytext);
 #ifdef DEBUG
           printf("flex: found CHAR %c[%s], line %d\n", yylval.char_value, yytext, yylineno);
 #endif

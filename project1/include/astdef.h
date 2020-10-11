@@ -44,7 +44,7 @@ typedef struct Node {
   union {
     long int_token;
     float float_token;
-    char char_token;
+    char *char_token;
     char *type_token;
     char *id_token;
     char *keyword_token;
@@ -66,7 +66,7 @@ Node *lfs(int nonterminal_type, int first_line, int last_line, int first_column,
 /* syntax tree actions */
 void push_int(Node *lfs_node, int int_val);
 void push_float(Node *lfs_node, float float_val);
-void push_char(Node *lfs_node, char char_val);
+void push_char(Node *lfs_node, char *char_val);
 void push_type(Node *lfs_node, char *type_val);
 void push_id(Node *lfs_node, char *id_val);
 void push_keyword(Node *lfs_node, char *keyword_val);

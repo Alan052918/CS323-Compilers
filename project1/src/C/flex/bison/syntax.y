@@ -11,7 +11,7 @@
 %union {
   long int_value;
   float float_value;
-  char char_value;
+  char *char_value;
   char *type_value;
   char *id_value;
   char *keyword_value;
@@ -179,7 +179,6 @@ FunDec:
     }
   | ID LP error {
       printf("Error type B at Line %d: Missing closing parenthesis ')' at the end of function declaration\n", @$.first_line);
-      puts("");
     }
   ;
 VarList:
@@ -565,7 +564,7 @@ void push_float(Node *lfs_node, float float_val) {
   ptr->next = new_rhs_node;
 }
 
-void push_char(Node *lfs_node, char char_val) {
+void push_char(Node *lfs_node, char *char_val) {
 #ifdef DEBUG
   printf("    push char: %c, line %d\n", char_val, yylloc.first_line);
 #endif
@@ -707,7 +706,7 @@ void print_tree(Node *pnode, int indent_depth) {
   switch (pnode->node_type) {
     case INT_T: printf("INT: %ld\n", pnode->int_token); break;
     case FLOAT_T: printf("FLOAT: %f\n", pnode->float_token); break;
-    case CHAR_T: printf("CHAR: '%c'\n", pnode->char_token); break;
+    case CHAR_T: printf("CHAR: %s\n", pnode->char_token); break;
     case TYPE_T: printf("TYPE: %s\n", pnode->type_token); break;
     case ID_T: printf("ID: %s\n", pnode->id_token); break;
     case KEYWORD_T: printf("%s\n", pnode->keyword_token); break;
