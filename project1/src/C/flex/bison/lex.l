@@ -17,10 +17,12 @@
 SPC     [ \t\r\f\v]
 INT     0|-?[1-9][0-9]{0,9}|-?0[xX][1-9a-fA-F][0-9a-fA-F]*
 FLOAT   -?[1-9][0-9]*\.[0-9]+
-CHAR    \'[a-zA-Z]\'|\\x[1-9a-fA-F][0-9a-fA-F]*
+CHAR    \'[a-zA-Z]\'|\'\\x[1-9a-fA-F][0-9a-fA-F]*\'
 TYPE    "int"|"char"|"float"
-ID      [a-zA-Z_][a-zA-Z0-9_]{0,31}
-ERR_ID  [0-9][a-zA-Z_]{0-30}
+ID      [a-zA-Z_][0-9a-zA-Z_]*
+
+ERR_ID    [a-zA-Z0-9_]+
+ERR_CHAR  \'\\x[0-9a-zA-Z]+\' 
 
 %%
 
@@ -231,12 +233,20 @@ ERR_ID  [0-9][a-zA-Z_]{0-30}
 
 {INT} {
         if (yytext[0] == '0' && yytext[1] == 'x') {
-          yylval.int_value = strtol(yytext, NULL, 0);
+          int i = strtol(yytext, NULL, 0);
+          if (i == 0) {
+#ifdef DEBUG
+            printf("flex: found invalid INT %s, line %d\n", yytext, yylineno);
+#endif
+            printf("Error type A at Line %d: unknown lexeme %s\n", yylineno, yytext);
+            return UNKNOWN_LEXEME;
+          }
+          yylval.int_value = i;
         } else {
           yylval.int_value = atoi(yytext);
         }
 #ifdef DEBUG
-        printf("flex: found INT %ld, line %d\n", yylval.int_value, yylineno);
+        printf("flex: found INT %ld[%s], line %d\n", yylval.int_value, yytext, yylineno);
 #endif
         return INT;
       }
@@ -248,14 +258,25 @@ ERR_ID  [0-9][a-zA-Z_]{0-30}
           return FLOAT;
         }
 {CHAR}  {
-          if (yytext[0] == '\'' && yytext[yyleng - 1] == '\'') {
-            yylval.char_value = yytext[1];
+          if (yytext[1] == '\\' && yytext[2] == 'x') {
+            // hexadecimal-form char
+            yytext[1] = '0';
+            int c = strtol(yytext + 1, NULL, 16);
+            if (c == 0 || c > 255) {
+              yytext[1] = '\\';
+#ifdef DEBUG
+              printf("flex: found invalid CHAR %d[%s], line %d\n", c, yytext, yylineno);
+#endif
+              printf("Error type A at Line %d: unknown lexeme %s\n", yylineno, yytext);
+              return UNKNOWN_LEXEME;
+            }
+            yylval.char_value = c;
           } else {
-            yytext[0] = '0';
-            yylval.char_value = strtol(yytext, NULL, 0);
+            // char literal
+            yylval.char_value = yytext[1];
           }
 #ifdef DEBUG
-          printf("flex: found CHAR %c, line %d\n", yylval.char_value, yylineno);
+          printf("flex: found CHAR %c[%s], line %d\n", yylval.char_value, yytext, yylineno);
 #endif
           return CHAR;
         }
@@ -274,7 +295,26 @@ ERR_ID  [0-9][a-zA-Z_]{0-30}
         return ID;
       }
 
+{ERR_ID}  {
+            // This will match any combination of letters, numbers, and underscores
+#ifdef DEBUG
+            printf("flex: found invalid id %s, line %d\n", yytext, yylineno);
+#endif
+            printf("Error type A at Line %d: unknown lexeme %s\n", yylineno, yytext);
+            return UNKNOWN_LEXEME;
+          }
+{ERR_CHAR}  {
+#ifdef DEBUG
+              printf("flex: found invalid hex char %s, line %d\n", yytext, yylineno);
+#endif
+              printf("Error type A at Line %d: unknown lexeme %s\n", yylineno, yytext);
+              return UNKNOWN_LEXEME;
+            }
 . {
+    // This will match any character
+#ifdef DEBUG
+    printf("flex: found invalid character %s, line %d\n", yytext, yylineno);
+#endif
     printf("Error type A at Line %d: unknown lexeme %s\n", yylineno, yytext);
     return UNKNOWN_LEXEME;
   }
