@@ -10,5 +10,6 @@ syntax.tab.[hc]
 syntax.output
 !*/ta_test/*.out
 !*/test/*.out
+!*/test-ex/*.out
 .vscode/
 venv/
