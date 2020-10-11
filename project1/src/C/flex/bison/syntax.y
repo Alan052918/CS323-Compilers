@@ -16,6 +16,7 @@
   char *id_value;
   char *keyword_value;
   Node *nonterminal_node;
+  char *unknown_value;
 }
 
 %type <nonterminal_node> Program
@@ -39,7 +40,7 @@
 %nonassoc LOWER_ELSE
 %nonassoc <keyword_value> ELSE
 
-%nonassoc <id_value> UNKNOWN_LEXEME
+%nonassoc <unknown_value> UNKNOWN_LEXEME
 %right <keyword_value> ASSIGN
 %left <keyword_value> OR
 %left <keyword_value> AND
@@ -93,9 +94,11 @@ ExtDef:
     }
   | ExtDecList error {
       printf("Error type B at Line %d: Missing specifier\n", @$.first_line);
+      $$ = lfs(ExtDef, @1.first_line, @1.last_line, @1.first_column, @1.last_column);
     }
   | Specifier ExtDecList error {
-      printf("Error type B at Line %d: Missing semicolon ';' at the end of extended definition specifier extdeclist semi\n", @$.first_line);
+      printf("Error type B at Line %d: Missing semicolon ';'\n", @$.first_line);
+      $$ = lfs(ExtDef, @1.first_line, @2.last_line, @1.first_column, @2.last_column);
     }
   ;
 ExtDecList:
@@ -158,7 +161,9 @@ VarDec:
       push_int($$, $3);
       push_keyword($$, $4);
     }
-  | UNKNOWN_LEXEME error {}
+  | UNKNOWN_LEXEME error {
+      $$ = lfs(VarDec, @1.first_line, @1.last_line, @1.first_column, @1.last_column);
+    }
   ;
 FunDec:
     ID LP VarList RP {
@@ -175,10 +180,12 @@ FunDec:
       push_keyword($$, $3);
     }
   | ID LP VarList error {
-      printf("Error type B at Line %d: Missing closing parenthesis ')' at the end of function declaration\n", @$.first_line);
+      printf("Error type B at Line %d: Missing closing parenthesis ')'\n", @$.first_line);
+      $$ = lfs(FunDec, @1.first_line, @3.last_line, @1.first_column, @3.last_column);
     }
   | ID LP error {
-      printf("Error type B at Line %d: Missing closing parenthesis ')' at the end of function declaration\n", @$.first_line);
+      printf("Error type B at Line %d: Missing closing parenthesis ')'\n", @$.first_line);
+      $$ = lfs(FunDec, @1.first_line, @2.last_line, @1.first_column, @2.last_column);
     }
   ;
 VarList:
@@ -201,6 +208,7 @@ ParamDec:
     }
   | VarDec error {
       printf("Error type B at Line %d: Missing specifier\n", @$.first_line);
+      $$ = lfs(ParamDec, @1.first_line, @1.last_line, @1.first_column, @1.last_column);
     }
   ;
 
@@ -219,7 +227,8 @@ CompSt:
       push_keyword($$, $4);
     }
   | LC DefList StmtList error {
-      printf("Error type B at Line %d: Missing closing curly bracket '}' at the end of composite statement\n", @$.first_line);
+      printf("Error type B at Line %d: Missing closing curly bracket '}'\n", @$.last_line);
+      $$ = lfs(CompSt, @1.first_line, @3.last_line, @1.first_column, @3.last_column);
     }
   ;
 StmtList:
@@ -230,7 +239,8 @@ StmtList:
     }
   | %empty { $$ = lfs(Nil, 0, 0, 0, 0); }
   | Stmt Def StmtList error {
-      printf("Error type B at Line %d: Definitions must come before statements\n", @$.first_line);
+      printf("Error type B at Line %d: Missing specifier\n", @$.first_line);
+      $$ = lfs(StmtList, @1.first_line, @3.last_line, @1.first_column, @3.last_column);
     }
   ;
 Stmt:
@@ -276,10 +286,19 @@ Stmt:
       push_nonterminal($$, $5);
     }
   | Exp error {
-      printf("Error type B at Line %d: Missing semicolon ';' at the end of statement\n", @$.first_line);
+      printf("Error type B at Line %d: Missing semicolon ';'\n", @$.first_line);
+      $$ = lfs(Stmt, @1.first_line, @1.last_line, @1.first_column, @1.last_column);
     }
   | RETURN Exp error {
-      printf("Error type B at Line %d: Missing semicolon ';' at the end of return statement\n", @$.first_line);
+      printf("Error type B at Line %d: Missing semicolon ';'\n", @$.first_line);
+      $$ = lfs(Stmt, @1.first_line, @2.last_line, @1.first_column, @2.last_column);
+    }
+  | RETURN UNKNOWN_LEXEME error {
+      printf("Error type B at Line %d: Missing semicolon ';'\n", @$.first_line);
+      $$ = lfs(Stmt, @1.first_line, @2.last_line, @1.first_column, @2.last_column);
+    }
+  | RETURN UNKNOWN_LEXEME SEMI error {
+      $$ = lfs(Stmt, @1.first_line, @3.last_line, @1.first_column, @3.last_column);
     }
   ;
 
@@ -300,7 +319,8 @@ Def:
       push_keyword($$, $3);
     }
   | Specifier DecList error {
-      printf("Error type B at Line %d: Missing semicolon ';' at the end of definition\n", @$.first_line);
+      printf("Error type B at Line %d: Missing semicolon ';'\n", @$.first_line);
+      $$ = lfs(Def, @1.first_line, @2.last_line, @1.first_column, @2.last_column);
     }
   ;
 DecList:
@@ -315,7 +335,8 @@ DecList:
       push_nonterminal($$, $3);
     }
   | Dec COMMA error {
-      printf("Error type B at Line %d: Redundant comma ',' at the end of declaration list\n", @$.first_line);
+      printf("Error type B at Line %d: Redundant comma ','\n", @$.first_line);
+      $$ = lfs(DecList, @1.first_line, @2.last_line, @1.first_column, @2.last_column);
     }
   ;
 Dec:
@@ -329,9 +350,12 @@ Dec:
       push_keyword($$, $2);
       push_nonterminal($$, $3);
     }
-  | VarDec ASSIGN UNKNOWN_LEXEME error {}
+  | VarDec ASSIGN UNKNOWN_LEXEME error {
+      $$ = lfs(Dec, @1.first_line, @3.last_line, @1.first_column, @3.last_column);
+    }
   | VarDec ASSIGN error {
       printf("Error type B at Line %d: Missing expression at the end of declaration\n", @$.first_line);
+      $$ = lfs(Dec, @1.first_line, @2.last_line, @1.first_column, @2.last_column);
     }
   ;
 
@@ -478,13 +502,16 @@ Exp:
     }
   | Exp UNKNOWN_LEXEME Exp error {}
   | ID LP Args error {
-      printf("Error type B at Line %d: Missing closing parenthesis ')' at the end of expression\n", @$.first_line);
+      printf("Error type B at Line %d: Missing closing parenthesis ')'\n", @$.first_line);
+      $$ = lfs(Exp, @1.first_line, @3.last_line, @1.first_column, @3.last_column);
     }
   | ID LP error {
-      printf("Error type B at Line %d: Missing closing parenthesis ')' at the end of expression\n", @$.first_line);
+      printf("Error type B at Line %d: Missing closing parenthesis ')'\n", @$.first_line);
+      $$ = lfs(Exp, @1.first_line, @2.last_line, @1.first_column, @2.last_column);
     }
   | Exp LB Exp error {
-      printf("Error type B at Line %d Missing closing bracket ']' at the end of expression\n", @$.first_line);
+      printf("Error type B at Line %d Missing closing bracket ']'\n", @$.first_line);
+      $$ = lfs(Exp, @1.first_line, @3.last_line, @1.first_column, @3.last_column);
     }
   ;
 Args:
@@ -499,7 +526,8 @@ Args:
       push_nonterminal($$, $1);
     }
   | Exp COMMA error {
-      printf("Error type B at Line %d Redundant comma ',' at the end of argument\n", @$.first_line);
+      printf("Error type B at Line %d Redundant comma ','\n", @$.first_line);
+      $$ = lfs(Args, @1.first_line, @2.last_line, @1.first_column, @2.last_column);
     }
   ;
 
@@ -566,7 +594,7 @@ void push_float(Node *lfs_node, float float_val) {
 
 void push_char(Node *lfs_node, char *char_val) {
 #ifdef DEBUG
-  printf("    push char: %c, line %d\n", char_val, yylloc.first_line);
+  printf("    push char: %s, line %d\n", char_val, yylloc.first_line);
 #endif
   Node *new_char_node = (Node *)malloc(sizeof(Node));
   new_char_node->node_type = CHAR_T;

@@ -24,6 +24,8 @@ ID      [a-zA-Z_][0-9a-zA-Z_]*
 ERR_ID    [a-zA-Z0-9_]+
 ERR_CHAR  \'\\x[0-9a-zA-Z]+\' 
 
+SINGLE_LINE_COMMENT "//".*
+
 %%
 
 {SPC} { /* whitespace characters, do nothing */ }
@@ -273,7 +275,7 @@ ERR_CHAR  \'\\x[0-9a-zA-Z]+\'
           }
           yylval.char_value = strdup(yytext);
 #ifdef DEBUG
-          printf("flex: found CHAR %c[%s], line %d\n", yylval.char_value, yytext, yylineno);
+          printf("flex: found CHAR %s[%s], line %d\n", yylval.char_value, yytext, yylineno);
 #endif
           return CHAR;
         }
@@ -307,6 +309,12 @@ ERR_CHAR  \'\\x[0-9a-zA-Z]+\'
               printf("Error type A at Line %d: unknown lexeme %s\n", yylineno, yytext);
               return UNKNOWN_LEXEME;
             }
+
+{SINGLE_LINE_COMMENT} {
+#ifdef DEBUG
+                        printf("flex: found single line comment, line %d\n", yytext, yylineno);
+#endif
+                      }
 . {
     // This will match any character
 #ifdef DEBUG

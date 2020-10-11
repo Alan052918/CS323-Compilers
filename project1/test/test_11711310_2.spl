@@ -1,0 +1,9 @@
+int foo()
+{
+  a = 12;
+  char b = '\x65';
+}
+
+char bar(int c)
+{
+  return c;
