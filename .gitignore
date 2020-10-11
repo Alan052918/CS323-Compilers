@@ -9,6 +9,7 @@ lex.yy.c
 syntax.tab.[hc]
 syntax.output
 bin
+!*/ta_test/*.out
 !*/test/*.out
 .vscode/
 venv/
