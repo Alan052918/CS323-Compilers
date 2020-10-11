@@ -1,0 +1,34 @@
+test case {1}
+test case {2}
+test case {3}
+2c2
+< Error type B at Line 6: Missing semicolon ';'
+---
+> Error type B at Line 6: Missing semicolon ';' at the end of return statement
+test case {4}
+1,2c1,2
+< Error type B at Line 9: Missing closing parenthesis ')'
+< Error type B at Line 12: Missing closing parenthesis ')'
+---
+> Error type B at Line 9: Missing closing parenthesis ')' at the end of function declaration
+> Error type B at Line 12: Missing closing parenthesis ')' at the end of expression
+test case {5}
+test case {6}
+test case {7}
+test case {8}
+1c1
+< Error type B at Line 3: Missing semicolon ';'
+---
+> Error type B at Line 3: Missing semicolon ';' at the end of definition
+test case {9}
+34c34
+<                     FLOAT: 2.2
+---
+>                     FLOAT: 2.200000
+test case {10}
+1c1
+< Error type B at Line 4: Missing specifier
+---
+> Error type B at Line 4: Definitions must come before statements
+test case {11}
+test case {12}
