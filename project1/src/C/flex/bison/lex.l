@@ -312,7 +312,7 @@ SINGLE_LINE_COMMENT "//".*
 
 {SINGLE_LINE_COMMENT} {
 #ifdef DEBUG
-                        printf("flex: found single line comment, line %d\n", yytext, yylineno);
+                        printf("flex: found single line comment, line %d\n", yylineno);
 #endif
                       }
 . {
