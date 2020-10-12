@@ -16,7 +16,6 @@
   char *id_value;
   char *keyword_value;
   Node *nonterminal_node;
-  char *unknown_value;
 }
 
 %type <nonterminal_node> Program
@@ -40,7 +39,7 @@
 %nonassoc LOWER_ELSE
 %nonassoc <keyword_value> ELSE
 
-%nonassoc <unknown_value> UNKNOWN_LEXEME
+%nonassoc UNKNOWN_LEXEME
 %right <keyword_value> ASSIGN
 %left <keyword_value> OR
 %left <keyword_value> AND
