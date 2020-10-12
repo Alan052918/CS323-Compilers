@@ -58,55 +58,55 @@
  */
 Program:
     ExtDefList {
-      $$ = lfs(Program, @1.first_line, @1.last_line, @1.first_column, @1.last_column);
+      $$ = lhs(Program, @1.first_line, @1.last_line, @1.first_column, @1.last_column);
       push_nonterminal($$, $1);
       program_root = $$;
     }
   ;
 ExtDefList:
     ExtDef ExtDefList {
-      $$ = lfs(ExtDefList, @1.first_line, @2.last_line, @1.first_column, @2.last_column);
+      $$ = lhs(ExtDefList, @1.first_line, @2.last_line, @1.first_column, @2.last_column);
       push_nonterminal($$, $1);
       push_nonterminal($$, $2);
     }
   | %empty {
-      $$ = lfs(Nil, 0, 0, 0, 0);
+      $$ = lhs(Nil, 0, 0, 0, 0);
     }
   ;
 ExtDef:
     Specifier ExtDecList SEMI {
-      $$ = lfs(ExtDef, @1.first_line, @3.last_line, @1.first_column, @3.last_column);
+      $$ = lhs(ExtDef, @1.first_line, @3.last_line, @1.first_column, @3.last_column);
       push_nonterminal($$, $1);
       push_nonterminal($$, $2);
       push_keyword($$, $3);
     }
   | Specifier SEMI {
-      $$ = lfs(ExtDef, @1.first_line, @2.last_line, @1.first_column, @2.last_column);
+      $$ = lhs(ExtDef, @1.first_line, @2.last_line, @1.first_column, @2.last_column);
       push_nonterminal($$, $1);
       push_keyword($$, $2);
     }
   | Specifier FunDec CompSt {
-      $$ = lfs(ExtDef, @1.first_line, @3.last_line, @1.first_column, @3.last_column);
+      $$ = lhs(ExtDef, @1.first_line, @3.last_line, @1.first_column, @3.last_column);
       push_nonterminal($$, $1);
       push_nonterminal($$, $2);
       push_nonterminal($$, $3);
     }
   | ExtDecList error {
       printf("Error type B at Line %d: Missing specifier\n", @$.first_line);
-      $$ = lfs(ExtDef, @1.first_line, @1.last_line, @1.first_column, @1.last_column);
+      $$ = lhs(ExtDef, @1.first_line, @1.last_line, @1.first_column, @1.last_column);
     }
   | Specifier ExtDecList error {
       printf("Error type B at Line %d: Missing semicolon ';'\n", @$.first_line);
-      $$ = lfs(ExtDef, @1.first_line, @2.last_line, @1.first_column, @2.last_column);
+      $$ = lhs(ExtDef, @1.first_line, @2.last_line, @1.first_column, @2.last_column);
     }
   ;
 ExtDecList:
     VarDec {
-      $$ = lfs(ExtDecList, @1.first_line, @1.last_line, @1.first_column, @1.last_column);
+      $$ = lhs(ExtDecList, @1.first_line, @1.last_line, @1.first_column, @1.last_column);
       push_nonterminal($$, $1);
     }
   | VarDec COMMA ExtDecList {
-      $$ = lfs(ExtDecList, @1.first_line, @3.last_line, @1.first_column, @3.last_column);
+      $$ = lhs(ExtDecList, @1.first_line, @3.last_line, @1.first_column, @3.last_column);
       push_nonterminal($$, $1);
       push_keyword($$, $2);
       push_nonterminal($$, $3);
@@ -120,17 +120,17 @@ ExtDecList:
  */
 Specifier:
     TYPE {
-      $$ = lfs(Specifier, @1.first_line, @1.last_line, @1.first_column, @1.last_column);
+      $$ = lhs(Specifier, @1.first_line, @1.last_line, @1.first_column, @1.last_column);
       push_type($$, $1);
     }
   | StructSpecifier {
-      $$ = lfs(Specifier, @1.first_line, @1.last_line, @1.first_column, @1.last_column);
+      $$ = lhs(Specifier, @1.first_line, @1.last_line, @1.first_column, @1.last_column);
       push_nonterminal($$, $1);
     }
   ;
 StructSpecifier:
     STRUCT ID LC DefList RC {
-      $$ = lfs(StructSpecifier, @1.first_line, @5.last_line, @1.first_column, @5.last_column);
+      $$ = lhs(StructSpecifier, @1.first_line, @5.last_line, @1.first_column, @5.last_column);
       push_keyword($$, $1);
       push_id($$, $2);
       push_keyword($$, $3);
@@ -138,7 +138,7 @@ StructSpecifier:
       push_keyword($$, $5);
     }
   | STRUCT ID {
-      $$ = lfs(StructSpecifier, @1.first_line, @2.last_line, @1.first_column, @2.last_column);
+      $$ = lhs(StructSpecifier, @1.first_line, @2.last_line, @1.first_column, @2.last_column);
       push_keyword($$, $1);
       push_id($$, $2);
     }
@@ -150,64 +150,64 @@ StructSpecifier:
  */
 VarDec:
     ID {
-      $$ = lfs(VarDec, @1.first_line, @1.last_line, @1.first_column, @1.last_column);
+      $$ = lhs(VarDec, @1.first_line, @1.last_line, @1.first_column, @1.last_column);
       push_id($$, $1);
     }
   | VarDec LB INT RB {
-      $$ = lfs(VarDec, @1.first_line, @4.last_line, @1.first_column, @4.last_column);
+      $$ = lhs(VarDec, @1.first_line, @4.last_line, @1.first_column, @4.last_column);
       push_nonterminal($$, $1);
       push_keyword($$, $2);
       push_int($$, $3);
       push_keyword($$, $4);
     }
   | UNKNOWN_LEXEME error {
-      $$ = lfs(VarDec, @1.first_line, @1.last_line, @1.first_column, @1.last_column);
+      $$ = lhs(VarDec, @1.first_line, @1.last_line, @1.first_column, @1.last_column);
     }
   ;
 FunDec:
     ID LP VarList RP {
-      $$ = lfs(FunDec, @1.first_line, @4.last_line, @1.first_column, @4.last_column);
+      $$ = lhs(FunDec, @1.first_line, @4.last_line, @1.first_column, @4.last_column);
       push_id($$, $1);
       push_keyword($$, $2);
       push_nonterminal($$, $3);
       push_keyword($$, $4);
     }
   | ID LP RP {
-      $$ = lfs(FunDec, @1.first_line, @3.last_line, @1.first_column, @3.last_column);
+      $$ = lhs(FunDec, @1.first_line, @3.last_line, @1.first_column, @3.last_column);
       push_id($$, $1);
       push_keyword($$, $2);
       push_keyword($$, $3);
     }
   | ID LP VarList error {
       printf("Error type B at Line %d: Missing closing parenthesis ')'\n", @$.first_line);
-      $$ = lfs(FunDec, @1.first_line, @3.last_line, @1.first_column, @3.last_column);
+      $$ = lhs(FunDec, @1.first_line, @3.last_line, @1.first_column, @3.last_column);
     }
   | ID LP error {
       printf("Error type B at Line %d: Missing closing parenthesis ')'\n", @$.first_line);
-      $$ = lfs(FunDec, @1.first_line, @2.last_line, @1.first_column, @2.last_column);
+      $$ = lhs(FunDec, @1.first_line, @2.last_line, @1.first_column, @2.last_column);
     }
   ;
 VarList:
     ParamDec COMMA VarList {
-      $$ = lfs(VarList, @1.first_line, @3.last_line, @1.first_column, @3.last_column);
+      $$ = lhs(VarList, @1.first_line, @3.last_line, @1.first_column, @3.last_column);
       push_nonterminal($$, $1);
       push_keyword($$, $2);
       push_nonterminal($$, $3);
     }
   | ParamDec {
-      $$ = lfs(VarList, @1.first_line, @1.last_line, @1.first_column, @1.last_column);
+      $$ = lhs(VarList, @1.first_line, @1.last_line, @1.first_column, @1.last_column);
       push_nonterminal($$, $1);
     }
   ;
 ParamDec:
     Specifier VarDec {
-      $$ = lfs(ParamDec, @1.first_line, @2.last_line, @1.first_column, @2.last_column);
+      $$ = lhs(ParamDec, @1.first_line, @2.last_line, @1.first_column, @2.last_column);
       push_nonterminal($$, $1);
       push_nonterminal($$, $2);
     }
   | VarDec error {
       printf("Error type B at Line %d: Missing specifier\n", @$.first_line);
-      $$ = lfs(ParamDec, @1.first_line, @1.last_line, @1.first_column, @1.last_column);
+      $$ = lhs(ParamDec, @1.first_line, @1.last_line, @1.first_column, @1.last_column);
     }
   ;
 
@@ -219,7 +219,7 @@ ParamDec:
  */
 CompSt:
     LC DefList StmtList RC {
-      $$ = lfs(CompSt, @1.first_line, @4.last_line, @1.first_column, @4.last_column);
+      $$ = lhs(CompSt, @1.first_line, @4.last_line, @1.first_column, @4.last_column);
       push_keyword($$, $1);
       push_nonterminal($$, $2);
       push_nonterminal($$, $3);
@@ -227,39 +227,39 @@ CompSt:
     }
   | LC DefList StmtList error {
       printf("Error type B at Line %d: Missing closing curly bracket '}'\n", @$.last_line);
-      $$ = lfs(CompSt, @1.first_line, @3.last_line, @1.first_column, @3.last_column);
+      $$ = lhs(CompSt, @1.first_line, @3.last_line, @1.first_column, @3.last_column);
     }
   ;
 StmtList:
     Stmt StmtList {
-      $$ = lfs(StmtList, @1.first_line, @2.last_line, @1.first_column, @2.last_column);
+      $$ = lhs(StmtList, @1.first_line, @2.last_line, @1.first_column, @2.last_column);
       push_nonterminal($$, $1);
       push_nonterminal($$, $2);
     }
-  | %empty { $$ = lfs(Nil, 0, 0, 0, 0); }
+  | %empty { $$ = lhs(Nil, 0, 0, 0, 0); }
   | Stmt Def StmtList error {
       printf("Error type B at Line %d: Missing specifier\n", @$.first_line);
-      $$ = lfs(StmtList, @1.first_line, @3.last_line, @1.first_column, @3.last_column);
+      $$ = lhs(StmtList, @1.first_line, @3.last_line, @1.first_column, @3.last_column);
     }
   ;
 Stmt:
     Exp SEMI {
-      $$ = lfs(Stmt, @1.first_line, @2.last_line, @1.first_column, @2.last_column);
+      $$ = lhs(Stmt, @1.first_line, @2.last_line, @1.first_column, @2.last_column);
       push_nonterminal($$, $1);
       push_keyword($$, $2);
     }
   | CompSt {
-      $$ = lfs(Stmt, @1.first_line, @1.last_line, @1.first_column, @1.last_column);
+      $$ = lhs(Stmt, @1.first_line, @1.last_line, @1.first_column, @1.last_column);
       push_nonterminal($$, $1);
     }
   | RETURN Exp SEMI {
-      $$ = lfs(Stmt, @1.first_line, @3.last_line, @1.first_column, @3.last_column);
+      $$ = lhs(Stmt, @1.first_line, @3.last_line, @1.first_column, @3.last_column);
       push_keyword($$, $1);
       push_nonterminal($$, $2);
       push_keyword($$, $3);
     }
   | IF LP Exp RP Stmt %prec LOWER_ELSE {
-      $$ = lfs(Stmt, @1.first_line, @5.last_line, @1.first_column, @5.last_column);
+      $$ = lhs(Stmt, @1.first_line, @5.last_line, @1.first_column, @5.last_column);
       push_keyword($$, $1);
       push_keyword($$, $2);
       push_nonterminal($$, $3);
@@ -267,7 +267,7 @@ Stmt:
       push_nonterminal($$, $5);
     }
   | IF LP Exp RP Stmt ELSE Stmt {
-      $$ = lfs(Stmt, @1.first_line, @7.last_line, @1.first_column, @7.last_column);
+      $$ = lhs(Stmt, @1.first_line, @7.last_line, @1.first_column, @7.last_column);
       push_keyword($$, $1);
       push_keyword($$, $2);
       push_nonterminal($$, $3);
@@ -277,7 +277,7 @@ Stmt:
       push_nonterminal($$, $7);
     }
   | WHILE LP Exp RP Stmt {
-      $$ = lfs(Stmt, @1.first_line, @5.last_line, @1.first_column, @5.last_column);
+      $$ = lhs(Stmt, @1.first_line, @5.last_line, @1.first_column, @5.last_column);
       push_keyword($$, $1);
       push_keyword($$, $2);
       push_nonterminal($$, $3);
@@ -286,75 +286,75 @@ Stmt:
     }
   | Exp error {
       printf("Error type B at Line %d: Missing semicolon ';'\n", @$.first_line);
-      $$ = lfs(Stmt, @1.first_line, @1.last_line, @1.first_column, @1.last_column);
+      $$ = lhs(Stmt, @1.first_line, @1.last_line, @1.first_column, @1.last_column);
     }
   | RETURN Exp error {
       printf("Error type B at Line %d: Missing semicolon ';'\n", @$.first_line);
-      $$ = lfs(Stmt, @1.first_line, @2.last_line, @1.first_column, @2.last_column);
+      $$ = lhs(Stmt, @1.first_line, @2.last_line, @1.first_column, @2.last_column);
     }
   | RETURN UNKNOWN_LEXEME error {
       printf("Error type B at Line %d: Missing semicolon ';'\n", @$.first_line);
-      $$ = lfs(Stmt, @1.first_line, @2.last_line, @1.first_column, @2.last_column);
+      $$ = lhs(Stmt, @1.first_line, @2.last_line, @1.first_column, @2.last_column);
     }
   | RETURN UNKNOWN_LEXEME SEMI error {
-      $$ = lfs(Stmt, @1.first_line, @3.last_line, @1.first_column, @3.last_column);
+      $$ = lhs(Stmt, @1.first_line, @3.last_line, @1.first_column, @3.last_column);
     }
   ;
 
 /* Local definition: declaration and assignment of local variables */
 DefList:
     Def DefList {
-      $$ = lfs(DefList, @1.first_line, @2.last_line, @1.first_column, @2.last_column);
+      $$ = lhs(DefList, @1.first_line, @2.last_line, @1.first_column, @2.last_column);
       push_nonterminal($$, $1);
       push_nonterminal($$, $2);
     }
-  | %empty  { $$ = lfs(Nil, 0, 0, 0, 0); }
+  | %empty  { $$ = lhs(Nil, 0, 0, 0, 0); }
   ;
 Def:
     Specifier DecList SEMI {
-      $$ = lfs(Def, @1.first_line, @3.last_line, @1.first_column, @3.last_column);
+      $$ = lhs(Def, @1.first_line, @3.last_line, @1.first_column, @3.last_column);
       push_nonterminal($$, $1);
       push_nonterminal($$, $2);
       push_keyword($$, $3);
     }
   | Specifier DecList error {
       printf("Error type B at Line %d: Missing semicolon ';'\n", @$.first_line);
-      $$ = lfs(Def, @1.first_line, @2.last_line, @1.first_column, @2.last_column);
+      $$ = lhs(Def, @1.first_line, @2.last_line, @1.first_column, @2.last_column);
     }
   ;
 DecList:
     Dec {
-      $$ = lfs(DecList, @1.first_line, @1.last_line, @1.first_column, @1.last_column);
+      $$ = lhs(DecList, @1.first_line, @1.last_line, @1.first_column, @1.last_column);
       push_nonterminal($$, $1);
     }
   | Dec COMMA DecList {
-      $$ = lfs(DecList, @1.first_line, @3.last_line, @1.first_column, @3.last_column);
+      $$ = lhs(DecList, @1.first_line, @3.last_line, @1.first_column, @3.last_column);
       push_nonterminal($$, $1);
       push_keyword($$, $2);
       push_nonterminal($$, $3);
     }
   | Dec COMMA error {
       printf("Error type B at Line %d: Redundant comma ','\n", @$.first_line);
-      $$ = lfs(DecList, @1.first_line, @2.last_line, @1.first_column, @2.last_column);
+      $$ = lhs(DecList, @1.first_line, @2.last_line, @1.first_column, @2.last_column);
     }
   ;
 Dec:
     VarDec {
-      $$ = lfs(Dec, @1.first_line, @1.last_line, @1.first_column, @1.last_column);
+      $$ = lhs(Dec, @1.first_line, @1.last_line, @1.first_column, @1.last_column);
       push_nonterminal($$, $1);
     }
   | VarDec ASSIGN Exp {
-      $$ = lfs(Dec, @1.first_line, @3.last_line, @1.first_column, @3.last_column);
+      $$ = lhs(Dec, @1.first_line, @3.last_line, @1.first_column, @3.last_column);
       push_nonterminal($$, $1);
       push_keyword($$, $2);
       push_nonterminal($$, $3);
     }
   | VarDec ASSIGN UNKNOWN_LEXEME error {
-      $$ = lfs(Dec, @1.first_line, @3.last_line, @1.first_column, @3.last_column);
+      $$ = lhs(Dec, @1.first_line, @3.last_line, @1.first_column, @3.last_column);
     }
   | VarDec ASSIGN error {
       printf("Error type B at Line %d: Missing expression at the end of declaration\n", @$.first_line);
-      $$ = lfs(Dec, @1.first_line, @2.last_line, @1.first_column, @2.last_column);
+      $$ = lhs(Dec, @1.first_line, @2.last_line, @1.first_column, @2.last_column);
     }
   ;
 
@@ -365,174 +365,174 @@ Dec:
  */
 Exp:
     Exp ASSIGN Exp {
-      $$ = lfs(Exp, @1.first_line, @3.last_line, @1.first_column, @3.last_column);
+      $$ = lhs(Exp, @1.first_line, @3.last_line, @1.first_column, @3.last_column);
       push_nonterminal($$, $1);
       push_keyword($$, $2);
       push_nonterminal($$, $3);
     }
   | Exp AND Exp {
-      $$ = lfs(Exp, @1.first_line, @3.last_line, @1.first_column, @3.last_column);
+      $$ = lhs(Exp, @1.first_line, @3.last_line, @1.first_column, @3.last_column);
       push_nonterminal($$, $1);
       push_keyword($$, $2);
       push_nonterminal($$, $3);
     }
   | Exp OR Exp {
-      $$ = lfs(Exp, @1.first_line, @3.last_line, @1.first_column, @3.last_column);
+      $$ = lhs(Exp, @1.first_line, @3.last_line, @1.first_column, @3.last_column);
       push_nonterminal($$, $1);
       push_keyword($$, $2);
       push_nonterminal($$, $3);
     }
   | Exp LT Exp {
-      $$ = lfs(Exp, @1.first_line, @3.last_line, @1.first_column, @3.last_column);
+      $$ = lhs(Exp, @1.first_line, @3.last_line, @1.first_column, @3.last_column);
       push_nonterminal($$, $1);
       push_keyword($$, $2);
       push_nonterminal($$, $3);
     }
   | Exp LE Exp {
-      $$ = lfs(Exp, @1.first_line, @3.last_line, @1.first_column, @3.last_column);
+      $$ = lhs(Exp, @1.first_line, @3.last_line, @1.first_column, @3.last_column);
       push_nonterminal($$, $1);
       push_keyword($$, $2);
       push_nonterminal($$, $3);
     }
   | Exp GT Exp {
-      $$ = lfs(Exp, @1.first_line, @3.last_line, @1.first_column, @3.last_column);
+      $$ = lhs(Exp, @1.first_line, @3.last_line, @1.first_column, @3.last_column);
       push_nonterminal($$, $1);
       push_keyword($$, $2);
       push_nonterminal($$, $3);
     }
   | Exp GE Exp {
-      $$ = lfs(Exp, @1.first_line, @3.last_line, @1.first_column, @3.last_column);
+      $$ = lhs(Exp, @1.first_line, @3.last_line, @1.first_column, @3.last_column);
       push_nonterminal($$, $1);
       push_keyword($$, $2);
       push_nonterminal($$, $3);
     }
   | Exp NE Exp {
-      $$ = lfs(Exp, @1.first_line, @3.last_line, @1.first_column, @3.last_column);
+      $$ = lhs(Exp, @1.first_line, @3.last_line, @1.first_column, @3.last_column);
       push_nonterminal($$, $1);
       push_keyword($$, $2);
       push_nonterminal($$, $3);
     }
   | Exp EQ Exp {
-      $$ = lfs(Exp, @1.first_line, @3.last_line, @1.first_column, @3.last_column);
+      $$ = lhs(Exp, @1.first_line, @3.last_line, @1.first_column, @3.last_column);
       push_nonterminal($$, $1);
       push_keyword($$, $2);
       push_nonterminal($$, $3);
     }
   | Exp PLUS Exp {
-      $$ = lfs(Exp, @1.first_line, @3.last_line, @1.first_column, @3.last_column);
+      $$ = lhs(Exp, @1.first_line, @3.last_line, @1.first_column, @3.last_column);
       push_nonterminal($$, $1);
       push_keyword($$, $2);
       push_nonterminal($$, $3);
     }
   | Exp MINUS Exp {
-      $$ = lfs(Exp, @1.first_line, @3.last_line, @1.first_column, @3.last_column);
+      $$ = lhs(Exp, @1.first_line, @3.last_line, @1.first_column, @3.last_column);
       push_nonterminal($$, $1);
       push_keyword($$, $2);
       push_nonterminal($$, $3);
     }
   | Exp MUL Exp {
-      $$ = lfs(Exp, @1.first_line, @3.last_line, @1.first_column, @3.last_column);
+      $$ = lhs(Exp, @1.first_line, @3.last_line, @1.first_column, @3.last_column);
       push_nonterminal($$, $1);
       push_keyword($$, $2);
       push_nonterminal($$, $3);
     }
   | Exp DIV Exp {
-      $$ = lfs(Exp, @1.first_line, @3.last_line, @1.first_column, @3.last_column);
+      $$ = lhs(Exp, @1.first_line, @3.last_line, @1.first_column, @3.last_column);
       push_nonterminal($$, $1);
       push_keyword($$, $2);
       push_nonterminal($$, $3);
     }
   | LP Exp RP {
-      $$ = lfs(Exp, @1.first_line, @3.last_line, @1.first_column, @3.last_column);
+      $$ = lhs(Exp, @1.first_line, @3.last_line, @1.first_column, @3.last_column);
       push_keyword($$, $1);
       push_nonterminal($$, $2);
       push_keyword($$, $3); }
   | MINUS Exp {
-      $$ = lfs(Exp, @1.first_line, @2.last_line, @1.first_column, @2.last_column);
+      $$ = lhs(Exp, @1.first_line, @2.last_line, @1.first_column, @2.last_column);
       push_keyword($$, $1);
       push_nonterminal($$, $2);
     }
   | NOT Exp {
-      $$ = lfs(Exp, @1.first_line, @2.last_line, @1.first_column, @2.last_column);
+      $$ = lhs(Exp, @1.first_line, @2.last_line, @1.first_column, @2.last_column);
       push_keyword($$, $1);
       push_nonterminal($$, $2);
     }
   | ID LP Args RP {
-      $$ = lfs(Exp, @1.first_line, @4.last_line, @1.first_column, @4.last_column);
+      $$ = lhs(Exp, @1.first_line, @4.last_line, @1.first_column, @4.last_column);
       push_id($$, $1);
       push_keyword($$, $2);
       push_nonterminal($$, $3);
       push_keyword($$, $4);
     }
   | ID LP RP {
-      $$ = lfs(Exp, @1.first_line, @3.last_line, @1.first_column, @3.last_column);
+      $$ = lhs(Exp, @1.first_line, @3.last_line, @1.first_column, @3.last_column);
       push_id($$, $1);
       push_keyword($$, $2);
       push_keyword($$, $3);
     }
   | Exp LB Exp RB {
-      $$ = lfs(Exp, @1.first_line, @4.last_line, @1.first_column, @4.last_column);
+      $$ = lhs(Exp, @1.first_line, @4.last_line, @1.first_column, @4.last_column);
       push_nonterminal($$, $1);
       push_keyword($$, $2);
       push_nonterminal($$, $3);
       push_keyword($$, $4);
     }
   | Exp DOT ID {
-      $$ = lfs(Exp, @1.first_line, @3.last_line, @1.first_column, @3.last_column);
+      $$ = lhs(Exp, @1.first_line, @3.last_line, @1.first_column, @3.last_column);
       push_nonterminal($$, $1);
       push_keyword($$, $2);
       push_id($$, $3);
     }
   | ID {
-      $$ = lfs(Exp, @1.first_line, @1.last_line, @1.first_column, @1.last_column);
+      $$ = lhs(Exp, @1.first_line, @1.last_line, @1.first_column, @1.last_column);
       push_id($$, $1);
     }
   | INT {
-      $$ = lfs(Exp, @1.first_line, @1.last_line, @1.first_column, @1.last_column);
+      $$ = lhs(Exp, @1.first_line, @1.last_line, @1.first_column, @1.last_column);
       push_int($$, $1);
     }
   | FLOAT {
-      $$ = lfs(Exp, @1.first_line, @1.last_line, @1.first_column, @1.last_column);
+      $$ = lhs(Exp, @1.first_line, @1.last_line, @1.first_column, @1.last_column);
       push_float($$, $1);
     }
   | CHAR {
-      $$ = lfs(Exp, @1.first_line, @1.last_line, @1.first_column, @1.last_column);
+      $$ = lhs(Exp, @1.first_line, @1.last_line, @1.first_column, @1.last_column);
       push_char($$, $1);
     }
   | Exp UNKNOWN_LEXEME Exp error {}
   | ID LP Args error {
       printf("Error type B at Line %d: Missing closing parenthesis ')'\n", @$.first_line);
-      $$ = lfs(Exp, @1.first_line, @3.last_line, @1.first_column, @3.last_column);
+      $$ = lhs(Exp, @1.first_line, @3.last_line, @1.first_column, @3.last_column);
     }
   | ID LP error {
       printf("Error type B at Line %d: Missing closing parenthesis ')'\n", @$.first_line);
-      $$ = lfs(Exp, @1.first_line, @2.last_line, @1.first_column, @2.last_column);
+      $$ = lhs(Exp, @1.first_line, @2.last_line, @1.first_column, @2.last_column);
     }
   | Exp LB Exp error {
       printf("Error type B at Line %d Missing closing bracket ']'\n", @$.first_line);
-      $$ = lfs(Exp, @1.first_line, @3.last_line, @1.first_column, @3.last_column);
+      $$ = lhs(Exp, @1.first_line, @3.last_line, @1.first_column, @3.last_column);
     }
   ;
 Args:
     Exp COMMA Args {
-      $$ = lfs(Args, @1.first_line, @3.last_line, @1.first_column, @3.last_column);
+      $$ = lhs(Args, @1.first_line, @3.last_line, @1.first_column, @3.last_column);
       push_nonterminal($$, $1);
       push_keyword($$, $2);
       push_nonterminal($$, $3);
     }
   | Exp {
-      $$ = lfs(Args, @1.first_line, @1.last_line, @1.first_column, @1.last_column);
+      $$ = lhs(Args, @1.first_line, @1.last_line, @1.first_column, @1.last_column);
       push_nonterminal($$, $1);
     }
   | Exp COMMA error {
       printf("Error type B at Line %d Redundant comma ','\n", @$.first_line);
-      $$ = lfs(Args, @1.first_line, @2.last_line, @1.first_column, @2.last_column);
+      $$ = lhs(Args, @1.first_line, @2.last_line, @1.first_column, @2.last_column);
     }
   ;
 
 %%
 
-Node *lfs(int nonterminal_type, int first_line, int last_line, int first_column, int last_column) {
+Node *lhs(int nonterminal_type, int first_line, int last_line, int first_column, int last_column) {
   Node *new_nonterminal_node = (Node *)malloc(sizeof(Node));
   new_nonterminal_node->node_type = NONTERMINAL_T;
   new_nonterminal_node->nonterminal_token = nonterminal_type;
@@ -542,12 +542,12 @@ Node *lfs(int nonterminal_type, int first_line, int last_line, int first_column,
   new_nonterminal_node->last_column = last_column;
   new_nonterminal_node->rhs = NULL;
 #ifdef DEBUG
-  printf("  lfs: %s[%d], line %d\n", get_nonterminal_name(nonterminal_type), nonterminal_type, new_nonterminal_node->first_line);
+  printf("  lhs: %s[%d], line %d\n", get_nonterminal_name(nonterminal_type), nonterminal_type, new_nonterminal_node->first_line);
 #endif
   return new_nonterminal_node;
 }
 
-void push_int(Node *lfs_node, int int_val) {
+void push_int(Node *lhs_node, int int_val) {
 #ifdef DEBUG
   printf("    push int: %d, line %d\n", int_val, yylloc.first_line);
 #endif
@@ -558,9 +558,9 @@ void push_int(Node *lfs_node, int int_val) {
   Rhs_node *new_rhs_node = (Rhs_node *)malloc(sizeof(Rhs_node));
   new_rhs_node->token_node = new_int_node;
   new_rhs_node->next = NULL;
-  Rhs_node *ptr = lfs_node->rhs;
+  Rhs_node *ptr = lhs_node->rhs;
   if (ptr == NULL) {
-    lfs_node->rhs = new_rhs_node;
+    lhs_node->rhs = new_rhs_node;
     return;
   }
   while (ptr->next != NULL) {
@@ -569,7 +569,7 @@ void push_int(Node *lfs_node, int int_val) {
   ptr->next = new_rhs_node;
 }
 
-void push_float(Node *lfs_node, float float_val) {
+void push_float(Node *lhs_node, float float_val) {
 #ifdef DEBUG
   printf("    push float: %f, line %d\n", float_val, yylloc.first_line);
 #endif
@@ -580,9 +580,9 @@ void push_float(Node *lfs_node, float float_val) {
   Rhs_node *new_rhs_node = (Rhs_node *)malloc(sizeof(Rhs_node));
   new_rhs_node->token_node = new_float_node;
   new_rhs_node->next = NULL;
-  Rhs_node *ptr = lfs_node->rhs;
+  Rhs_node *ptr = lhs_node->rhs;
   if (ptr == NULL) {
-    lfs_node->rhs = new_rhs_node;
+    lhs_node->rhs = new_rhs_node;
     return;
   }
   while (ptr->next != NULL) {
@@ -591,7 +591,7 @@ void push_float(Node *lfs_node, float float_val) {
   ptr->next = new_rhs_node;
 }
 
-void push_char(Node *lfs_node, char *char_val) {
+void push_char(Node *lhs_node, char *char_val) {
 #ifdef DEBUG
   printf("    push char: %s, line %d\n", char_val, yylloc.first_line);
 #endif
@@ -602,9 +602,9 @@ void push_char(Node *lfs_node, char *char_val) {
   Rhs_node *new_rhs_node = (Rhs_node *)malloc(sizeof(Rhs_node));
   new_rhs_node->token_node = new_char_node;
   new_rhs_node->next = NULL;
-  Rhs_node *ptr = lfs_node->rhs;
+  Rhs_node *ptr = lhs_node->rhs;
   if (ptr == NULL) {
-    lfs_node->rhs = new_rhs_node;
+    lhs_node->rhs = new_rhs_node;
     return;
   }
   while (ptr->next != NULL) {
@@ -613,7 +613,7 @@ void push_char(Node *lfs_node, char *char_val) {
   ptr->next = new_rhs_node;
 }
 
-void push_type(Node *lfs_node, char *type_val) {
+void push_type(Node *lhs_node, char *type_val) {
 #ifdef DEBUG
   printf("    push type: %s, line %d\n", type_val, yylloc.first_line);
 #endif
@@ -624,9 +624,9 @@ void push_type(Node *lfs_node, char *type_val) {
   Rhs_node *new_rhs_node = (Rhs_node *)malloc(sizeof(Rhs_node));
   new_rhs_node->token_node = new_type_node;
   new_rhs_node->next = NULL;
-  Rhs_node *ptr = lfs_node->rhs;
+  Rhs_node *ptr = lhs_node->rhs;
   if (ptr == NULL) {
-    lfs_node->rhs = new_rhs_node;
+    lhs_node->rhs = new_rhs_node;
     return;
   }
   while (ptr->next != NULL) {
@@ -635,7 +635,7 @@ void push_type(Node *lfs_node, char *type_val) {
   ptr->next = new_rhs_node;
 }
 
-void push_id(Node *lfs_node, char *id_val) {
+void push_id(Node *lhs_node, char *id_val) {
 #ifdef DEBUG
   printf("    push id: %s, line %d\n", id_val, yylloc.first_line);
 #endif
@@ -646,9 +646,9 @@ void push_id(Node *lfs_node, char *id_val) {
   Rhs_node *new_rhs_node = (Rhs_node *)malloc(sizeof(Rhs_node));
   new_rhs_node->token_node = new_id_node;
   new_rhs_node->next = NULL;
-  Rhs_node *ptr = lfs_node->rhs;
+  Rhs_node *ptr = lhs_node->rhs;
   if (ptr == NULL) {
-    lfs_node->rhs = new_rhs_node;
+    lhs_node->rhs = new_rhs_node;
     return;
   }
   while (ptr->next != NULL) {
@@ -657,7 +657,7 @@ void push_id(Node *lfs_node, char *id_val) {
   ptr->next = new_rhs_node;
 }
 
-void push_keyword(Node *lfs_node, char *keyword_val) {
+void push_keyword(Node *lhs_node, char *keyword_val) {
 #ifdef DEBUG
   printf("    push keyword: %s, line %d\n", keyword_val, yylloc.first_line);
 #endif
@@ -668,9 +668,9 @@ void push_keyword(Node *lfs_node, char *keyword_val) {
   Rhs_node *new_rhs_node = (Rhs_node *)malloc(sizeof(Rhs_node));
   new_rhs_node->token_node = new_keyword_node;
   new_rhs_node->next = NULL;
-  Rhs_node *ptr = lfs_node->rhs;
+  Rhs_node *ptr = lhs_node->rhs;
   if (ptr == NULL) {
-    lfs_node->rhs = new_rhs_node;
+    lhs_node->rhs = new_rhs_node;
     return;
   }
   while (ptr->next != NULL) {
@@ -679,16 +679,16 @@ void push_keyword(Node *lfs_node, char *keyword_val) {
   ptr->next = new_rhs_node;
 }
 
-void push_nonterminal(Node *lfs_node, Node *nonterminal) {
+void push_nonterminal(Node *lhs_node, Node *nonterminal) {
 #ifdef DEBUG
   printf("    push nonterminal: %s, line %d\n", get_nonterminal_name(nonterminal->nonterminal_token), yylloc.first_line);
 #endif
   Rhs_node *new_rhs_node = (Rhs_node *)malloc(sizeof(Rhs_node));
   new_rhs_node->token_node = nonterminal;
   new_rhs_node->next = NULL;
-  Rhs_node *ptr = lfs_node->rhs;
+  Rhs_node *ptr = lhs_node->rhs;
   if (ptr == NULL) {
-    lfs_node->rhs = new_rhs_node;
+    lhs_node->rhs = new_rhs_node;
     return;
   }
   while (ptr->next != NULL) {

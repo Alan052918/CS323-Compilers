@@ -60,17 +60,17 @@ typedef struct Rhs_node {
 } Rhs_node;
 
 /* syntax tree node constructors */
-Node *lfs(int nonterminal_type, int first_line, int last_line, int first_column,
+Node *lhs(int nonterminal_type, int first_line, int last_line, int first_column,
           int last_column);
 
 /* syntax tree actions */
-void push_int(Node *lfs_node, int int_val);
-void push_float(Node *lfs_node, float float_val);
-void push_char(Node *lfs_node, char *char_val);
-void push_type(Node *lfs_node, char *type_val);
-void push_id(Node *lfs_node, char *id_val);
-void push_keyword(Node *lfs_node, char *keyword_val);
-void push_nonterminal(Node *lfs_node, Node *nonterminal);
+void push_int(Node *lhs_node, int int_val);
+void push_float(Node *lhs_node, float float_val);
+void push_char(Node *lhs_node, char *char_val);
+void push_type(Node *lhs_node, char *type_val);
+void push_id(Node *lhs_node, char *id_val);
+void push_keyword(Node *lhs_node, char *keyword_val);
+void push_nonterminal(Node *lhs_node, Node *nonterminal);
 
 char *get_nonterminal_name(int nonterminal_val);
 void print_tree(Node *pnode, int indent_depth);
