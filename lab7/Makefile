@@ -6,7 +6,7 @@ BISON=bison
 .lex: lex.l
 	$(FLEX) lex.l
 .syntax: syntax.y
-	$(BISON) -t -d syntax.y
+	$(BISON) -dtv syntax.y
 jp: .lex .syntax
 	$(CC) syntax.tab.c -lfl -ly -o jp.out
 clean:

@@ -1,5 +1,6 @@
 %{
     #include"syntax.tab.h"
+    #include "def.h"
 %}
 %option noyywrap
 
@@ -25,13 +26,27 @@ empty [ \n\r\t]
 ":" { return COLON; }
 "," { return COMMA; }
 
-"true" { return TRUE; }
-"false" { return FALSE; }
+"true"  {
+          yylval.boolean = true;
+          return TRUE;
+        }
+"false" {
+          yylval.boolean = false;
+          return FALSE;
+        }
 "null" { return VNULL; }
 
-{string} { return STRING; }
-{number} { return NUMBER; }
-{error_number} { return ERROR_NUMBER; }
+{string}  {
+            yylval.string = strdup(yytext);
+            return STRING;
+          }
+{number}  {
+            yylval.number = atof(yytext);
+            return NUMBER;
+          }
+{error_number}  {
+                  return ERROR_NUMBER;
+                }
 
 {empty} {}
 

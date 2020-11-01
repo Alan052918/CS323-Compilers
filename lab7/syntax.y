@@ -1,20 +1,30 @@
-%{
-    #include "lex.yy.c"
+%{ #include "lex.yy.c"
     #include "jsondef.h"
+    #include "def.h"
+
     void yyerror(const char*);
 
-    JsonObject *root;
+    struct JsonObject *root;
 %}
 
 %union {
-  JsonObject *jsonObj;
-  ObjectMember *objMem;
-  ArrayValue *arrVal;
+  double number;
+  char *string;
+  int boolean;
+  struct JsonObject *jsonObj;
+  struct ObjectMember *objMem;
+  struct ArrayValue *arrVal;
 }
 
-%token <jsonObj> STRING NUMBER TRUE FALSE VNULL
-%token LC RC LB RB COLON COMMA
+%token <number> NUMBER
+%token <string> STRING
+%token <boolean> TRUE FALSE
+%token VNULL
+%token LC RC LB RB COLON 
 %token ERROR_NUMBER
+
+%left LOWER_COMMA
+%left COMMA
 
 %type <jsonObj> Json Object Array
 %type <objMem> Members Member
@@ -23,6 +33,9 @@
 %%
 
 Json:
+      %empty {
+        root = NULL;
+      }
     | Value {
         struct JsonObject *json = (struct JsonObject *)malloc(sizeof(struct JsonObject));
         memset(json, '\0', sizeof(struct JsonObject));
@@ -40,7 +53,7 @@ Value:
         struct ArrayValue *val = (struct ArrayValue *)malloc(sizeof(struct ArrayValue));
         memset(val, '\0', sizeof(struct ArrayValue));
         val->value = $1;
-        val->next = NULL
+        val->next = NULL;
         $$ = val;
       }
     | Array {
@@ -53,7 +66,7 @@ Value:
     | STRING {
         struct JsonObject *str = (struct JsonObject *)malloc(sizeof(struct JsonObject));
         memset(str, '\0', sizeof(struct JsonObject));
-        str->category = STRING;
+        str->category = STR;
         str->string = $1;
         struct ArrayValue *val = (struct ArrayValue *)malloc(sizeof(struct ArrayValue));
         memset(val, '\0', sizeof(struct ArrayValue));
@@ -64,7 +77,7 @@ Value:
     | NUMBER {
         struct JsonObject *num = (struct JsonObject *)malloc(sizeof(struct JsonObject));
         memset(num, '\0', sizeof(struct JsonObject));
-        num->category = NUMBER;
+        num->category = NUM;
         num->number = $1;
         struct ArrayValue *val = (struct ArrayValue *)malloc(sizeof(struct ArrayValue));
         memset(val, '\0', sizeof(struct ArrayValue));
@@ -100,7 +113,7 @@ Value:
     | VNULL {
         struct JsonObject *nil = (struct JsonObject *)malloc(sizeof(struct JsonObject));
         memset(nil, '\0', sizeof(struct JsonObject));
-        nil->category = VNULL;
+        nil->category = NIL;
         struct ArrayValue *val = (struct ArrayValue *)malloc(sizeof(struct ArrayValue));
         memset(val, '\0', sizeof(struct ArrayValue));
         val->value = nil;
@@ -131,7 +144,7 @@ Object:
       }
     ;
 Members:
-      Member {
+      Member %prec LOWER_COMMA {
         $$ = $1;
       }
     | Member COMMA Members {
@@ -146,7 +159,7 @@ Member:
       STRING COLON Value {
         struct ObjectMember *mem = (struct ObjectMember *)malloc(sizeof(struct ObjectMember));
         memset(mem, '\0', sizeof(struct ObjectMember));
-        mem->key = $1->string;
+        mem->key = $1;
         mem->value = $3;
         mem->next = NULL;
         $$ = mem;
@@ -182,9 +195,6 @@ Array:
     | LB Values RC error {
         puts("Unmatched right bracket, recovered");
       }
-    | LB Values RB RB error {
-        puts("Extra close, recovered");
-      }
     ;
 Values:
       Value {
@@ -210,6 +220,9 @@ Values:
 %%
 
 void printJsonObject(struct JsonObject *node) {
+  if (node == NULL) {
+    return;
+  }
   switch (node->category) {
     case OBJECT:
       printObjectMember(node->members);
@@ -217,11 +230,11 @@ void printJsonObject(struct JsonObject *node) {
     case ARRAY:
       printArrayValue(node->values);
       break;
-    case STRING:
+    case STR:
       printf("%s\n", node->string);
       break;
-    case NUMBER:
-      printf("%d\n", node->number);
+    case NUM:
+      printf("%lf\n", node->number);
       break;
     case BOOLEAN:
       if (node->boolean) {
@@ -230,7 +243,7 @@ void printJsonObject(struct JsonObject *node) {
         printf("False\n");
       }
       break;
-    case VNULL:
+    case NIL:
       break;
     default:
       break;
@@ -246,7 +259,7 @@ void printArrayValue(struct ArrayValue *arval) {
 
 void printObjectMember(struct ObjectMember *member) {
   printf("key: %s\n", member->key);
-  printJsonObject(member->value);
+  printJsonObject(member->value->value);
   if (member->next) {
     printObjectMember(member->next);
   }
