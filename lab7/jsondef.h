@@ -1,7 +1,7 @@
 struct JsonObject {
   enum { OBJECT, ARRAY, STRING, NUMBER, BOOLEAN, VNULL } category;
   union {
-    struct ObjectMember *member;
+    struct ObjectMember *members;
     struct ArrayValue *values;
     char *string;
     double number;

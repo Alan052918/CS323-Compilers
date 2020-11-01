@@ -209,6 +209,49 @@ Values:
     ;
 %%
 
+void printJsonObject(struct JsonObject *node) {
+  switch (node->category) {
+    case OBJECT:
+      printObjectMember(node->members);
+      break;
+    case ARRAY:
+      printArrayValue(node->values);
+      break;
+    case STRING:
+      printf("%s\n", node->string);
+      break;
+    case NUMBER:
+      printf("%d\n", node->number);
+      break;
+    case BOOLEAN:
+      if (node->boolean) {
+        printf("True\n");
+      } else {
+        printf("False\n");
+      }
+      break;
+    case VNULL:
+      break;
+    default:
+      break;
+  }
+}
+
+void printArrayValue(struct ArrayValue *arval) {
+  printJsonObject(arval->value);
+  if (arval->next) {
+    printArrayValue(arval->next);
+  }
+}
+
+void printObjectMember(struct ObjectMember *member) {
+  printf("key: %s\n", member->key);
+  printJsonObject(member->value);
+  if (member->next) {
+    printObjectMember(member->next);
+  }
+}
+
 void yyerror(const char *s){
     printf("syntax error: ");
 }
@@ -217,11 +260,11 @@ int main(int argc, char **argv){
     if(argc != 2) {
         fprintf(stderr, "Usage: %s <file_path>\n", argv[0]);
         exit(-1);
-    }
-    else if(!(yyin = fopen(argv[1], "r"))) {
+    } else if(!(yyin = fopen(argv[1], "r"))) {
         perror(argv[1]);
         exit(-1);
     }
     yyparse();
+    printJsonObject(root);
     return 0;
 }
