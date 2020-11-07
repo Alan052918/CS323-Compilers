@@ -4,6 +4,8 @@ int foo()
   char b = '\x65';
 }
 
-char bar(int c)
+char bar(int d)
 {
-  return c;
+  return $;
+}
+
