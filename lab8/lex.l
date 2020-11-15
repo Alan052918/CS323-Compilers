@@ -1,5 +1,6 @@
 %{
     #include"syntax.tab.h"
+    #include "def.h"
 %}
 %option noyywrap
 
@@ -12,6 +13,7 @@ int 0|[1-9][0-9]*
 frac \.[0-9]+
 exp [Ee][+-]?[0-9]+
 number -?{int}{frac}?{exp}?
+error_number -?0[0-9]*{frac}?{exp}?
 
 empty [ \n\r\t]
 
@@ -24,11 +26,28 @@ empty [ \n\r\t]
 ":" { return COLON; }
 "," { return COMMA; }
 
-"true" { return TRUE; }
-"false" { return FALSE; }
+"true"  {
+          yylval.boolean = true;
+          return TRUE;
+        }
+"false" {
+          yylval.boolean = false;
+          return FALSE;
+        }
 "null" { return VNULL; }
 
-{string} { return STRING; }
-{number} { return NUMBER; }
+{string}  {
+            yylval.string = strdup(yytext);
+            return STRING;
+          }
+{number}  {
+            yylval.number = atof(yytext);
+            return NUMBER;
+          }
+{error_number}  {
+                  return ERROR_NUMBER;
+                }
 
 {empty} {}
+
+. { printf("lexical error: %s\n", yytext); }
