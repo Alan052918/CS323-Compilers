@@ -1,11 +1,21 @@
 %{
+  #include <cstdio>
+  #include <iostream>
+  #include <string>
   #include "include/astdef.h"
-  #include "lex.yy.c"
+  // #include "lex.yy.c"
+
+  using namespace std;
+
+  extern "C" FILE *yyin;
+
+  int syntax_error;
+  Node *program_root;
+
+  extern "C" int yylex();
+  extern "C" int yyparse();
 
   void yyerror(const char *);
-
-  Node *program_root;
-  int syntax_error;
 %}
 
 %union {
@@ -14,8 +24,8 @@
   char *char_value;
   char *type_value;
   char *id_value;
-  char *keyword_value;
-  Node *nonterminal_node;
+  const char *keyword_value;
+  struct Node *nonterminal_node;
 }
 
 %type <nonterminal_node> Program
@@ -542,7 +552,9 @@ Node *lhs(int nonterminal_type, int first_line, int last_line, int first_column,
   new_nonterminal_node->last_column = last_column;
   new_nonterminal_node->rhs = NULL;
 #ifdef DEBUG
-  printf("  lhs: %s[%d], line %d\n", get_nonterminal_name(nonterminal_type), nonterminal_type, new_nonterminal_node->first_line);
+  printf(" lhs: ");
+  get_nonterminal_name(nonterminal_type);
+  printf("[%d], line %d\n", nonterminal_type, new_nonterminal_node->first_line);
 #endif
   return new_nonterminal_node;
 }
@@ -657,7 +669,7 @@ void push_id(Node *lhs_node, char *id_val) {
   ptr->next = new_rhs_node;
 }
 
-void push_keyword(Node *lhs_node, char *keyword_val) {
+void push_keyword(Node *lhs_node, const char *keyword_val) {
 #ifdef DEBUG
   printf("    push keyword: %s, line %d\n", keyword_val, yylloc.first_line);
 #endif
@@ -681,7 +693,9 @@ void push_keyword(Node *lhs_node, char *keyword_val) {
 
 void push_nonterminal(Node *lhs_node, Node *nonterminal) {
 #ifdef DEBUG
-  printf("    push nonterminal: %s, line %d\n", get_nonterminal_name(nonterminal->nonterminal_token), yylloc.first_line);
+  printf("    push nonterminal: ");
+  get_nonterminal_name(nonterminal->nonterminal_token);
+  printf(", line %d\n", yylloc.first_line);
 #endif
   Rhs_node *new_rhs_node = (Rhs_node *)malloc(sizeof(Rhs_node));
   new_rhs_node->token_node = nonterminal;
@@ -697,29 +711,29 @@ void push_nonterminal(Node *lhs_node, Node *nonterminal) {
   ptr->next = new_rhs_node;
 }
 
-char *get_nonterminal_name(int nonterminal_val) {
+void get_nonterminal_name(int nonterminal_val) {
   switch (nonterminal_val) {
-    case Program: return "Program";
-    case ExtDefList: return "ExtDefList";
-    case ExtDef: return "ExtDef";
-    case ExtDecList: return "ExtDecList";
-    case Specifier: return "Specifier";
-    case StructSpecifier: return "StructSpecifier";
-    case VarDec: return "VarDec";
-    case FunDec: return "FunDec";
-    case VarList: return "VarList";
-    case ParamDec: return "ParamDec";
-    case CompSt: return "CompSt";
-    case StmtList: return "StmtList";
-    case Stmt: return "Stmt";
-    case DefList: return "DefList";
-    case Def: return "Def";
-    case DecList: return "DecList";
-    case Dec: return "Dec";
-    case Exp: return "Exp";
-    case Args: return "Args";
-    case Nil: return "Nil";
-    default: return "Undefined nonterminal type!";
+    case Program: printf("Program"); break;
+    case ExtDefList: printf("ExtDefList"); break;
+    case ExtDef: printf("ExtDef"); break;
+    case ExtDecList: printf("ExtDecList"); break;
+    case Specifier: printf("Specifier"); break;
+    case StructSpecifier: printf("StructSpecifier"); break;
+    case VarDec: printf("VarDec"); break;
+    case FunDec: printf("FunDec"); break;
+    case VarList: printf("VarList"); break;
+    case ParamDec: printf("ParamDec"); break;
+    case CompSt: printf("CompSt"); break;
+    case StmtList: printf("StmtList"); break;
+    case Stmt: printf("Stmt"); break;
+    case DefList: printf("DefList"); break;
+    case Def: printf("Def"); break;
+    case DecList: printf("DecList"); break;
+    case Dec: printf("Dec"); break;
+    case Exp: printf("Exp"); break;
+    case Args: printf("Args"); break;
+    case Nil: printf("Nil"); break;
+    default: printf("Undefined nonterminal type!"); break;
   }
 }
 
@@ -737,7 +751,10 @@ void print_tree(Node *pnode, int indent_depth) {
     case TYPE_T: printf("TYPE: %s\n", pnode->type_token); break;
     case ID_T: printf("ID: %s\n", pnode->id_token); break;
     case KEYWORD_T: printf("%s\n", pnode->keyword_token); break;
-    case NONTERMINAL_T: printf("%s (%d)\n", get_nonterminal_name(pnode->nonterminal_token), pnode->first_line); break;
+    case NONTERMINAL_T: 
+      get_nonterminal_name(pnode->nonterminal_token);
+      printf(" (%d)\n", pnode->first_line);
+      break;
     default: printf("Undefined node type %d\n", pnode->node_type); return;
   }
   Rhs_node *ptr = pnode->rhs;

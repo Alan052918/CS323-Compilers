@@ -1,4 +1,3 @@
-#include <stdarg.h>
 /* syntax tree node types */
 enum node_type {
   INT_T,
@@ -47,7 +46,7 @@ typedef struct Node {
     char *char_token;
     char *type_token;
     char *id_token;
-    char *keyword_token;
+    const char *keyword_token;
     int nonterminal_token;
   };
   struct Rhs_node *rhs;
@@ -69,8 +68,8 @@ void push_float(Node *lhs_node, float float_val);
 void push_char(Node *lhs_node, char *char_val);
 void push_type(Node *lhs_node, char *type_val);
 void push_id(Node *lhs_node, char *id_val);
-void push_keyword(Node *lhs_node, char *keyword_val);
+void push_keyword(Node *lhs_node, const char *keyword_val);
 void push_nonterminal(Node *lhs_node, Node *nonterminal);
 
-char *get_nonterminal_name(int nonterminal_val);
+void get_nonterminal_name(int nonterminal_val);
 void print_tree(Node *pnode, int indent_depth);

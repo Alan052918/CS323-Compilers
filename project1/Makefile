@@ -1,4 +1,4 @@
-CC=gcc
+CC=g++
 FLEX=flex
 BISON=bison
 
@@ -11,12 +11,12 @@ splc: .syntax .lex
 	@if ! test -d "./bin"; then \
 		mkdir bin; \
 	fi
-	$(CC) syntax.tab.c -lfl -ly -o bin/splc
+	$(CC) syntax.tab.c lex.yy.c -lfl -ly -o bin/splc
 debug: .syntax .lex
 	@if ! test -d "./bin"; then \
 		mkdir bin; \
 	fi
-	$(CC) syntax.tab.c -lfl -ly -DDEBUG -o bin/debug
+	$(CC) syntax.tab.c lex.yy.c -lfl -ly -DDEBUG -o bin/debug
 clean:
 	@rm -rf bin/
 	@rm lex.yy.c syntax.tab.* syntax.output

@@ -1,6 +1,9 @@
 %{
-  #include <stdlib.h>
+  #include <iostream>
+  #include <string>
   #include "syntax.tab.h"
+
+  using namespace std;
 
   #define YY_USER_ACTION \
     yylloc.first_line = yylineno; \
@@ -8,6 +11,8 @@
     yylloc.last_line = yylineno; \
     yylloc.last_column = yycoluno + yyleng; \
     yycoluno += yyleng;
+
+  extern "C" int yylex();
     
   int yycoluno = 1;
 %}
@@ -39,161 +44,161 @@ SINGLE_LINE_COMMENT "//".*
 #ifdef DEBUG
         printf("flex: found DOT, line %d\n", yylineno);
 #endif
-        yylval.keyword_value = "DOT";
+        yylval.keyword_value = (char *)"DOT";
         return DOT;
       }
 ";"   {
 #ifdef DEBUG
         printf("flex: found SEMI, line %d\n", yylineno);
 #endif
-        yylval.keyword_value = "SEMI";
+        yylval.keyword_value = (char *)"SEMI";
         return SEMI;
       }
 ","   {
 #ifdef DEBUG
         printf("flex: found COMMA, line %d\n", yylineno);
 #endif
-        yylval.keyword_value = "COMMA";
+        yylval.keyword_value = (char *)"COMMA";
         return COMMA;
       }
 "="   {
 #ifdef DEBUG
         printf("flex: found ASSIGN, line %d\n", yylineno);
 #endif
-        yylval.keyword_value = "ASSIGN";
+        yylval.keyword_value = (char *)"ASSIGN";
         return ASSIGN;
       }
 "<"   {
 #ifdef DEBUG
         printf("flex: found LT, line %d\n", yylineno);
 #endif
-        yylval.keyword_value = "LT";
+        yylval.keyword_value = (char *)"LT";
         return LT;
       }
 ">"   {
 #ifdef DEBUG
         printf("flex: found GT, line %d\n", yylineno);
 #endif
-        yylval.keyword_value = "GT";
+        yylval.keyword_value = (char *)"GT";
         return GT;
       }
 "+"   {
 #ifdef DEBUG
         printf("flex: found PLUS, line %d\n", yylineno);
 #endif
-        yylval.keyword_value = "PLUS";
+        yylval.keyword_value = (char *)"PLUS";
         return PLUS;
       }
 "-"   {
 #ifdef DEBUG
         printf("flex: found MINUS, line %d\n", yylineno);
 #endif
-        yylval.keyword_value = "MINUS";
+        yylval.keyword_value = (char *)"MINUS";
         return MINUS;
       }
 "*"   {
 #ifdef DEBUG
         printf("flex: found MUL, line %d\n", yylineno);
 #endif
-        yylval.keyword_value = "MUL";
+        yylval.keyword_value = (char *)"MUL";
         return MUL;
       }
 "/"   {
 #ifdef DEBUG
         printf("flex: found DIV, line %d\n", yylineno);
 #endif
-        yylval.keyword_value = "DIV";
+        yylval.keyword_value = (char *)"DIV";
         return DIV;
       }
 "!"   {
 #ifdef DEBUG
         printf("flex: found NOT, line %d\n", yylineno);
 #endif
-        yylval.keyword_value = "NOT";
+        yylval.keyword_value = (char *)"NOT";
         return NOT;
       }
 "("   {
 #ifdef DEBUG
         printf("flex: found LP, line %d\n", yylineno);
 #endif
-        yylval.keyword_value = "LP";
+        yylval.keyword_value = (char *)"LP";
         return LP;
       }
 ")"   {
 #ifdef DEBUG
         printf("flex: found RP, line %d\n", yylineno);
 #endif
-        yylval.keyword_value = "RP";
+        yylval.keyword_value = (char *)"RP";
         return RP;
       }
 "["   {
 #ifdef DEBUG
         printf("flex: found LB, line %d\n", yylineno);
 #endif
-        yylval.keyword_value = "LB";
+        yylval.keyword_value = (char *)"LB";
         return LB;
       }
 "]"   {
 #ifdef DEBUG
         printf("flex: found RB, line %d\n", yylineno);
 #endif
-        yylval.keyword_value = "RB";
+        yylval.keyword_value = (char *)"RB";
         return RB;
       }
 "{"   {
 #ifdef DEBUG
         printf("flex: found LC, line %d\n", yylineno);
 #endif
-        yylval.keyword_value = "LC";
+        yylval.keyword_value = (char *)"LC";
         return LC;
       }
 "}"   {
 #ifdef DEBUG
         printf("flex: found RC, line %d\n", yylineno);
 #endif
-        yylval.keyword_value = "RC";
+        yylval.keyword_value = (char *)"RC";
         return RC;
       }
 "<="  {
 #ifdef DEBUG
         printf("flex: found LE, line %d\n", yylineno);
 #endif
-        yylval.keyword_value = "LE";
+        yylval.keyword_value = (char *)"LE";
         return LE;
       }
 ">="  {
 #ifdef DEBUG
         printf("flex: found GE, line %d\n", yylineno);
 #endif
-        yylval.keyword_value = "GE";
+        yylval.keyword_value = (char *)"GE";
         return GE;
       }
 "!="  {
 #ifdef DEBUG
         printf("flex: found NE, line %d\n", yylineno);
 #endif
-        yylval.keyword_value = "NE";
+        yylval.keyword_value = (char *)"NE";
         return NE;
       }
 "=="  {
 #ifdef DEBUG
         printf("flex: found EQ, line %d\n", yylineno);
 #endif
-        yylval.keyword_value = "EQ";
+        yylval.keyword_value = (char *)"EQ";
         return EQ;
       }
 "&&"  {
 #ifdef DEBUG
         printf("flex: found AND, line %d\n", yylineno);
 #endif
-        yylval.keyword_value = "AND";
+        yylval.keyword_value = (char *)"AND";
         return AND;
       }
 "||"  {
 #ifdef DEBUG
         printf("flex: found OR, line %d\n", yylineno);
 #endif
-        yylval.keyword_value = "OR";
+        yylval.keyword_value = (char *)"OR";
         return OR;
       }
 
@@ -201,35 +206,35 @@ SINGLE_LINE_COMMENT "//".*
 #ifdef DEBUG
             printf("flex: found STRUCT, line %d\n", yylineno);
 #endif
-            yylval.keyword_value = "STRUCT";
+            yylval.keyword_value = (char *)"STRUCT";
             return STRUCT;
           }
 "if"  {
 #ifdef DEBUG
         printf("flex: found IF, line %d\n", yylineno);
 #endif
-        yylval.keyword_value = "IF";
+        yylval.keyword_value = (char *)"IF";
         return IF;
       }
 "else"  {
 #ifdef DEBUG
           printf("flex: found ELSE, line %d\n", yylineno);
 #endif
-          yylval.keyword_value = "ELSE";
+          yylval.keyword_value = (char *)"ELSE";
           return ELSE;
         }
 "while" {
 #ifdef DEBUG
           printf("flex: found WHILE, line %d\n", yylineno);
 #endif
-          yylval.keyword_value = "WHILE";
+          yylval.keyword_value = (char *)"WHILE";
           return WHILE;
         }
 "return"  {
 #ifdef DEBUG
             printf("flex: found RETURN, line %d\n", yylineno);
 #endif
-            yylval.keyword_value = "RETURN";
+            yylval.keyword_value = (char *)"RETURN";
             return RETURN;
           }
 
