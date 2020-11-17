@@ -3,7 +3,6 @@
   #include <iostream>
   #include <string>
   #include "include/astdef.h"
-  // #include "lex.yy.c"
 
   using namespace std;
 
