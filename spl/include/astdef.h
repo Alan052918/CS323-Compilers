@@ -1,3 +1,8 @@
+#ifndef ASTDEF_H
+#define ASTDEF_H
+
+#include <vector>
+
 /* syntax tree node types */
 enum node_type {
   INT_T,
@@ -36,10 +41,8 @@ enum nonterminal_type {
 /* syntax tree node definition */
 typedef struct Node {
   int node_type;
-  int first_line;
-  int last_line;
-  int first_column;
-  int last_column;
+  int rhs_form;
+  std::vector<Node *> children;
   union {
     long int_token;
     float float_token;
@@ -49,18 +52,16 @@ typedef struct Node {
     const char *keyword_token;
     int nonterminal_token;
   };
-  struct Rhs_node *rhs;
+  // struct Rhs_node *rhs;
+  int first_line;
+  int last_line;
+  int first_column;
+  int last_column;
 } Node;
 
-/* production rule right-hand-side definition */
-typedef struct Rhs_node {
-  struct Node *token_node;
-  struct Rhs_node *next;
-} Rhs_node;
-
 /* syntax tree node constructors */
-Node *lhs(int nonterminal_type, int first_line, int last_line, int first_column,
-          int last_column);
+Node *lhs(int nonterminal_type, int rhsf, int first_line, int last_line,
+          int first_column, int last_column);
 
 /* syntax tree actions */
 void push_int(Node *lhs_node, int int_val);
@@ -72,4 +73,28 @@ void push_keyword(Node *lhs_node, const char *keyword_val);
 void push_nonterminal(Node *lhs_node, Node *nonterminal);
 
 void get_nonterminal_name(int nonterminal_val);
-void print_tree(Node *pnode, int indent_depth);
+
+/* visitor functions */
+int visit_Program(Node *program);
+int visit_ExtDefList(Node *extDefList, int indent_level);
+int visit_ExtDef(Node *extDef, int indent_level);
+int visit_ExtDecList(Node *extDecList, int indent_level);
+int visit_Specifier(Node *specifier, int indent_level);
+int visit_StructSpecifier(Node *structSpecifier, int indent_level);
+int visit_VarDec(Node *varDec, int indent_level);
+int visit_FunDec(Node *funDec, int indent_level);
+int visit_VarList(Node *varList, int indent_level);
+int visit_ParamDec(Node *paramDec, int indent_level);
+int visit_CompSt(Node *compSt, int indent_level);
+int visit_StmtList(Node *stmtList, int indent_level);
+int visit_Stmt(Node *stmt, int indent_level);
+int visit_DefList(Node *defList, int indent_level);
+int visit_Def(Node *def, int indent_level);
+int visit_DecList(Node *decList, int indent_level);
+int visit_Dec(Node *dec, int indent_level);
+int visit_Exp(Node *exp, int indent_level);
+int visit_Args(Node *args, int indent_level);
+
+void print_indentation(int indent_level);
+
+#endif

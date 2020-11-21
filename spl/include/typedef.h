@@ -3,9 +3,15 @@
 
 typedef struct Type {
   char name[32];
-  enum { PRIMITIVE, ARRAY, STRUCTURE } category;
+  enum {
+    INTEGER,
+    FLOATING_POINT,
+    CHARACTER,
+    PRIMITIVE,
+    ARRAY,
+    STRUCTURE
+  } category;
   union {
-    enum { INTEGER, FLOATING_POINT, CHARACTER } primitive;
     struct Array *array;
     struct FieldList *structure;
   };
