@@ -1,6 +1,9 @@
 #ifndef ASTDEF_H
 #define ASTDEF_H
 
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
 #include <vector>
 
 /* syntax tree node types */

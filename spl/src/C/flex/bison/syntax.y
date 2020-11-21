@@ -1,11 +1,6 @@
 %{
-  #include <cstdio>
-  #include <iostream>
-  #include <cstring>
   #include "include/astdef.h"
   #include "include/typedef.h"
-
-  using namespace std;
 
   extern "C" FILE *yyin;
 
@@ -541,8 +536,8 @@ Args:
 
 %%
 
-#include "src/C/build_tree.c"
-#include "src/C/visitor.c"
+#include "src/C/build_tree.cpp"
+#include "src/C/visitor.cpp"
 
 void yyerror(const char *s) {
   syntax_error = true;
