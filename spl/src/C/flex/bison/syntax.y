@@ -3,6 +3,7 @@
   #include <iostream>
   #include <string>
   #include "include/astdef.h"
+  // #include "include/typedef.h"
 
   using namespace std;
 
@@ -10,6 +11,7 @@
 
   int syntax_error;
   Node *program_root;
+  FILE *pt;
 
   extern "C" int yylex();
   extern "C" int yyparse();
@@ -711,50 +713,65 @@ void push_nonterminal(Node *lhs_node, Node *nonterminal) {
 }
 
 void get_nonterminal_name(int nonterminal_val) {
-  switch (nonterminal_val) {
-    case Program: printf("Program"); break;
-    case ExtDefList: printf("ExtDefList"); break;
-    case ExtDef: printf("ExtDef"); break;
-    case ExtDecList: printf("ExtDecList"); break;
-    case Specifier: printf("Specifier"); break;
-    case StructSpecifier: printf("StructSpecifier"); break;
-    case VarDec: printf("VarDec"); break;
-    case FunDec: printf("FunDec"); break;
-    case VarList: printf("VarList"); break;
-    case ParamDec: printf("ParamDec"); break;
-    case CompSt: printf("CompSt"); break;
-    case StmtList: printf("StmtList"); break;
-    case Stmt: printf("Stmt"); break;
-    case DefList: printf("DefList"); break;
-    case Def: printf("Def"); break;
-    case DecList: printf("DecList"); break;
-    case Dec: printf("Dec"); break;
-    case Exp: printf("Exp"); break;
-    case Args: printf("Args"); break;
-    case Nil: printf("Nil"); break;
-    default: printf("Undefined nonterminal type!"); break;
+  if (!(pt = fopen("pt.txt", "a"))) {
+    printf("Fail to open pt.txt, abnormal exit\n");
+    exit(EXIT_FAILURE);
   }
+  switch (nonterminal_val) {
+    case Program: fprintf(pt, "Program"); break;
+    case ExtDefList: fprintf(pt, "ExtDefList"); break;
+    case ExtDef: fprintf(pt, "ExtDef"); break;
+    case ExtDecList: fprintf(pt, "ExtDecList"); break;
+    case Specifier: fprintf(pt, "Specifier"); break;
+    case StructSpecifier: fprintf(pt, "StructSpecifier"); break;
+    case VarDec: fprintf(pt, "VarDec"); break;
+    case FunDec: fprintf(pt, "FunDec"); break;
+    case VarList: fprintf(pt, "VarList"); break;
+    case ParamDec: fprintf(pt, "ParamDec"); break;
+    case CompSt: fprintf(pt, "CompSt"); break;
+    case StmtList: fprintf(pt, "StmtList"); break;
+    case Stmt: fprintf(pt, "Stmt"); break;
+    case DefList: fprintf(pt, "DefList"); break;
+    case Def: fprintf(pt, "Def"); break;
+    case DecList: fprintf(pt, "DecList"); break;
+    case Dec: fprintf(pt, "Dec"); break;
+    case Exp: fprintf(pt, "Exp"); break;
+    case Args: fprintf(pt, "Args"); break;
+    case Nil: fprintf(pt, "Nil"); break;
+    default: fprintf(pt, "Undefined nonterminal type!"); break;
+  }
+  fclose(pt);
 }
 
 void print_tree(Node *pnode, int indent_depth) {
   if (pnode->node_type == NONTERMINAL_T && pnode->nonterminal_token == Nil) {
     return;
   }
+  if (!(pt = fopen("pt.txt", "a"))) {
+    printf("Fail to open pt.txt, abnormal exit\n");
+    exit(EXIT_FAILURE);
+  }
   for (int i = 0; i < indent_depth; i++) {
-    printf(" ");
+    fprintf(pt, " ");
   }
   switch (pnode->node_type) {
-    case INT_T: printf("INT: %ld\n", pnode->int_token); break;
-    case FLOAT_T: printf("FLOAT: %f\n", pnode->float_token); break;
-    case CHAR_T: printf("CHAR: %s\n", pnode->char_token); break;
-    case TYPE_T: printf("TYPE: %s\n", pnode->type_token); break;
-    case ID_T: printf("ID: %s\n", pnode->id_token); break;
-    case KEYWORD_T: printf("%s\n", pnode->keyword_token); break;
-    case NONTERMINAL_T: 
+    case INT_T: fprintf(pt, "INT: %ld\n", pnode->int_token); fclose(pt); break;
+    case FLOAT_T: fprintf(pt, "FLOAT: %f\n", pnode->float_token); fclose(pt); break;
+    case CHAR_T: fprintf(pt, "CHAR: %s\n", pnode->char_token); fclose(pt); break;
+    case TYPE_T: fprintf(pt, "TYPE: %s\n", pnode->type_token); fclose(pt); break;
+    case ID_T: fprintf(pt, "ID: %s\n", pnode->id_token); fclose(pt); break;
+    case KEYWORD_T: fprintf(pt, "%s\n", pnode->keyword_token); fclose(pt); break;
+    case NONTERMINAL_T:
+      fclose(pt);
       get_nonterminal_name(pnode->nonterminal_token);
-      printf(" (%d)\n", pnode->first_line);
+      if (!(pt = fopen("pt.txt", "a"))) {
+        printf("Fail to open pt.txt, abnormal exit\n");
+        exit(EXIT_FAILURE);
+      }
+      fprintf(pt, " (%d)\n", pnode->first_line);
+      fclose(pt);
       break;
-    default: printf("Undefined node type %d\n", pnode->node_type); return;
+    default: fprintf(pt, "Undefined node type %d\n", pnode->node_type); fclose(pt); return;
   }
   Rhs_node *ptr = pnode->rhs;
   if (ptr == NULL) {
@@ -787,6 +804,9 @@ int main(int argc, char **argv) {
 #ifdef DEBUG
       printf("\n*********************\n");
 #endif
+      pt = fopen("pt.txt", "w");
+      fprintf(pt, "<PARSE TREE for SPL source file %s>\n", file_name);
+      fclose(pt);
       print_tree(program_root, 0);
     } else if (result == 1) {
 #ifdef DEBUG

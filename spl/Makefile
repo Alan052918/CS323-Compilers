@@ -19,4 +19,4 @@ debug: .syntax .lex
 	$(CC) syntax.tab.c lex.yy.c -lfl -ly -DDEBUG -o bin/debug
 clean:
 	@rm -rf bin/
-	@rm lex.yy.c syntax.tab.* syntax.output
+	@rm lex.yy.c syntax.tab.* syntax.output pt.txt
