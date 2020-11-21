@@ -52,12 +52,13 @@ typedef struct Node {
     const char *keyword_token;
     int nonterminal_token;
   };
-  // struct Rhs_node *rhs;
   int first_line;
   int last_line;
   int first_column;
   int last_column;
 } Node;
+
+Node *program_root;
 
 /* syntax tree node constructors */
 Node *lhs(int nonterminal_type, int rhsf, int first_line, int last_line,
@@ -97,4 +98,4 @@ int visit_Args(Node *args, int indent_level);
 
 void print_indentation(int indent_level);
 
-#endif
+#endif  // ASTDEF_H

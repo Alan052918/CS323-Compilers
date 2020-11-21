@@ -17,6 +17,11 @@ debug: .syntax .lex
 		mkdir bin; \
 	fi
 	$(CC) syntax.tab.c lex.yy.c -lfl -ly -DDEBUG -o bin/debug
+parse_tree: .syntax .lex
+	@if ! test -d "./bin"; then \
+		mkdir bin; \
+	fi
+	$(CC) syntax.tab.c lex.yy.c -lfl -ly -DPARSE_TREE -o bin/parse_tree
 clean:
 	@rm -rf bin/
 	@rm lex.yy.c syntax.tab.* syntax.output pt.txt
