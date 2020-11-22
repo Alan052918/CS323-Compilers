@@ -1,10 +1,7 @@
 #ifndef ASTDEF_H
 #define ASTDEF_H
 
-#include <cstdio>
-#include <cstdlib>
-#include <cstring>
-#include <vector>
+#include "common.h"
 
 /* syntax tree node types */
 enum node_type {
@@ -61,8 +58,6 @@ typedef struct Node {
   int last_column;
 } Node;
 
-Node *program_root;
-
 /* syntax tree node constructors */
 Node *lhs(int nonterminal_type, int rhsf, int first_line, int last_line,
           int first_column, int last_column);
@@ -100,5 +95,8 @@ int visit_Exp(Node *exp, int indent_level);
 int visit_Args(Node *args, int indent_level);
 
 void print_indentation(int indent_level);
+
+// global variable
+Node *program_root;
 
 #endif  // ASTDEF_H

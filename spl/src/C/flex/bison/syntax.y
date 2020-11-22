@@ -1,4 +1,5 @@
 %{
+  #include "include/common.h"
   #include "include/astdef.h"
   #include "include/typedef.h"
 

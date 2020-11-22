@@ -1,4 +1,7 @@
 #include "../../include/astdef.h"
+#include "../../include/common.h"
+#include "../../include/symtable.h"
+#include "../../include/typedef.h"
 
 /* Visitor methods */
 
@@ -40,6 +43,7 @@ int visit_ExtDef(Node *extDef, int indent_level) {
 #endif
   switch (extDef->rhs_form) {
     case 0:  // ExtDef := Specifier ExtDecList SEMI
+             // global variables (of the same type) DECLARATION, PUSH VAR
       visit_Specifier(extDef->children[0], indent_level + 1);
       visit_ExtDecList(extDef->children[1], indent_level + 1);
 #if defined(PARSE_TREE) || defined(DEBUG)
@@ -55,6 +59,7 @@ int visit_ExtDef(Node *extDef, int indent_level) {
 #endif
       break;
     case 2:  // ExtDef := Specifier FunDec CompSt
+             // function DEFINITION, PUSH FUN
       visit_Specifier(extDef->children[0], indent_level + 1);
       visit_FunDec(extDef->children[1], indent_level + 1);
       visit_CompSt(extDef->children[2], indent_level + 1);
@@ -165,6 +170,7 @@ int visit_VarDec(Node *varDec, int indent_level) {
 #endif
       break;
     case 1:  // VarDec := VarDec LB INT RB
+             // array variable declaration
       visit_VarDec(varDec->children[0], indent_level + 1);
 #if defined(PARSE_TREE) || defined(DEBUG)
       print_indentation(indent_level + 1);
@@ -270,10 +276,12 @@ int visit_CompSt(Node *compSt, int indent_level) {
 #endif
   switch (compSt->rhs_form) {
     case 0:  // CompSt := LC DefList StmtList RC
+             // enter new scope, PUSH MAP
 #if defined(PARSE_TREE) || defined(DEBUG)
       print_indentation(indent_level + 1);
       printf("LC\n");
 #endif
+      st.push_maps();
       visit_DefList(compSt->children[1], indent_level + 1);
       visit_StmtList(compSt->children[2], indent_level + 1);
 #if defined(PARSE_TREE) || defined(DEBUG)
@@ -423,6 +431,7 @@ int visit_Def(Node *def, int indent_level) {
 #endif
   switch (def->rhs_form) {
     case 0:  // Def := Specifier DecList SEMI
+             // local variable DECLARATOIN, PUSH MAP
       visit_Specifier(def->children[0], indent_level + 1);
       visit_DecList(def->children[1], indent_level + 1);
 #if defined(PARSE_TREE) || defined(DEBUG)
@@ -493,7 +502,7 @@ int visit_Exp(Node *exp, int indent_level) {
 #endif
   switch (exp->rhs_form) {
     case 0:  // Exp := Exp ASSIGN || AND || OR || LT || LE || GT || GE || NE ||
-      // EQ || PLUS || MINUS || DIV Exp
+             // EQ || PLUS || MINUS || DIV Exp
       visit_Exp(exp->children[0], indent_level + 1);
 #if defined(PARSE_TREE) || defined(DEBUG)
       print_indentation(indent_level + 1);
@@ -520,6 +529,7 @@ int visit_Exp(Node *exp, int indent_level) {
       visit_Exp(exp->children[1], indent_level + 1);
       break;
     case 3:  // Exp := ID LP Args RP
+             // function call
 #if defined(PARSE_TREE) || defined(DEBUG)
       print_indentation(indent_level + 1);
       printf("ID: %s\n", exp->children[0]->id_token);
@@ -533,6 +543,7 @@ int visit_Exp(Node *exp, int indent_level) {
 #endif
       break;
     case 4:  // Exp := ID LP RP
+             // function call
 #if defined(PARSE_TREE) || defined(DEBUG)
       print_indentation(indent_level + 1);
       printf("ID: %s\n", exp->children[0]->id_token);
@@ -555,6 +566,7 @@ int visit_Exp(Node *exp, int indent_level) {
 #endif
       break;
     case 6:  // Exp := Exp DOT ID
+             // access member variable
       visit_Exp(exp->children[0], indent_level + 1);
 #if defined(PARSE_TREE) || defined(DEBUG)
       print_indentation(indent_level + 1);

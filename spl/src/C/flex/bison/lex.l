@@ -13,7 +13,7 @@
     yycoluno += yyleng;
 
   extern "C" int yylex();
-    
+
   int yycoluno = 1;
 %}
 
@@ -27,7 +27,7 @@ TYPE    "int"|"char"|"float"
 ID      [a-zA-Z_][0-9a-zA-Z_]*
 
 ERR_ID    [a-zA-Z0-9_]+
-ERR_CHAR  \'\\x[0-9a-zA-Z]+\' 
+ERR_CHAR  \'\\x[0-9a-zA-Z]+\'
 
 SINGLE_LINE_COMMENT "//".*
 
