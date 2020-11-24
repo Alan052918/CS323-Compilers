@@ -4,6 +4,13 @@
 #include "common.h"
 #include "typedef.h"
 
+/**
+ * Search modes
+ * - Decf: for declaration/definition, look for id in current scope only
+ * - Use: for usage, look for id recursively in the scope hierarchy
+ */
+enum SearchMode { DecfMode, UseMode };
+
 class SymbolTable {
  private:
   int scope_depth;
@@ -71,11 +78,11 @@ class SymbolTable {
 #ifdef DEBUG
     printf("SymbolTable.push_var(): variable [%s]\n", id);
 #endif
-    if (find_var(id) == true) {
+    if (find_var(id, DecfMode) != NULL) {
       fprintf(stderr, "Redefining variable %s\n", id);
       return;
     }
-    this->vm_vec.back().insert({id, vtype});
+    this->vm_vec.back().insert(std::make_pair(id, vtype));
   }
 
   /**
@@ -85,47 +92,47 @@ class SymbolTable {
 #ifdef DEBUG
     printf("SymbolTable.push_fun(): function [%s]\n", id);
 #endif
-    if (find_fun(id) == true) {
+    if (find_fun(id, DecfMode) != NULL) {
       fprintf(stderr, "Redefining function %s\n", id);
       return;
     }
-    this->fm_vec.back().insert({id, ftype});
+    this->fm_vec.back().insert(std::make_pair(id, ftype));
   }
 
   /**
    * search variable id in current scope for duplicates
    */
-  bool find_var(const char *id) {
+  VarType *find_var(const char *id, SearchMode mode) {
     std::unordered_map<const char *, VarType *> map = this->top_varmap();
     auto search = map.find(id);
     if (search != map.end()) {
 #ifdef DEBUG
-      printf("SymbolTable.find_var(): FOUND duplicate\n");
+      printf("SymbolTable.find_var(): FOUND variable type\n");
 #endif
-      return true;
+      return search->second;
     }
 #ifdef DEBUG
-    printf("SymbolTable.find_var(): no duplicate\n");
+    printf("SymbolTable.find_var(): NOT found\n");
 #endif
-    return false;
+    return NULL;
   }
 
   /**
    * search function id in current scope for duplicates
    */
-  bool find_fun(const char *id) {
+  FunType *find_fun(const char *id, SearchMode mode) {
     std::unordered_map<const char *, FunType *> map = this->top_funmap();
     auto search = map.find(id);
     if (search != map.end()) {
 #ifdef DEBUG
-      printf("SymbolTable.find_fun(): FOUND duplicate\n");
+      printf("SymbolTable.find_fun(): FOUND function type\n");
 #endif
-      return true;
+      return search->second;
     }
 #ifdef DEBUG
-    printf("SymbolTable.find_fun(): no duplicate\n");
+    printf("SymbolTable.find_fun(): NOT found\n");
 #endif
-    return false;
+    return NULL;
   }
 };
 

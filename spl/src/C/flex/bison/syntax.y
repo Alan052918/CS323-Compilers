@@ -1,6 +1,6 @@
 %{
   #include "include/common.h"
-  #include "include/astdef.h"
+  #include "include/parsetree.h"
   #include "include/typedef.h"
 
   extern "C" FILE *yyin;
@@ -537,7 +537,7 @@ Args:
 
 %%
 
-#include "src/C/build_tree.cpp"
+#include "src/C/parsetree.cpp"
 #include "src/C/visitor.cpp"
 
 void yyerror(const char *s) {

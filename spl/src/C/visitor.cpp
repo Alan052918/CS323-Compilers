@@ -1,4 +1,4 @@
-#include "../../include/astdef.h"
+#include "../../include/parsetree.h"
 #include "../../include/common.h"
 #include "../../include/symtable.h"
 #include "../../include/typedef.h"
@@ -97,20 +97,33 @@ int visit_ExtDecList(Node *extDecList, int indent_level) {
   }
 }
 
-int visit_Specifier(Node *specifier, int indent_level) {
+VarType *visit_Specifier(Node *specifier, int indent_level) {
 #if defined(PARSE_TREE) || defined(DEBUG)
   print_indentation(indent_level);
   printf("Specifier (%d)\n", specifier->first_line);
 #endif
+  VarType *vt;
   switch (specifier->rhs_form) {
     case 0:  // Specifier := TYPE
 #if defined(PARSE_TREE) || defined(DEBUG)
       print_indentation(indent_level + 1);
       printf("TYPE: %s\n", specifier->children[0]->type_token);
 #endif
+      vt = (VarType *)malloc(sizeof(VarType));
+      memset(vt, '\0', sizeof(VarType));
+      vt->category = PRIMITIVE;
+      if (strcmp("int", specifier->children[0]->type_token) == 0) {
+        vt->primitive = INTEGER;
+      } else if (strcmp("char", specifier->children[0]->type_token) == 0) {
+        vt->primitive = CHARACTER;
+      } else if (strcmp("float", specifier->children[0]->type_token) == 0) {
+        vt->primitive = FLOATING_POINT;
+      } else {
+        fprintf(stderr, "Unidentified type token\n");
+      }
       break;
     case 1:  // Specifier := StructSpecifier
-      visit_StructSpecifier(specifier->children[0], indent_level + 1);
+      vt = visit_StructSpecifier(specifier->children[0], indent_level + 1);
       break;
 
     default:
@@ -118,9 +131,10 @@ int visit_Specifier(Node *specifier, int indent_level) {
               specifier->first_line);
       break;
   }
+  return vt;
 }
 
-int visit_StructSpecifier(Node *structSpecifier, int indent_level) {
+VarType *visit_StructSpecifier(Node *structSpecifier, int indent_level) {
 #if defined(PARSE_TREE) || defined(DEBUG)
   print_indentation(indent_level);
   printf("StructSpecifier (%d)\n", structSpecifier->first_line);

@@ -1,6 +1,5 @@
 %{
-  #include <iostream>
-  #include <string>
+  #include "include/common.h"
   #include "syntax.tab.h"
 
   using namespace std;

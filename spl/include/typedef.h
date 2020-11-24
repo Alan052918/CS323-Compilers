@@ -3,18 +3,15 @@
 
 #include "common.h"
 
+enum Category { PRIMITIVE, ARRAY, STRUCTURE };
+enum Primitive { INTEGER, FLOATING_POINT, CHARACTER };
+
 // variable type
 typedef struct VarType {
   char name[32];
-  enum {
-    INTEGER,
-    FLOATING_POINT,
-    CHARACTER,
-    PRIMITIVE,
-    ARRAY,
-    STRUCTURE
-  } category;
+  Category category;
   union {
+    Primitive primitive;
     struct Array *array;
     struct FieldList *structure;
   };
