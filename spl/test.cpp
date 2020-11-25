@@ -1,25 +1,13 @@
-#include <iostream>
-#include <vector>
+#include "include/ast/ast.h"
+#include "include/ast/ast_list.h"
+#include "include/common.h"
+#include "include/symtable.h"
+#include "include/typedef.h"
 
-typedef struct Type {
-  int a;
-} Type;
+using namespace std;
 
 int main() {
-  std::vector<Type *> list;
-  Type *type = (Type *)malloc(sizeof(Type));
-  type->a = 12;
-  list.push_back(type);
-  for (Type *t : list) {
-    std::cout << t->a << '\n';
-  }
-
-  std::vector<int> q;
-  q.push_back(12);
-  q.push_back(34);
-  q.push_back(45);
-  for (int i : q) {
-    std::cout << i << " ";
-  }
-  std::cout << std::endl;
+  program_root = &Program(0, 1, 1, 1, 1);
+  program_root->ext_def_list = &ExtDefList(0, 1, 1, 1, 1);
+  program_root->visit(0);
 }
