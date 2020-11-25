@@ -1,5 +1,6 @@
 %{
   #include "include/common.h"
+  #include "include/ast_list.h"
   #include "syntax.tab.h"
 
   using namespace std;

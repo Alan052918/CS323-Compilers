@@ -2,10 +2,11 @@
 #define PROGRAM_H
 
 #include "ast.h"
-#include "ext_def_list.h"
 #include "../common.h"
 #include "../symtable.h"
 #include "../typedef.h"
+
+class ExtDefList;
 
 class Program : public NonterminalNode {
  public:
@@ -14,14 +15,7 @@ class Program : public NonterminalNode {
   Program(int rhsf, int fl, int ll, int fc, int lc)
       : NonterminalNode(rhsf, fl, ll, fc, lc) {}
 
-  void visit(int indent_level) override {
-#if defined(PARSE_TREE) || defined(DEBUG)
-    this->print_indentation(indent_level);
-    printf("Program (%d)\n", this->first_line);
-#endif
-    // Program := ExtDefList
-    this->ext_def_list->visit(indent_level + 1);
-  }
+  void visit(int indent_level) override;
 };
 
 Program *program_root;

@@ -24,18 +24,8 @@ class ASTNode {
     this->last_column = lc;
   }
 
-  virtual void visit(int indent_level) {
-#if defined(PARSE_TREE) || defined(DEBUG)
-    this->print_indentation(indent_level);
-    printf("Generic ASTNode (%d)\n", this->first_line);
-#endif
-  }
-
-  void print_indentation(int indent_level) {
-    for (int i = 0; i < indent_level; i++) {
-      printf("  ");  // indent with 2 spaces
-    }
-  }
+  virtual void visit(int indent_level);
+  void print_indentation(int indent_level);
 };
 
 class TerminalNode : public ASTNode {
@@ -46,7 +36,7 @@ class TerminalNode : public ASTNode {
     char *char_token;
     char *type_token;
     char *id_token;
-    const char *keyword_token;
+    char *keyword_token;
   };
 
   TerminalNode(NodeType nt, int fl, int ll, int fc, int lc)
