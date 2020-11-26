@@ -388,7 +388,7 @@ DecList:
       $$->node_list.push_back($1);
     }
   | Dec COMMA DecList {
-      $$ = new DecList(1, @1.first_line, @3.last_line, @1.first_column, @3.last_column);
+      $$ = new DecList(0, @1.first_line, @3.last_line, @1.first_column, @3.last_column);
 
       $$->node_list.push_back($1);
       for (Dec *dec : $3->node_list) {
