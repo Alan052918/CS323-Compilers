@@ -5,7 +5,7 @@
 Stmt::Stmt(int rhsf, int fl, int ll, int fc, int lc)
     : NonterminalNode(rhsf, fl, ll, fc, lc) {
 #ifdef DEBUG
-  printf("  bison: reduce Stmt[%d]\n", rhsf);
+  printf("  bison: reduce Stmt[%d] l%d-%d c%d-%d\n", rhsf, fl, ll, fc, lc);
 #endif
 }
 

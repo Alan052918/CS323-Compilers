@@ -4,7 +4,7 @@
 StmtList::StmtList(int rhsf, int fl, int ll, int fc, int lc)
     : NonterminalNode(rhsf, fl, ll, fc, lc) {
 #ifdef DEBUG
-  printf("  bison: reduce StmtList[%d]\n", rhsf);
+  printf("  bison: reduce StmtList[%d] l%d-%d c%d-%d\n", rhsf, fl, ll, fc, lc);
 #endif
 }
 
@@ -12,15 +12,15 @@ void StmtList::visit(int indent_level) {
   if (this->rhs_form == 1) {
     return;
   }
-#if defined(PARSE_TREE) || defined(DEBUG)
-  this->print_indentation(indent_level);
-  printf("StmtList (%d)\n", this->first_line);
-#endif
   switch (this->rhs_form) {
     case 0:  // StmtList := Stmt StmtList
       for (int i = 0; i < this->node_list.size(); i++) {
         Stmt *stmt = this->node_list.at(i);
-        stmt->visit(indent_level + i);
+#if defined(PARSE_TREE) || defined(DEBUG)
+        this->print_indentation(indent_level + i);
+        printf("StmtList (%d)\n", stmt->first_line);
+#endif
+        stmt->visit(indent_level + 1 + i);
       }
       break;
       /* case 1:  // StmtList := %empty

@@ -7,11 +7,11 @@
 ExtDef::ExtDef(int rhsf, int fl, int ll, int fc, int lc)
     : NonterminalNode(rhsf, fl, ll, fc, lc) {
 #ifdef DEBUG
-  printf("  bison: reduce ExtDef[%d]\n", rhsf);
+  printf("  bison: reduce ExtDef[%d] l%d-%d c%d-%d\n", rhsf, fl, ll, fc, lc);
 #endif
 }
 
-void ExtDef::visit(int indent_level)  {
+void ExtDef::visit(int indent_level) {
 #if defined(PARSE_TREE) || defined(DEBUG)
   this->print_indentation(indent_level);
   printf("ExtDef (%d)\n", this->first_line);

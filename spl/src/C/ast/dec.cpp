@@ -5,7 +5,7 @@
 Dec::Dec(int rhsf, int fl, int ll, int fc, int lc)
     : NonterminalNode(rhsf, fl, ll, fc, lc) {
 #ifdef DEBUG
-  printf("  bison: reduce Dec[%d]\n", rhsf);
+  printf("  bison: reduce Dec[%d] l%d-%d c%d-%d\n", rhsf, fl, ll, fc, lc);
 #endif
 }
 

@@ -221,7 +221,7 @@ FunDec:
       $$ = new FunDec(0, @1.first_line, @4.last_line, @1.first_column, @4.last_column);
 
       $$->id_node = new TerminalNode(Id, @2.first_line, @2.last_line, @2.first_column, @2.last_column);
-      $$->id_node->id_token = $2;
+      $$->id_node->id_token = $1;
 
       $$->var_list = $3;
     }
@@ -229,7 +229,7 @@ FunDec:
       $$ = new FunDec(1, @1.first_line, @3.last_line, @1.first_column, @3.last_column);
 
       $$->id_node = new TerminalNode(Id, @2.first_line, @2.last_line, @2.first_column, @2.last_column);
-      $$->id_node->id_token = $2;
+      $$->id_node->id_token = $1;
     }
   | ID LP VarList error {
       printf("Error type B at Line %d: Missing closing parenthesis ')'\n", @$.first_line);

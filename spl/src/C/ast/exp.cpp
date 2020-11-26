@@ -4,7 +4,7 @@
 Exp::Exp(int rhsf, int fl, int ll, int fc, int lc)
     : NonterminalNode(rhsf, fl, ll, fc, lc) {
 #ifdef DEBUG
-  printf("  bison: reduce Exp[%d]\n", rhsf);
+  printf("  bison: reduce Exp[%d] l%d-%d c%d-%d\n", rhsf, fl, ll, fc, lc);
 #endif
 }
 
@@ -21,7 +21,7 @@ void Exp::visit(int indent_level) {
       this->print_indentation(indent_level + 1);
       printf("%s\n", this->keyword_node->keyword_token);
 #endif
-      strcpy(this->keyword, this->keyword_node->keyword_token);
+      this->keyword = this->keyword_node->keyword_token;
       this->exp_2->visit(indent_level + 1);
       break;
     case 1:  // Exp := LP Exp RP
@@ -40,7 +40,7 @@ void Exp::visit(int indent_level) {
       this->print_indentation(indent_level + 1);
       printf("%s\n", this->keyword_node->keyword_token);
 #endif
-      strcpy(this->keyword, this->keyword_node->keyword_token);
+      this->keyword = this->keyword_node->keyword_token;
       this->exp_1->visit(indent_level + 1);
       break;
     case 3:  // Exp := ID LP Args RP
@@ -51,7 +51,7 @@ void Exp::visit(int indent_level) {
       this->print_indentation(indent_level + 1);
       printf("LP\n");
 #endif
-      strcpy(this->id, this->id_node->id_token);
+      this->id = this->id_node->id_token;
       this->args->visit(indent_level + 1);
 #if defined(PARSE_TREE) || defined(DEBUG)
       this->print_indentation(indent_level + 1);
@@ -68,7 +68,7 @@ void Exp::visit(int indent_level) {
       this->print_indentation(indent_level + 1);
       printf("RP\n");
 #endif
-      strcpy(this->id, this->id_node->id_token);
+      this->id = this->id_node->id_token;
       break;
     case 5:  // Exp := Exp LB Exp RB
       this->exp_1->visit(indent_level + 1);
@@ -91,14 +91,14 @@ void Exp::visit(int indent_level) {
       this->print_indentation(indent_level + 1);
       printf("ID: %s\n", this->id_node->id_token);
 #endif
-      strcpy(this->id, this->id_node->id_token);
+      this->id = this->id_node->id_token;
       break;
     case 7:  // Exp := ID
 #if defined(PARSE_TREE) || defined(DEBUG)
       this->print_indentation(indent_level + 1);
       printf("ID: %s\n", this->id_node->id_token);
 #endif
-      strcpy(this->id, this->id_node->id_token);
+      this->id = this->id_node->id_token;
       break;
     case 8:  // Exp := INT
 #if defined(PARSE_TREE) || defined(DEBUG)
@@ -119,7 +119,7 @@ void Exp::visit(int indent_level) {
       this->print_indentation(indent_level + 1);
       printf("CHAR: %s\n", this->char_node->char_token);
 #endif
-      strcpy(this->character, this->char_node->char_token);
+      this->character = this->char_node->char_token;
       break;
 
     default:
