@@ -17,7 +17,11 @@ class FunDec : public NonterminalNode {
   char *id;
 
   FunDec(int rhsf, int fl, int ll, int fc, int lc)
-      : NonterminalNode(rhsf, fl, ll, fc, lc) {}
+      : NonterminalNode(rhsf, fl, ll, fc, lc) {
+#if defined(PARSE_TREE) || defined(DEBUG)
+    printf("  bison: reduce FunDec[%d]\n", rhsf);
+#endif
+  }
 
   void visit(int indent_level) override;
 };

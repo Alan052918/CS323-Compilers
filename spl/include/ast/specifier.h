@@ -17,7 +17,11 @@ class Specifier : public NonterminalNode {
   VarType *var_type;
 
   Specifier(int rhsf, int fl, int ll, int fc, int lc)
-      : NonterminalNode(rhsf, fl, ll, fc, lc) {}
+      : NonterminalNode(rhsf, fl, ll, fc, lc) {
+#if defined(PARSE_TREE) || defined(DEBUG)
+    printf("  bison: reduce Specifier[%d]\n", rhsf);
+#endif
+  }
 
   void visit(int indent_level) override;
 };

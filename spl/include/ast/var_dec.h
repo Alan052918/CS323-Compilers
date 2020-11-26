@@ -18,7 +18,11 @@ class VarDec : public NonterminalNode {
   std::vector<int> dim_list;
 
   VarDec(int rhsf, int fl, int ll, int fc, int lc)
-      : NonterminalNode(rhsf, fl, ll, fc, lc) {}
+      : NonterminalNode(rhsf, fl, ll, fc, lc) {
+#if defined(PARSE_TREE) || defined(DEBUG)
+    printf("  bison: reduce VarDec[%d]\n", rhsf);
+#endif
+  }
 
   /**
    * Array variable declaration is visited from outside to inside, i.e.:

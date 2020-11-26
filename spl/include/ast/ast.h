@@ -15,6 +15,7 @@ class ASTNode {
   int last_line;
   int first_column;
   int last_column;
+  SymbolTable *symbol_table;
 
   ASTNode(NodeType nt, int fl, int ll, int fc, int lc) {
     this->node_type = nt;
@@ -48,7 +49,11 @@ class NonterminalNode : public ASTNode {
   int rhs_form;
 
   NonterminalNode(int rhsf, int fl, int ll, int fc, int lc)
-      : rhs_form(rhsf), ASTNode(Nonterminal, fl, ll, fc, lc) {}
+      : rhs_form(rhsf), ASTNode(Nonterminal, fl, ll, fc, lc) {
+// #if defined(PARSE_TREE) || defined(DEBUG)
+//     printf("  bison: reduce NonterminalNode[%d]\n", rhsf);
+// #endif
+  }
 };
 
 #endif  // AST_H

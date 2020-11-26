@@ -6,6 +6,7 @@
   extern "C" FILE *yyin;
 
   bool syntax_error;
+  Program *program_root;
 
   extern "C" int yylex();
   extern "C" int yyparse();
@@ -19,7 +20,7 @@
   char *char_value;
   char *type_value;
   char *id_value;
-  const char *keyword_value;
+  char *keyword_value;
   Program *program_node;
   ExtDefList *ext_def_list_node;
   ExtDef *ext_def_node;
@@ -93,45 +94,45 @@
  */
 Program:
     ExtDefList {
-      Program program = Program(0, @1.first_line, @1.last_line, @1.first_column, @1.last_column);
-      $$ = &program;
+      Program p = Program(0, @1.first_line, @1.last_line, @1.first_column, @1.last_column);
+      $$ = &p;
 
       $$->ext_def_list = $1;
-      // program_root = $$;
+      program_root = $$;
     }
   ;
 ExtDefList:
     ExtDef ExtDefList {
-      ExtDefList ext_def_list = ExtDefList(0, @1.first_line, @2.last_line, @1.first_column, @2.last_column);
-      $$ = &ext_def_list;
+      ExtDefList edl = ExtDefList(0, @1.first_line, @2.last_line, @1.first_column, @2.last_column);
+      $$ = &edl;
 
       $$->node_list.push_back($1);
-      for (ExtDef *ext_def : $2->node_list) {
-        $$->node_list.push_back(ext_def);
+      for (ExtDef *ed : $2->node_list) {
+        $$->node_list.push_back(ed);
       }
     }
   | %empty {
-      ExtDefList ext_def_list = ExtDefList(1, 0, 0, 0, 0);
-      $$ = &ext_def_list;
+      ExtDefList edl = ExtDefList(1, 0, 0, 0, 0);
+      $$ = &edl;
     }
   ;
 ExtDef:
     Specifier ExtDecList SEMI {
-      ExtDef ext_def = ExtDef(0, @1.first_line, @3.last_line, @1.first_column, @3.last_column);
-      $$ = &ext_def;
+      ExtDef ed = ExtDef(0, @1.first_line, @3.last_line, @1.first_column, @3.last_column);
+      $$ = &ed;
 
       $$->specifier = $1;
       $$->ext_dec_list = $2;
     }
   | Specifier SEMI {
-      ExtDef ext_def = ExtDef(1, @1.first_line, @2.last_line, @1.first_column, @2.last_column);
-      $$ = &ext_def;
+      ExtDef ed = ExtDef(1, @1.first_line, @2.last_line, @1.first_column, @2.last_column);
+      $$ = &ed;
 
       $$->specifier = $1;
     }
   | Specifier FunDec CompSt {
-      ExtDef ext_def = ExtDef(2, @1.first_line, @3.last_line, @1.first_column, @3.last_column);
-      $$ = &ext_def;
+      ExtDef ed = ExtDef(2, @1.first_line, @3.last_line, @1.first_column, @3.last_column);
+      $$ = &ed;
 
       $$->specifier = $1;
       $$->fun_dec = $2;
@@ -139,25 +140,25 @@ ExtDef:
     }
   | ExtDecList error {
       printf("Error type B at Line %d: Missing specifier\n", @$.first_line);
-      ExtDef ext_def = ExtDef(-1, @1.first_line, @1.last_line, @1.first_column, @1.last_column);
-      $$ = &ext_def;
+      ExtDef ed = ExtDef(-1, @1.first_line, @1.last_line, @1.first_column, @1.last_column);
+      $$ = &ed;
     }
   | Specifier ExtDecList error {
       printf("Error type B at Line %d: Missing semicolon ';'\n", @$.first_line);
-      ExtDef ext_def = ExtDef(-1, @1.first_line, @2.last_line, @1.first_column, @2.last_column);
-      $$ = &ext_def;
+      ExtDef ed = ExtDef(-1, @1.first_line, @2.last_line, @1.first_column, @2.last_column);
+      $$ = &ed;
     }
   ;
 ExtDecList:
     VarDec {
-      ExtDecList ext_dec_list = ExtDecList(0, @1.first_line, @1.last_line, @1.first_column, @1.last_column);
-      $$ = &ext_dec_list;
+      ExtDecList edl = ExtDecList(0, @1.first_line, @1.last_line, @1.first_column, @1.last_column);
+      $$ = &edl;
 
       $$->node_list.push_back($1);
     }
   | VarDec COMMA ExtDecList {
-      ExtDecList ext_dec_list = ExtDecList(0, @1.first_line, @3.last_line, @1.first_column, @3.last_column);
-      $$ = &ext_dec_list;
+      ExtDecList edl = ExtDecList(0, @1.first_line, @3.last_line, @1.first_column, @3.last_column);
+      $$ = &edl;
 
       $$->node_list.push_back($1);
       for (VarDec *var_dec : $3->node_list) {
@@ -173,38 +174,38 @@ ExtDecList:
  */
 Specifier:
     TYPE {
-      Specifier specifier = Specifier(0, @1.first_line, @1.last_line, @1.first_column, @1.last_column);
-      $$ = &specifier;
+      Specifier s = Specifier(0, @1.first_line, @1.last_line, @1.first_column, @1.last_column);
+      $$ = &s;
 
-      TerminalNode type_node = TerminalNode(Type, @1.first_line, @1.last_line, @1.first_column, @1.last_column);
-      strcpy(type_node.type_token, $1);
-      $$->type_node = &type_node;
+      TerminalNode tn = TerminalNode(Type, @1.first_line, @1.last_line, @1.first_column, @1.last_column);
+      tn.type_token = $1;
+      $$->type_node = &tn;
     }
   | StructSpecifier {
-      Specifier specifier = Specifier(1, @1.first_line, @1.last_line, @1.first_column, @1.last_column);
-      $$ = &specifier;
+      Specifier s = Specifier(1, @1.first_line, @1.last_line, @1.first_column, @1.last_column);
+      $$ = &s;
 
       $$->struct_specifier = $1;
     }
   ;
 StructSpecifier:
     STRUCT ID LC DefList RC {
-      StructSpecifier struct_specifier = StructSpecifier(0, @1.first_line, @5.last_line, @1.first_column, @5.last_column);
-      $$ = &struct_specifier;
+      StructSpecifier ss = StructSpecifier(0, @1.first_line, @5.last_line, @1.first_column, @5.last_column);
+      $$ = &ss;
 
-      TerminalNode id_node = TerminalNode(Id, @2.first_line, @2.last_line, @2.first_column, @2.last_column);
-      strcpy(id_node.id_token, $2);
-      $$->id_node = &id_node;
+      TerminalNode in = TerminalNode(Id, @2.first_line, @2.last_line, @2.first_column, @2.last_column);
+      in.id_token = $2;
+      $$->id_node = &in;
 
       $$->def_list = $4;
     }
   | STRUCT ID {
-      StructSpecifier struct_specifier = StructSpecifier(1, @1.first_line, @2.last_line, @1.first_column, @2.last_column);
-      $$ = &struct_specifier;
+      StructSpecifier ss = StructSpecifier(1, @1.first_line, @2.last_line, @1.first_column, @2.last_column);
+      $$ = &ss;
 
-      TerminalNode id_node = TerminalNode(Id, @2.first_line, @2.last_line, @2.first_column, @2.last_column);
-      strcpy(id_node.id_token, $2);
-      $$->id_node = &id_node;
+      TerminalNode in = TerminalNode(Id, @2.first_line, @2.last_line, @2.first_column, @2.last_column);
+      in.id_token = $2;
+      $$->id_node = &in;
     }
   ;
 
@@ -214,87 +215,87 @@ StructSpecifier:
  */
 VarDec:
     ID {
-      VarDec var_dec = VarDec(0, @1.first_line, @1.last_line, @1.first_column, @1.last_column);
-      $$ = &var_dec;
+      VarDec vd = VarDec(0, @1.first_line, @1.last_line, @1.first_column, @1.last_column);
+      $$ = &vd;
 
-      TerminalNode id_node = TerminalNode(Id, @1.first_line, @1.last_line, @1.first_column, @1.last_column);
-      strcpy(id_node.id_token, $1);
-      $$->id_node = &id_node;
+      TerminalNode in = TerminalNode(Id, @1.first_line, @1.last_line, @1.first_column, @1.last_column);
+      in.id_token = $1;
+      $$->id_node = &in;
     }
   | VarDec LB INT RB {
-      VarDec var_dec = VarDec(1, @1.first_line, @4.last_line, @1.first_column, @4.last_column);
-      $$ = &var_dec;
+      VarDec vd = VarDec(1, @1.first_line, @4.last_line, @1.first_column, @4.last_column);
+      $$ = &vd;
 
       $$->var_dec = $1;
 
-      TerminalNode int_node = TerminalNode(Int, @3.first_line, @3.last_line, @3.first_column, @3.last_column);
-      int_node.int_token = $3;
-      $$->int_node = &int_node;
+      TerminalNode in = TerminalNode(Int, @3.first_line, @3.last_line, @3.first_column, @3.last_column);
+      in.int_token = $3;
+      $$->int_node = &in;
     }
   | UNKNOWN_LEXEME error {
-      VarDec var_dec = VarDec(-1, @1.first_line, @1.last_line, @1.first_column, @1.last_column);
-      $$ = &var_dec;
+      VarDec vd = VarDec(-1, @1.first_line, @1.last_line, @1.first_column, @1.last_column);
+      $$ = &vd;
     }
   ;
 FunDec:
     ID LP VarList RP {
-      FunDec fun_dec = FunDec(0, @1.first_line, @4.last_line, @1.first_column, @4.last_column);
-      $$ = &fun_dec;
+      FunDec fd = FunDec(0, @1.first_line, @4.last_line, @1.first_column, @4.last_column);
+      $$ = &fd;
 
-      TerminalNode id_node = TerminalNode(Id, @2.first_line, @2.last_line, @2.first_column, @2.last_column);
-      strcpy(id_node.id_token, $2);
-      $$->id_node = &id_node;
+      TerminalNode in = TerminalNode(Id, @2.first_line, @2.last_line, @2.first_column, @2.last_column);
+      in.id_token = $2;
+      $$->id_node = &in;
 
       $$->var_list = $3;
     }
   | ID LP RP {
-      FunDec fun_dec = FunDec(1, @1.first_line, @3.last_line, @1.first_column, @3.last_column);
-      $$ = &fun_dec;
+      FunDec fd = FunDec(1, @1.first_line, @3.last_line, @1.first_column, @3.last_column);
+      $$ = &fd;
 
-      TerminalNode id_node = TerminalNode(Id, @2.first_line, @2.last_line, @2.first_column, @2.last_column);
-      strcpy(id_node.id_token, $2);
-      $$->id_node = &id_node;
+      TerminalNode in = TerminalNode(Id, @2.first_line, @2.last_line, @2.first_column, @2.last_column);
+      in.id_token = $2;
+      $$->id_node = &in;
     }
   | ID LP VarList error {
       printf("Error type B at Line %d: Missing closing parenthesis ')'\n", @$.first_line);
-      FunDec fun_dec = FunDec(-1, @1.first_line, @3.last_line, @1.first_column, @3.last_column);
-      $$ = &fun_dec;
+      FunDec fd = FunDec(-1, @1.first_line, @3.last_line, @1.first_column, @3.last_column);
+      $$ = &fd;
     }
   | ID LP error {
       printf("Error type B at Line %d: Missing closing parenthesis ')'\n", @$.first_line);
-      FunDec fun_dec = FunDec(-1, @1.first_line, @2.last_line, @1.first_column, @2.last_column);
-      $$ = &fun_dec;
+      FunDec fd = FunDec(-1, @1.first_line, @2.last_line, @1.first_column, @2.last_column);
+      $$ = &fd;
     }
   ;
 VarList:
     ParamDec COMMA VarList {
-      VarList var_list = VarList(0, @1.first_line, @3.last_line, @1.first_column, @3.last_column);
-      $$ = &var_list;
+      VarList vl = VarList(0, @1.first_line, @3.last_line, @1.first_column, @3.last_column);
+      $$ = &vl;
 
       $$->node_list.push_back($1);
-      for (ParamDec *param_dec : $3->node_list) {
-        $$->node_list.push_back(param_dec);
+      for (ParamDec *pd : $3->node_list) {
+        $$->node_list.push_back(pd);
       }
     }
   | ParamDec {
-      VarList var_list = VarList(0, @1.first_line, @1.last_line, @1.first_column, @1.last_column);
-      $$ = &var_list;
+      VarList vl = VarList(0, @1.first_line, @1.last_line, @1.first_column, @1.last_column);
+      $$ = &vl;
 
       $$->node_list.push_back($1);
     }
   ;
 ParamDec:
     Specifier VarDec {
-      ParamDec param_dec = ParamDec(0, @1.first_line, @2.last_line, @1.first_column, @2.last_column);
-      $$ = &param_dec;
+      ParamDec pd = ParamDec(0, @1.first_line, @2.last_line, @1.first_column, @2.last_column);
+      $$ = &pd;
 
       $$->specifier = $1;
       $$->var_dec = $2;
     }
   | VarDec error {
       printf("Error type B at Line %d: Missing specifier\n", @$.first_line);
-      ParamDec param_dec = ParamDec(-1, @1.first_line, @1.last_line, @1.first_column, @1.last_column);
-      $$ = &param_dec;
+      ParamDec pd = ParamDec(-1, @1.first_line, @1.last_line, @1.first_column, @1.last_column);
+      $$ = &pd;
     }
   ;
 
@@ -306,22 +307,22 @@ ParamDec:
  */
 CompSt:
     LC DefList StmtList RC {
-      CompSt comp_st = CompSt(0, @1.first_line, @4.last_line, @1.first_column, @4.last_column);
-      $$ = &comp_st;
+      CompSt cs = CompSt(0, @1.first_line, @4.last_line, @1.first_column, @4.last_column);
+      $$ = &cs;
 
       $$->def_list = $2;
       $$->stmt_list = $3;
     }
   | LC DefList StmtList error {
       printf("Error type B at Line %d: Missing closing curly bracket '}'\n", @$.last_line);
-      CompSt comp_st = CompSt(-1, @1.first_line, @3.last_line, @1.first_column, @3.last_column);
-      $$ = &comp_st;
+      CompSt cs = CompSt(-1, @1.first_line, @3.last_line, @1.first_column, @3.last_column);
+      $$ = &cs;
     }
   ;
 StmtList:
     Stmt StmtList {
-      StmtList stmt_list = StmtList(0, @1.first_line, @2.last_line, @1.first_column, @2.last_column);
-      $$ = &stmt_list;
+      StmtList sl = StmtList(0, @1.first_line, @2.last_line, @1.first_column, @2.last_column);
+      $$ = &sl;
 
       $$->node_list.push_back($1);
       for (Stmt *stmt : $2->node_list) {
@@ -329,117 +330,117 @@ StmtList:
       }
     }
   | %empty {
-      StmtList stmt_list = StmtList(1, 0, 0, 0, 0);
-      $$ = &stmt_list;
+      StmtList sl = StmtList(1, 0, 0, 0, 0);
+      $$ = &sl;
     }
   | Stmt Def StmtList error {
       printf("Error type B at Line %d: Missing specifier\n", @$.first_line);
-      StmtList stmt_list = StmtList(-1, @1.first_line, @3.last_line, @1.first_column, @3.last_column);
-      $$ = &stmt_list;
+      StmtList sl = StmtList(-1, @1.first_line, @3.last_line, @1.first_column, @3.last_column);
+      $$ = &sl;
     }
   ;
 Stmt:
     Exp SEMI {
-      Stmt stmt = Stmt(0, @1.first_line, @2.last_line, @1.first_column, @2.last_column);
-      $$ = &stmt;
+      Stmt s = Stmt(0, @1.first_line, @2.last_line, @1.first_column, @2.last_column);
+      $$ = &s;
 
       $$->exp = $1;
     }
   | CompSt {
-      Stmt stmt = Stmt(1, @1.first_line, @1.last_line, @1.first_column, @1.last_column);
-      $$ = &stmt;
+      Stmt s = Stmt(1, @1.first_line, @1.last_line, @1.first_column, @1.last_column);
+      $$ = &s;
 
       $$->comp_st = $1;
     }
   | RETURN Exp SEMI {
-      Stmt stmt = Stmt(2, @1.first_line, @3.last_line, @1.first_column, @3.last_column);
-      $$ = &stmt;
+      Stmt s = Stmt(2, @1.first_line, @3.last_line, @1.first_column, @3.last_column);
+      $$ = &s;
 
       $$->exp = $2;
     }
   | IF LP Exp RP Stmt %prec LOWER_ELSE {
-      Stmt stmt = Stmt(3, @1.first_line, @5.last_line, @1.first_column, @5.last_column);
-      $$ = &stmt;
+      Stmt s = Stmt(3, @1.first_line, @5.last_line, @1.first_column, @5.last_column);
+      $$ = &s;
 
       $$->exp = $3;
       $$->stmt_1 = $5;
     }
   | IF LP Exp RP Stmt ELSE Stmt {
-      Stmt stmt = Stmt(4, @1.first_line, @7.last_line, @1.first_column, @7.last_column);
-      $$ = &stmt;
+      Stmt s = Stmt(4, @1.first_line, @7.last_line, @1.first_column, @7.last_column);
+      $$ = &s;
 
       $$->exp = $3;
       $$->stmt_1 = $5;
       $$->stmt_2 = $7;
     }
   | WHILE LP Exp RP Stmt {
-      Stmt stmt = Stmt(5, @1.first_line, @5.last_line, @1.first_column, @5.last_column);
-      $$ = &stmt;
+      Stmt s = Stmt(5, @1.first_line, @5.last_line, @1.first_column, @5.last_column);
+      $$ = &s;
 
       $$->exp = $3;
       $$->stmt_1 = $5;
     }
   | Exp error {
       printf("Error type B at Line %d: Missing semicolon ';'\n", @$.first_line);
-      Stmt stmt = Stmt(-1, @1.first_line, @1.last_line, @1.first_column, @1.last_column);
-      $$ = &stmt;
+      Stmt s = Stmt(-1, @1.first_line, @1.last_line, @1.first_column, @1.last_column);
+      $$ = &s;
     }
   | RETURN Exp error {
       printf("Error type B at Line %d: Missing semicolon ';'\n", @$.first_line);
-      Stmt stmt = Stmt(-1, @1.first_line, @2.last_line, @1.first_column, @2.last_column);
-      $$ = &stmt;
+      Stmt s = Stmt(-1, @1.first_line, @2.last_line, @1.first_column, @2.last_column);
+      $$ = &s;
     }
   | RETURN UNKNOWN_LEXEME error {
       printf("Error type B at Line %d: Missing semicolon ';'\n", @$.first_line);
-      Stmt stmt = Stmt(-1, @1.first_line, @2.last_line, @1.first_column, @2.last_column);
-      $$ = &stmt;
+      Stmt s = Stmt(-1, @1.first_line, @2.last_line, @1.first_column, @2.last_column);
+      $$ = &s;
     }
   | RETURN UNKNOWN_LEXEME SEMI error {
-      Stmt stmt = Stmt(-1, @1.first_line, @3.last_line, @1.first_column, @3.last_column);
-      $$ = &stmt;
+      Stmt s = Stmt(-1, @1.first_line, @3.last_line, @1.first_column, @3.last_column);
+      $$ = &s;
     }
   ;
 
 /* Local definition: declaration and assignment of local variables */
 DefList:
     Def DefList {
-      DefList def_list = DefList(0, @1.first_line, @2.last_line, @1.first_column, @2.last_column);
-      $$ = &def_list;
+      DefList dl = DefList(0, @1.first_line, @2.last_line, @1.first_column, @2.last_column);
+      $$ = &dl;
 
       $$->node_list.push_back($1);
-      for (Def *def : $2->node_list) {
-        $$->node_list.push_back(def);
+      for (Def *d : $2->node_list) {
+        $$->node_list.push_back(d);
       }
     }
   | %empty  {
-      DefList def_list = DefList(1, 0, 0, 0, 0);
-      $$ = &def_list;
+      DefList dl = DefList(1, 0, 0, 0, 0);
+      $$ = &dl;
     }
   ;
 Def:
     Specifier DecList SEMI {
-      Def def = Def(0, @1.first_line, @3.last_line, @1.first_column, @3.last_column);
-      $$ = &def;
+      Def d = Def(0, @1.first_line, @3.last_line, @1.first_column, @3.last_column);
+      $$ = &d;
 
       $$->specifier = $1;
       $$->dec_list = $2;
     }
   | Specifier DecList error {
       printf("Error type B at Line %d: Missing semicolon ';'\n", @$.first_line);
-      Def def = Def(-1, @1.first_line, @2.last_line, @1.first_column, @2.last_column);
-      $$ = &def;
+      Def d = Def(-1, @1.first_line, @2.last_line, @1.first_column, @2.last_column);
+      $$ = &d;
     }
   ;
 DecList:
     Dec {
-      DecList dec_list = DecList(0, @1.first_line, @1.last_line, @1.first_column, @1.last_column);
-      $$ = &dec_list;
+      DecList dl = DecList(0, @1.first_line, @1.last_line, @1.first_column, @1.last_column);
+      $$ = &dl;
 
       $$->node_list.push_back($1);
     }
   | Dec COMMA DecList {
-      DecList dec_list = DecList(1, @1.first_line, @3.last_line, @1.first_column, @3.last_column);
-      $$ = &dec_list;
+      DecList dl = DecList(1, @1.first_line, @3.last_line, @1.first_column, @3.last_column);
+      $$ = &dl;
 
       $$->node_list.push_back($1);
       for (Dec *dec : $3->node_list) {
@@ -448,32 +449,32 @@ DecList:
     }
   | Dec COMMA error {
       printf("Error type B at Line %d: Redundant comma ','\n", @$.first_line);
-      DecList dec_list = DecList(-1, @1.first_line, @2.last_line, @1.first_column, @2.last_column);
-      $$ = &dec_list;
+      DecList dl = DecList(-1, @1.first_line, @2.last_line, @1.first_column, @2.last_column);
+      $$ = &dl;
     }
   ;
 Dec:
     VarDec {
-      Dec dec = Dec(0, @1.first_line, @1.last_line, @1.first_column, @1.last_column);
-      $$ = &dec;
+      Dec d = Dec(0, @1.first_line, @1.last_line, @1.first_column, @1.last_column);
+      $$ = &d;
 
       $$->var_dec = $1;
     }
   | VarDec ASSIGN Exp {
-      Dec dec = Dec(1, @1.first_line, @3.last_line, @1.first_column, @3.last_column);
-      $$ = &dec;
+      Dec d = Dec(1, @1.first_line, @3.last_line, @1.first_column, @3.last_column);
+      $$ = &d;
 
       $$->var_dec = $1;
       $$->exp = $3;
     }
   | VarDec ASSIGN UNKNOWN_LEXEME error {
-      Dec dec = Dec(-1, @1.first_line, @3.last_line, @1.first_column, @3.last_column);
-      $$ = &dec;
+      Dec d = Dec(-1, @1.first_line, @3.last_line, @1.first_column, @3.last_column);
+      $$ = &d;
     }
   | VarDec ASSIGN error {
       printf("Error type B at Line %d: Missing expression at the end of declaration\n", @$.first_line);
-      Dec dec = Dec(-1, @1.first_line, @2.last_line, @1.first_column, @2.last_column);
-      $$ = &dec;
+      Dec d = Dec(-1, @1.first_line, @2.last_line, @1.first_column, @2.last_column);
+      $$ = &d;
     }
   ;
 
@@ -484,278 +485,278 @@ Dec:
  */
 Exp:
     Exp ASSIGN Exp {
-      Exp exp = Exp(0, @1.first_line, @3.last_line, @1.first_column, @3.last_column);
-      $$ = &exp;
+      Exp e = Exp(0, @1.first_line, @3.last_line, @1.first_column, @3.last_column);
+      $$ = &e;
 
       $$->exp_1 = $1;
       $$->exp_2 = $3;
 
-      TerminalNode keyword_node = TerminalNode(Keyword, @2.first_line, @2.last_line, @2.first_column, @2.last_column);
-      strcpy(keyword_node.keyword_token, $2);
-      $$->keyword_node = &keyword_node;
+      TerminalNode kn = TerminalNode(Keyword, @2.first_line, @2.last_line, @2.first_column, @2.last_column);
+      kn.keyword_token = $2;
+      $$->keyword_node = &kn;
     }
   | Exp AND Exp {
-      Exp exp = Exp(0, @1.first_line, @3.last_line, @1.first_column, @3.last_column);
-      $$ = &exp;
+      Exp e = Exp(0, @1.first_line, @3.last_line, @1.first_column, @3.last_column);
+      $$ = &e;
 
       $$->exp_1 = $1;
       $$->exp_2 = $3;
 
-      TerminalNode keyword_node = TerminalNode(Keyword, @2.first_line, @2.last_line, @2.first_column, @2.last_column);
-      strcpy(keyword_node.keyword_token, $2);
-      $$->keyword_node = &keyword_node;
+      TerminalNode kn = TerminalNode(Keyword, @2.first_line, @2.last_line, @2.first_column, @2.last_column);
+      kn.keyword_token = $2;
+      $$->keyword_node = &kn;
     }
   | Exp OR Exp {
-      Exp exp = Exp(0, @1.first_line, @3.last_line, @1.first_column, @3.last_column);
-      $$ = &exp;
+      Exp e = Exp(0, @1.first_line, @3.last_line, @1.first_column, @3.last_column);
+      $$ = &e;
 
       $$->exp_1 = $1;
       $$->exp_2 = $3;
 
-      TerminalNode keyword_node = TerminalNode(Keyword, @2.first_line, @2.last_line, @2.first_column, @2.last_column);
-      strcpy(keyword_node.keyword_token, $2);
-      $$->keyword_node = &keyword_node;
+      TerminalNode kn = TerminalNode(Keyword, @2.first_line, @2.last_line, @2.first_column, @2.last_column);
+      kn.keyword_token = $2;
+      $$->keyword_node = &kn;
     }
   | Exp LT Exp {
-      Exp exp = Exp(0, @1.first_line, @3.last_line, @1.first_column, @3.last_column);
-      $$ = &exp;
+      Exp e = Exp(0, @1.first_line, @3.last_line, @1.first_column, @3.last_column);
+      $$ = &e;
 
       $$->exp_1 = $1;
       $$->exp_2 = $3;
 
-      TerminalNode keyword_node = TerminalNode(Keyword, @2.first_line, @2.last_line, @2.first_column, @2.last_column);
-      strcpy(keyword_node.keyword_token, $2);
-      $$->keyword_node = &keyword_node;
+      TerminalNode kn = TerminalNode(Keyword, @2.first_line, @2.last_line, @2.first_column, @2.last_column);
+      kn.keyword_token = $2;
+      $$->keyword_node = &kn;
     }
   | Exp LE Exp {
-      Exp exp = Exp(0, @1.first_line, @3.last_line, @1.first_column, @3.last_column);
-      $$ = &exp;
+      Exp e = Exp(0, @1.first_line, @3.last_line, @1.first_column, @3.last_column);
+      $$ = &e;
 
       $$->exp_1 = $1;
       $$->exp_2 = $3;
 
-      TerminalNode keyword_node = TerminalNode(Keyword, @2.first_line, @2.last_line, @2.first_column, @2.last_column);
-      strcpy(keyword_node.keyword_token, $2);
-      $$->keyword_node = &keyword_node;
+      TerminalNode kn = TerminalNode(Keyword, @2.first_line, @2.last_line, @2.first_column, @2.last_column);
+      kn.keyword_token = $2;
+      $$->keyword_node = &kn;
     }
   | Exp GT Exp {
-      Exp exp = Exp(0, @1.first_line, @3.last_line, @1.first_column, @3.last_column);
-      $$ = &exp;
+      Exp e = Exp(0, @1.first_line, @3.last_line, @1.first_column, @3.last_column);
+      $$ = &e;
 
       $$->exp_1 = $1;
       $$->exp_2 = $3;
 
-      TerminalNode keyword_node = TerminalNode(Keyword, @2.first_line, @2.last_line, @2.first_column, @2.last_column);
-      strcpy(keyword_node.keyword_token, $2);
-      $$->keyword_node = &keyword_node;
+      TerminalNode kn = TerminalNode(Keyword, @2.first_line, @2.last_line, @2.first_column, @2.last_column);
+      kn.keyword_token = $2;
+      $$->keyword_node = &kn;
     }
   | Exp GE Exp {
-      Exp exp = Exp(0, @1.first_line, @3.last_line, @1.first_column, @3.last_column);
-      $$ = &exp;
+      Exp e = Exp(0, @1.first_line, @3.last_line, @1.first_column, @3.last_column);
+      $$ = &e;
 
       $$->exp_1 = $1;
       $$->exp_2 = $3;
 
-      TerminalNode keyword_node = TerminalNode(Keyword, @2.first_line, @2.last_line, @2.first_column, @2.last_column);
-      strcpy(keyword_node.keyword_token, $2);
-      $$->keyword_node = &keyword_node;
+      TerminalNode kn = TerminalNode(Keyword, @2.first_line, @2.last_line, @2.first_column, @2.last_column);
+      kn.keyword_token = $2;
+      $$->keyword_node = &kn;
     }
   | Exp NE Exp {
-      Exp exp = Exp(0, @1.first_line, @3.last_line, @1.first_column, @3.last_column);
-      $$ = &exp;
+      Exp e = Exp(0, @1.first_line, @3.last_line, @1.first_column, @3.last_column);
+      $$ = &e;
 
       $$->exp_1 = $1;
       $$->exp_2 = $3;
 
-      TerminalNode keyword_node = TerminalNode(Keyword, @2.first_line, @2.last_line, @2.first_column, @2.last_column);
-      strcpy(keyword_node.keyword_token, $2);
-      $$->keyword_node = &keyword_node;
+      TerminalNode kn = TerminalNode(Keyword, @2.first_line, @2.last_line, @2.first_column, @2.last_column);
+      kn.keyword_token = $2;
+      $$->keyword_node = &kn;
     }
   | Exp EQ Exp {
-      Exp exp = Exp(0, @1.first_line, @3.last_line, @1.first_column, @3.last_column);
-      $$ = &exp;
+      Exp e = Exp(0, @1.first_line, @3.last_line, @1.first_column, @3.last_column);
+      $$ = &e;
 
       $$->exp_1 = $1;
       $$->exp_2 = $3;
 
-      TerminalNode keyword_node = TerminalNode(Keyword, @2.first_line, @2.last_line, @2.first_column, @2.last_column);
-      strcpy(keyword_node.keyword_token, $2);
-      $$->keyword_node = &keyword_node;
+      TerminalNode kn = TerminalNode(Keyword, @2.first_line, @2.last_line, @2.first_column, @2.last_column);
+      kn.keyword_token = $2;
+      $$->keyword_node = &kn;
     }
   | Exp PLUS Exp {
-      Exp exp = Exp(0, @1.first_line, @3.last_line, @1.first_column, @3.last_column);
-      $$ = &exp;
+      Exp e = Exp(0, @1.first_line, @3.last_line, @1.first_column, @3.last_column);
+      $$ = &e;
 
       $$->exp_1 = $1;
       $$->exp_2 = $3;
 
-      TerminalNode keyword_node = TerminalNode(Keyword, @2.first_line, @2.last_line, @2.first_column, @2.last_column);
-      strcpy(keyword_node.keyword_token, $2);
-      $$->keyword_node = &keyword_node;
+      TerminalNode kn = TerminalNode(Keyword, @2.first_line, @2.last_line, @2.first_column, @2.last_column);
+      kn.keyword_token = $2;
+      $$->keyword_node = &kn;
     }
   | Exp MINUS Exp {
-      Exp exp = Exp(0, @1.first_line, @3.last_line, @1.first_column, @3.last_column);
-      $$ = &exp;
+      Exp e = Exp(0, @1.first_line, @3.last_line, @1.first_column, @3.last_column);
+      $$ = &e;
 
       $$->exp_1 = $1;
       $$->exp_2 = $3;
 
-      TerminalNode keyword_node = TerminalNode(Keyword, @2.first_line, @2.last_line, @2.first_column, @2.last_column);
-      strcpy(keyword_node.keyword_token, $2);
-      $$->keyword_node = &keyword_node;
+      TerminalNode kn = TerminalNode(Keyword, @2.first_line, @2.last_line, @2.first_column, @2.last_column);
+      kn.keyword_token = $2;
+      $$->keyword_node = &kn;
     }
   | Exp MUL Exp {
-      Exp exp = Exp(0, @1.first_line, @3.last_line, @1.first_column, @3.last_column);
-      $$ = &exp;
+      Exp e = Exp(0, @1.first_line, @3.last_line, @1.first_column, @3.last_column);
+      $$ = &e;
 
       $$->exp_1 = $1;
       $$->exp_2 = $3;
 
-      TerminalNode keyword_node = TerminalNode(Keyword, @2.first_line, @2.last_line, @2.first_column, @2.last_column);
-      strcpy(keyword_node.keyword_token, $2);
-      $$->keyword_node = &keyword_node;
+      TerminalNode kn = TerminalNode(Keyword, @2.first_line, @2.last_line, @2.first_column, @2.last_column);
+      kn.keyword_token = $2;
+      $$->keyword_node = &kn;
     }
   | Exp DIV Exp {
-      Exp exp = Exp(0, @1.first_line, @3.last_line, @1.first_column, @3.last_column);
-      $$ = &exp;
+      Exp e = Exp(0, @1.first_line, @3.last_line, @1.first_column, @3.last_column);
+      $$ = &e;
 
       $$->exp_1 = $1;
       $$->exp_2 = $3;
 
-      TerminalNode keyword_node = TerminalNode(Keyword, @2.first_line, @2.last_line, @2.first_column, @2.last_column);
-      strcpy(keyword_node.keyword_token, $2);
-      $$->keyword_node = &keyword_node;
+      TerminalNode kn = TerminalNode(Keyword, @2.first_line, @2.last_line, @2.first_column, @2.last_column);
+      kn.keyword_token = $2;
+      $$->keyword_node = &kn;
     }
   | LP Exp RP {
-      Exp exp = Exp(1, @1.first_line, @3.last_line, @1.first_column, @3.last_column);
-      $$ = &exp;
+      Exp e = Exp(1, @1.first_line, @3.last_line, @1.first_column, @3.last_column);
+      $$ = &e;
 
       $$->exp_1 = $2;
     }
   | MINUS Exp {
-      Exp exp = Exp(2, @1.first_line, @2.last_line, @1.first_column, @2.last_column);
-      $$ = &exp;
+      Exp e = Exp(2, @1.first_line, @2.last_line, @1.first_column, @2.last_column);
+      $$ = &e;
 
-      TerminalNode keyword_node = TerminalNode(Keyword, @1.first_line, @1.last_line, @1.first_column, @1.last_column);
-      strcpy(keyword_node.keyword_token, $1);
-      $$->keyword_node = &keyword_node;
+      TerminalNode kn = TerminalNode(Keyword, @1.first_line, @1.last_line, @1.first_column, @1.last_column);
+      kn.keyword_token = $1;
+      $$->keyword_node = &kn;
 
       $$->exp_1 = $2;
     }
   | NOT Exp {
-      Exp exp = Exp(2, @1.first_line, @2.last_line, @1.first_column, @2.last_column);
-      $$ = &exp;
+      Exp e = Exp(2, @1.first_line, @2.last_line, @1.first_column, @2.last_column);
+      $$ = &e;
 
-      TerminalNode keyword_node = TerminalNode(Keyword, @1.first_line, @1.last_line, @1.first_column, @1.last_column);
-      strcpy(keyword_node.keyword_token, $1);
-      $$->keyword_node = &keyword_node;
+      TerminalNode kn = TerminalNode(Keyword, @1.first_line, @1.last_line, @1.first_column, @1.last_column);
+      kn.keyword_token = $1;
+      $$->keyword_node = &kn;
 
       $$->exp_1 = $2;
     }
   | ID LP Args RP {
-      Exp exp = Exp(3, @1.first_line, @4.last_line, @1.first_column, @4.last_column);
-      $$ = &exp;
+      Exp e = Exp(3, @1.first_line, @4.last_line, @1.first_column, @4.last_column);
+      $$ = &e;
 
-      TerminalNode id_node = TerminalNode(Id, @1.first_line, @1.last_line, @1.first_column, @1.last_column);
-      strcpy(id_node.id_token, $1);
-      $$->id_node = &id_node;
+      TerminalNode in = TerminalNode(Id, @1.first_line, @1.last_line, @1.first_column, @1.last_column);
+      in.id_token = $1;
+      $$->id_node = &in;
 
       $$->args = $3;
     }
   | ID LP RP {
-      Exp exp = Exp(4, @1.first_line, @3.last_line, @1.first_column, @3.last_column);
-      $$ = &exp;
+      Exp e = Exp(4, @1.first_line, @3.last_line, @1.first_column, @3.last_column);
+      $$ = &e;
 
-      TerminalNode id_node = TerminalNode(Id, @1.first_line, @1.last_line, @1.first_column, @1.last_column);
-      strcpy(id_node.id_token, $1);
-      $$->id_node = &id_node;
+      TerminalNode in = TerminalNode(Id, @1.first_line, @1.last_line, @1.first_column, @1.last_column);
+      in.id_token = $1;
+      $$->id_node = &in;
     }
   | Exp LB Exp RB {
-      Exp exp = Exp(5, @1.first_line, @4.last_line, @1.first_column, @4.last_column);
-      $$ = &exp;
+      Exp e = Exp(5, @1.first_line, @4.last_line, @1.first_column, @4.last_column);
+      $$ = &e;
 
       $$->exp_1 = $1;
       $$->exp_2 = $3;
     }
   | Exp DOT ID {
-      Exp exp = Exp(6, @1.first_line, @3.last_line, @1.first_column, @3.last_column);
-      $$ = &exp;
+      Exp e = Exp(6, @1.first_line, @3.last_line, @1.first_column, @3.last_column);
+      $$ = &e;
 
       $$->exp_1 = $1;
 
-      TerminalNode id_node = TerminalNode(Id, @3.first_line, @3.last_line, @3.first_column, @3.last_column);
-      strcpy(id_node.id_token, $3);
-      $$->id_node = &id_node;
+      TerminalNode in = TerminalNode(Id, @3.first_line, @3.last_line, @3.first_column, @3.last_column);
+      in.id_token = $3;
+      $$->id_node = &in;
     }
   | ID {
-      Exp exp = Exp(7, @1.first_line, @1.last_line, @1.first_column, @1.last_column);
-      $$ = &exp;
+      Exp e = Exp(7, @1.first_line, @1.last_line, @1.first_column, @1.last_column);
+      $$ = &e;
 
-      TerminalNode id_node = TerminalNode(Id, @1.first_line, @1.last_line, @1.first_column, @1.last_column);
-      strcpy(id_node.id_token, $1);
-      $$->id_node = &id_node;
+      TerminalNode in = TerminalNode(Id, @1.first_line, @1.last_line, @1.first_column, @1.last_column);
+      in.id_token = $1;
+      $$->id_node = &in;
     }
   | INT {
-      Exp exp = Exp(8, @1.first_line, @1.last_line, @1.first_column, @1.last_column);
-      $$ = &exp;
+      Exp e = Exp(8, @1.first_line, @1.last_line, @1.first_column, @1.last_column);
+      $$ = &e;
 
-      TerminalNode int_node = TerminalNode(Int, @1.first_line, @1.last_line, @1.first_column, @1.last_column);
-      int_node.int_token = $1;
-      $$->int_node = &int_node;
+      TerminalNode in = TerminalNode(Int, @1.first_line, @1.last_line, @1.first_column, @1.last_column);
+      in.int_token = $1;
+      $$->int_node = &in;
     }
   | FLOAT {
-      Exp exp = Exp(9, @1.first_line, @1.last_line, @1.first_column, @1.last_column);
-      $$ = &exp;
+      Exp e = Exp(9, @1.first_line, @1.last_line, @1.first_column, @1.last_column);
+      $$ = &e;
 
-      TerminalNode float_node = TerminalNode(Float, @1.first_line, @1.last_line, @1.first_column, @1.last_column);
-      float_node.float_token = $1;
-      $$->float_node = &float_node;
+      TerminalNode fn = TerminalNode(Float, @1.first_line, @1.last_line, @1.first_column, @1.last_column);
+      fn.float_token = $1;
+      $$->float_node = &fn;
     }
   | CHAR {
-      Exp exp = Exp(10, @1.first_line, @1.last_line, @1.first_column, @1.last_column);
-      $$ = &exp;
+      Exp e = Exp(10, @1.first_line, @1.last_line, @1.first_column, @1.last_column);
+      $$ = &e;
 
-      TerminalNode char_node = TerminalNode(Char, @1.first_line, @1.last_line, @1.first_column, @1.last_column);
-      strcpy(char_node.char_token, $1);
-      $$->char_node = &char_node;
+      TerminalNode cn = TerminalNode(Char, @1.first_line, @1.last_line, @1.first_column, @1.last_column);
+      cn.char_token = $1;
+      $$->char_node = &cn;
     }
   | Exp UNKNOWN_LEXEME Exp error {}
   | ID LP Args error {
       printf("Error type B at Line %d: Missing closing parenthesis ')'\n", @$.first_line);
-      Exp exp = Exp(-1, @1.first_line, @3.last_line, @1.first_column, @3.last_column);
-      $$ = &exp;
+      Exp e = Exp(-1, @1.first_line, @3.last_line, @1.first_column, @3.last_column);
+      $$ = &e;
     }
   | ID LP error {
       printf("Error type B at Line %d: Missing closing parenthesis ')'\n", @$.first_line);
-      Exp exp = Exp(-1, @1.first_line, @2.last_line, @1.first_column, @2.last_column);
-      $$ = &exp;
+      Exp e = Exp(-1, @1.first_line, @2.last_line, @1.first_column, @2.last_column);
+      $$ = &e;
     }
   | Exp LB Exp error {
       printf("Error type B at Line %d Missing closing bracket ']'\n", @$.first_line);
-      Exp exp = Exp(-1, @1.first_line, @3.last_line, @1.first_column, @3.last_column);
-      $$ = &exp;
+      Exp e = Exp(-1, @1.first_line, @3.last_line, @1.first_column, @3.last_column);
+      $$ = &e;
     }
   ;
 Args:
     Exp COMMA Args {
-      Args args = Args(0, @1.first_line, @3.last_line, @1.first_column, @3.last_column);
-      $$ = &args;
+      Args a = Args(0, @1.first_line, @3.last_line, @1.first_column, @3.last_column);
+      $$ = &a;
 
       $$->node_list.push_back($1);
-      for (Exp *exp : $3->node_list) {
-        $$->node_list.push_back(exp);
+      for (Exp *e : $3->node_list) {
+        $$->node_list.push_back(e);
       }
     }
   | Exp {
-      Args args = Args(0, @1.first_line, @1.last_line, @1.first_column, @1.last_column);
-      $$ = &args;
+      Args a = Args(0, @1.first_line, @1.last_line, @1.first_column, @1.last_column);
+      $$ = &a;
 
       $$->node_list.push_back($1);
     }
   | Exp COMMA error {
       printf("Error type B at Line %d Redundant comma ','\n", @$.first_line);
-      Args args = Args(-1, @1.first_line, @2.last_line, @1.first_column, @2.last_column);
-      $$ = &args;
+      Args a = Args(-1, @1.first_line, @2.last_line, @1.first_column, @2.last_column);
+      $$ = &a;
     }
   ;
 
@@ -782,7 +783,7 @@ int main(int argc, char **argv) {
 #ifdef DEBUG
       printf("\n*********************\n");
 #endif
-      /* program_root->visit(0); */
+      program_root->visit(0);
     } else if (result == 1) {
 #ifdef DEBUG
       fprintf(stderr, "Abort\n");
