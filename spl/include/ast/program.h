@@ -18,6 +18,4 @@ class Program : public NonterminalNode {
   void visit(int indent_level) override;
 };
 
-Program *program_root;
-
 #endif  // PROGRAM_H

@@ -97,7 +97,7 @@ Program:
       $$ = &program;
 
       $$->ext_def_list = $1;
-      program_root = $$;
+      // program_root = $$;
     }
   ;
 ExtDefList:
@@ -782,7 +782,7 @@ int main(int argc, char **argv) {
 #ifdef DEBUG
       printf("\n*********************\n");
 #endif
-      program_root->visit(0);
+      /* program_root->visit(0); */
     } else if (result == 1) {
 #ifdef DEBUG
       fprintf(stderr, "Abort\n");

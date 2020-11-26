@@ -57,7 +57,7 @@ void StructSpecifier::visit(int indent_level) {
       this->print_indentation(indent_level + 1);
       printf("ID: %s\n", this->id_node->id_token);
 #endif
-      this->var_type = st.find_var(this->id_node->id_token, UseMode);
+      // this->var_type = st.find_var(this->id_node->id_token, UseMode);
       break;
     }
 

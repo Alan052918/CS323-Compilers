@@ -14,7 +14,7 @@ void CompSt::visit(int indent_level) {
       this->print_indentation(indent_level + 1);
       printf("LC\n");
 #endif
-      st.push_maps();
+      // st.push_maps();
       this->def_list->visit(indent_level + 1);
       this->stmt_list->visit(indent_level + 1);
 #if defined(PARSE_TREE) || defined(DEBUG)

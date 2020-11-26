@@ -137,11 +137,3 @@ class SymbolTable {
 };
 
 #endif  // SYMTABLE_H
-
-#ifndef ST_DEFINED
-#define ST_DEFINED
-
-// global variable
-SymbolTable st;
-
-#endif  // ST_DEFINED
