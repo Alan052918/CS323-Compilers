@@ -8,7 +8,7 @@ StmtList::StmtList(int rhsf, int fl, int ll, int fc, int lc)
 #endif
 }
 
-void StmtList::visit(int indent_level)  {
+void StmtList::visit(int indent_level) {
   if (this->rhs_form == 1) {
     return;
   }
