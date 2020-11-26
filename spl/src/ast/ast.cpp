@@ -1,4 +1,4 @@
-#include "../../../include/ast/ast.h"
+#include "../../include/ast/ast.h"
 
 ASTNode::ASTNode(NodeType nt, int fl, int ll, int fc, int lc) {
   this->node_type = nt;

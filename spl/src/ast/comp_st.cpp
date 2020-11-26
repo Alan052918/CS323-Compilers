@@ -1,6 +1,6 @@
-#include "../../../include/ast/comp_st.h"
-#include "../../../include/ast/def_list.h"
-#include "../../../include/ast/stmt_list.h"
+#include "../../include/ast/comp_st.h"
+#include "../../include/ast/def_list.h"
+#include "../../include/ast/stmt_list.h"
 
 CompSt::CompSt(int rhsf, int fl, int ll, int fc, int lc)
     : NonterminalNode(rhsf, fl, ll, fc, lc) {

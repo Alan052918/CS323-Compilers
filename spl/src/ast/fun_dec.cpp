@@ -1,5 +1,5 @@
-#include "../../../include/ast/fun_dec.h"
-#include "../../../include/ast/var_list.h"
+#include "../../include/ast/fun_dec.h"
+#include "../../include/ast/var_list.h"
 
 FunDec::FunDec(int rhsf, int fl, int ll, int fc, int lc)
     : NonterminalNode(rhsf, fl, ll, fc, lc) {

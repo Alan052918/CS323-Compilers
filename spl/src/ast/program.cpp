@@ -1,5 +1,5 @@
-#include "../../../include/ast/program.h"
-#include "../../../include/ast/ext_def_list.h"
+#include "../../include/ast/program.h"
+#include "../../include/ast/ext_def_list.h"
 
 Program::Program(int rhsf, int fl, int ll, int fc, int lc)
     : NonterminalNode(rhsf, fl, ll, fc, lc) {

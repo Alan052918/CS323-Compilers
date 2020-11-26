@@ -1,5 +1,5 @@
-#include "../../../include/ast/specifier.h"
-#include "../../../include/ast/struct_specifier.h"
+#include "../../include/ast/specifier.h"
+#include "../../include/ast/struct_specifier.h"
 
 Specifier::Specifier(int rhsf, int fl, int ll, int fc, int lc)
     : NonterminalNode(rhsf, fl, ll, fc, lc) {

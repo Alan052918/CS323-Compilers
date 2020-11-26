@@ -1,6 +1,6 @@
-#include "../../../include/ast/dec.h"
-#include "../../../include/ast/exp.h"
-#include "../../../include/ast/var_dec.h"
+#include "../../include/ast/dec.h"
+#include "../../include/ast/exp.h"
+#include "../../include/ast/var_dec.h"
 
 Dec::Dec(int rhsf, int fl, int ll, int fc, int lc)
     : NonterminalNode(rhsf, fl, ll, fc, lc) {

@@ -1,5 +1,5 @@
-#include "../../../include/ast/args.h"
-#include "../../../include/ast/exp.h"
+#include "../../include/ast/args.h"
+#include "../../include/ast/exp.h"
 
 Args::Args(int rhsf, int fl, int ll, int fc, int lc)
     : NonterminalNode(rhsf, fl, ll, fc, lc) {

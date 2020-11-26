@@ -1,4 +1,4 @@
-#include "../../../include/ast/var_dec.h"
+#include "../../include/ast/var_dec.h"
 
 VarDec::VarDec(int rhsf, int fl, int ll, int fc, int lc)
     : NonterminalNode(rhsf, fl, ll, fc, lc) {

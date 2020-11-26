@@ -1,6 +1,6 @@
-#include "../../../include/ast/def.h"
-#include "../../../include/ast/dec_list.h"
-#include "../../../include/ast/specifier.h"
+#include "../../include/ast/def.h"
+#include "../../include/ast/dec_list.h"
+#include "../../include/ast/specifier.h"
 
 Def::Def(int rhsf, int fl, int ll, int fc, int lc)
     : NonterminalNode(rhsf, fl, ll, fc, lc) {

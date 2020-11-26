@@ -1,6 +1,6 @@
-#include "../../../include/ast/stmt.h"
-#include "../../../include/ast/comp_st.h"
-#include "../../../include/ast/exp.h"
+#include "../../include/ast/stmt.h"
+#include "../../include/ast/comp_st.h"
+#include "../../include/ast/exp.h"
 
 Stmt::Stmt(int rhsf, int fl, int ll, int fc, int lc)
     : NonterminalNode(rhsf, fl, ll, fc, lc) {

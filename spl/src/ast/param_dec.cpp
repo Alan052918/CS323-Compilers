@@ -1,6 +1,6 @@
-#include "../../../include/ast/param_dec.h"
-#include "../../../include/ast/specifier.h"
-#include "../../../include/ast/var_dec.h"
+#include "../../include/ast/param_dec.h"
+#include "../../include/ast/specifier.h"
+#include "../../include/ast/var_dec.h"
 
 ParamDec::ParamDec(int rhsf, int fl, int ll, int fc, int lc)
     : NonterminalNode(rhsf, fl, ll, fc, lc) {

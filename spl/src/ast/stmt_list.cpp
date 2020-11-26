@@ -1,5 +1,5 @@
-#include "../../../include/ast/stmt_list.h"
-#include "../../../include/ast/stmt.h"
+#include "../../include/ast/stmt_list.h"
+#include "../../include/ast/stmt.h"
 
 StmtList::StmtList(int rhsf, int fl, int ll, int fc, int lc)
     : NonterminalNode(rhsf, fl, ll, fc, lc) {

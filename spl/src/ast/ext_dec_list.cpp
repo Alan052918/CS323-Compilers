@@ -1,5 +1,5 @@
-#include "../../../include/ast/ext_dec_list.h"
-#include "../../../include/ast/var_dec.h"
+#include "../../include/ast/ext_dec_list.h"
+#include "../../include/ast/var_dec.h"
 
 ExtDecList::ExtDecList(int rhsf, int fl, int ll, int fc, int lc)
     : NonterminalNode(rhsf, fl, ll, fc, lc) {
