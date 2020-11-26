@@ -1,6 +1,13 @@
 #include "../../../include/ast/args.h"
 #include "../../../include/ast/exp.h"
 
+Args::Args(int rhsf, int fl, int ll, int fc, int lc)
+    : NonterminalNode(rhsf, fl, ll, fc, lc) {
+#ifdef DEBUG
+  printf("  bison: reduce Args[%d]\n", rhsf);
+#endif
+}
+
 void Args::visit(int indent_level) {
 #if defined(PARSE_TREE) || defined(DEBUG)
   this->print_indentation(indent_level);

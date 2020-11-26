@@ -4,6 +4,13 @@
 #include "../../../include/ast/fun_dec.h"
 #include "../../../include/ast/specifier.h"
 
+ExtDef::ExtDef(int rhsf, int fl, int ll, int fc, int lc)
+    : NonterminalNode(rhsf, fl, ll, fc, lc) {
+#ifdef DEBUG
+  printf("  bison: reduce ExtDef[%d]\n", rhsf);
+#endif
+}
+
 void ExtDef::visit(int indent_level)  {
 #if defined(PARSE_TREE) || defined(DEBUG)
   this->print_indentation(indent_level);

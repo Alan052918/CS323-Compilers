@@ -2,6 +2,13 @@
 #include "../../../include/ast/def_list.h"
 #include "../../../include/ast/stmt_list.h"
 
+CompSt::CompSt(int rhsf, int fl, int ll, int fc, int lc)
+    : NonterminalNode(rhsf, fl, ll, fc, lc) {
+#ifdef DEBUG
+  printf("  bison: reduce CompSt[%d]\n", rhsf);
+#endif
+}
+
 void CompSt::visit(int indent_level) {
 #if defined(PARSE_TREE) || defined(DEBUG)
   this->print_indentation(indent_level);

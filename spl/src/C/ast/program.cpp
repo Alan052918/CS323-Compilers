@@ -1,6 +1,13 @@
 #include "../../../include/ast/program.h"
 #include "../../../include/ast/ext_def_list.h"
 
+Program::Program(int rhsf, int fl, int ll, int fc, int lc)
+    : NonterminalNode(rhsf, fl, ll, fc, lc) {
+#ifdef DEBUG
+  printf("  bison: reduce Program[%d]\n", rhsf);
+#endif
+}
+
 void Program::visit(int indent_level) {
 #if defined(PARSE_TREE) || defined(DEBUG)
   this->print_indentation(indent_level);

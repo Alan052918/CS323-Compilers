@@ -12,14 +12,9 @@ class StmtList : public NonterminalNode {
  public:
   std::vector<Stmt *> node_list;
 
-  StmtList(int rhsf, int fl, int ll, int fc, int lc)
-      : NonterminalNode(rhsf, fl, ll, fc, lc) {
-#if defined(PARSE_TREE) || defined(DEBUG)
-    printf("  bison: reduce StmtList[%d]\n", rhsf);
-#endif
-  }
+  StmtList(int rhsf, int fl, int ll, int fc, int lc);
 
-  void visit(int indent_level) override;
+  void visit(int indent_level);
 };
 
 #endif  // STMT_LIST_H

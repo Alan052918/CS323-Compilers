@@ -1,6 +1,12 @@
 #include "../../../include/ast/dec_list.h"
 #include "../../../include/ast/dec.h"
 
+DecList::DecList(int rhsf, int fl, int ll, int fc, int lc)
+    : NonterminalNode(rhsf, fl, ll, fc, lc) {
+#ifdef DEBUG
+  printf("  bison: reduce DecList[%d]\n", rhsf);
+#endif
+}
 void DecList::visit(int indent_level) {
 #if defined(PARSE_TREE) || defined(DEBUG)
   this->print_indentation(indent_level);

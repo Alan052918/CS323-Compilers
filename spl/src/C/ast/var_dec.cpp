@@ -1,5 +1,12 @@
 #include "../../../include/ast/var_dec.h"
 
+VarDec::VarDec(int rhsf, int fl, int ll, int fc, int lc)
+    : NonterminalNode(rhsf, fl, ll, fc, lc) {
+#ifdef DEBUG
+  printf("  bison: reduce VarDec[%d]\n", rhsf);
+#endif
+}
+
 void VarDec::visit(int indent_level) {
 #if defined(PARSE_TREE) || defined(DEBUG)
   this->print_indentation(indent_level);

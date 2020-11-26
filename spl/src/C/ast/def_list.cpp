@@ -1,6 +1,12 @@
 #include "../../../include/ast/def_list.h"
 #include "../../../include/ast/def.h"
 
+DefList::DefList(int rhsf, int fl, int ll, int fc, int lc)
+    : NonterminalNode(rhsf, fl, ll, fc, lc) {
+#ifdef DEBUG
+  printf("  bison: reduce DefList[%d]\n", rhsf);
+#endif
+}
 void DefList::visit(int indent_level) {
   if (this->rhs_form == 1) {
     return;

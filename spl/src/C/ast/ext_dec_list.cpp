@@ -1,6 +1,13 @@
 #include "../../../include/ast/ext_dec_list.h"
 #include "../../../include/ast/var_dec.h"
 
+ExtDecList::ExtDecList(int rhsf, int fl, int ll, int fc, int lc)
+    : NonterminalNode(rhsf, fl, ll, fc, lc) {
+#ifdef DEBUG
+  printf("  bison: reduce ExtDecList[%d]\n", rhsf);
+#endif
+}
+
 void ExtDecList::visit(int indent_level) {
 #if defined(PARSE_TREE) || defined(DEBUG)
   this->print_indentation(indent_level);

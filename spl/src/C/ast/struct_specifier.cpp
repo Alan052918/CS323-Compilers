@@ -1,6 +1,13 @@
 #include "../../../include/ast/struct_specifier.h"
 #include "../../../include/ast/def_list.h"
 
+StructSpecifier::StructSpecifier(int rhsf, int fl, int ll, int fc, int lc)
+    : NonterminalNode(rhsf, fl, ll, fc, lc) {
+#ifdef DEBUG
+  printf("  bison: reduce StructSpecifier[%d]\n", rhsf);
+#endif
+}
+
 void StructSpecifier::visit(int indent_level) {
 #if defined(PARSE_TREE) || defined(DEBUG)
   this->print_indentation(indent_level);

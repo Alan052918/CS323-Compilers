@@ -16,14 +16,9 @@ class Def : public NonterminalNode {
 
   VarType *var_type;
 
-  Def(int rhsf, int fl, int ll, int fc, int lc)
-      : NonterminalNode(rhsf, fl, ll, fc, lc) {
-#if defined(PARSE_TREE) || defined(DEBUG)
-    printf("  bison: reduce Def[%d]\n", rhsf);
-#endif
-  }
+  Def(int rhsf, int fl, int ll, int fc, int lc);
 
-  void visit(int indent_level) override;
+  void visit(int indent_level);
 };
 
 #endif  // DEF_H

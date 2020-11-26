@@ -12,14 +12,9 @@ class Program : public NonterminalNode {
  public:
   ExtDefList *ext_def_list;
 
-  Program(int rhsf, int fl, int ll, int fc, int lc)
-      : NonterminalNode(rhsf, fl, ll, fc, lc) {
-#if defined(PARSE_TREE) || defined(DEBUG)
-    printf("  bison: reduce Program[%d]\n", rhsf);
-#endif
-  }
+  Program(int rhsf, int fl, int ll, int fc, int lc);
 
-  void visit(int indent_level) override;
+  void visit(int indent_level);
 };
 
 #endif  // PROGRAM_H

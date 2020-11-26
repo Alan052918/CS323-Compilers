@@ -15,14 +15,9 @@ class Stmt : public NonterminalNode {
   Exp *exp;
   Stmt *stmt_1, *stmt_2;
 
-  Stmt(int rhsf, int fl, int ll, int fc, int lc)
-      : NonterminalNode(rhsf, fl, ll, fc, lc) {
-#if defined(PARSE_TREE) || defined(DEBUG)
-    printf("  bison: reduce Stmt[%d]\n", rhsf);
-#endif
-  }
+  Stmt(int rhsf, int fl, int ll, int fc, int lc);
 
-  void visit(int indent_level) override;
+  void visit(int indent_level);
 };
 
 #endif  // STMT_H

@@ -2,6 +2,13 @@
 #include "../../../include/ast/specifier.h"
 #include "../../../include/ast/var_dec.h"
 
+ParamDec::ParamDec(int rhsf, int fl, int ll, int fc, int lc)
+    : NonterminalNode(rhsf, fl, ll, fc, lc) {
+#ifdef DEBUG
+  printf("  bison: reduce ParamDec[%d]\n", rhsf);
+#endif
+}
+
 void ParamDec::visit(int indent_level) {
 #if defined(PARSE_TREE) || defined(DEBUG)
   this->print_indentation(indent_level);

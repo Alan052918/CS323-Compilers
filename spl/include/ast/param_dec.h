@@ -16,14 +16,9 @@ class ParamDec : public NonterminalNode {
 
   VarType *var_type;
 
-  ParamDec(int rhsf, int fl, int ll, int fc, int lc)
-      : NonterminalNode(rhsf, fl, ll, fc, lc) {
-#if defined(PARSE_TREE) || defined(DEBUG)
-    printf("  bison: reduce ParamDec[%d]\n", rhsf);
-#endif
-  }
+  ParamDec(int rhsf, int fl, int ll, int fc, int lc);
 
-  void visit(int indent_level) override;
+  void visit(int indent_level);
 };
 
 #endif  // PARAM_DEC_H

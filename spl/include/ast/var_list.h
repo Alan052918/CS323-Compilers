@@ -14,14 +14,9 @@ class VarList : public NonterminalNode {
 
   std::vector<VarType *> type_list;
 
-  VarList(int rhsf, int fl, int ll, int fc, int lc)
-      : NonterminalNode(rhsf, fl, ll, fc, lc) {
-#if defined(PARSE_TREE) || defined(DEBUG)
-    printf("  bison: reduce VarList[%d]\n", rhsf);
-#endif
-  }
+  VarList(int rhsf, int fl, int ll, int fc, int lc);
 
-  void visit(int indent_level) override;
+  void visit(int indent_level);
 };
 
 #endif  // VAR_LIST_H

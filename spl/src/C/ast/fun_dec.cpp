@@ -1,6 +1,13 @@
 #include "../../../include/ast/fun_dec.h"
 #include "../../../include/ast/var_list.h"
 
+FunDec::FunDec(int rhsf, int fl, int ll, int fc, int lc)
+    : NonterminalNode(rhsf, fl, ll, fc, lc) {
+#ifdef DEBUG
+  printf("  bison: reduce FunDec[%d]\n", rhsf);
+#endif
+}
+
 void FunDec::visit(int indent_level) {
 #if defined(PARSE_TREE) || defined(DEBUG)
   this->print_indentation(indent_level);

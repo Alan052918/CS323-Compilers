@@ -1,6 +1,13 @@
 #include "../../../include/ast/stmt_list.h"
 #include "../../../include/ast/stmt.h"
 
+StmtList::StmtList(int rhsf, int fl, int ll, int fc, int lc)
+    : NonterminalNode(rhsf, fl, ll, fc, lc) {
+#ifdef DEBUG
+  printf("  bison: reduce StmtList[%d]\n", rhsf);
+#endif
+}
+
 void StmtList::visit(int indent_level)  {
   if (this->rhs_form == 1) {
     return;

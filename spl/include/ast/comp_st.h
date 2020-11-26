@@ -14,14 +14,9 @@ class CompSt : public NonterminalNode {
   DefList *def_list;
   StmtList *stmt_list;
 
-  CompSt(int rhsf, int fl, int ll, int fc, int lc)
-      : NonterminalNode(rhsf, fl, ll, fc, lc) {
-#if defined(PARSE_TREE) || defined(DEBUG)
-    printf("  bison: reduce CompSt[%d]\n", rhsf);
-#endif
-  }
+  CompSt(int rhsf, int fl, int ll, int fc, int lc);
 
-  void visit(int indent_level) override;
+  void visit(int indent_level);
 };
 
 #endif  // COMP_ST_H

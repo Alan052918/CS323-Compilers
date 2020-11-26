@@ -14,14 +14,9 @@ class Args : public NonterminalNode {
 
   std::vector<VarType *> type_list;
 
-  Args(int rhsf, int fl, int ll, int fc, int lc)
-      : NonterminalNode(rhsf, fl, ll, fc, lc) {
-#if defined(PARSE_TREE) || defined(DEBUG)
-    printf("  bison: reduce Args[%d]\n", rhsf);
-#endif
-  }
+  Args(int rhsf, int fl, int ll, int fc, int lc);
 
-  void visit(int indent_level) override;
+  void visit(int indent_level);
 };
 
 #endif  // ARGS_H

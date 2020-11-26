@@ -12,14 +12,9 @@ class DecList : public NonterminalNode {
  public:
   std::vector<Dec *> node_list;
 
-  DecList(int rhsf, int fl, int ll, int fc, int lc)
-      : NonterminalNode(rhsf, fl, ll, fc, lc) {
-#if defined(PARSE_TREE) || defined(DEBUG)
-    printf("  bison: reduce DecList[%d]\n", rhsf);
-#endif
-  }
+  DecList(int rhsf, int fl, int ll, int fc, int lc);
 
-  void visit(int indent_level) override;
+  void visit(int indent_level);
 };
 
 #endif  // DEC_LIST_H

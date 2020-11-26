@@ -1,6 +1,13 @@
 #include "../../../include/ast/specifier.h"
 #include "../../../include/ast/struct_specifier.h"
 
+Specifier::Specifier(int rhsf, int fl, int ll, int fc, int lc)
+    : NonterminalNode(rhsf, fl, ll, fc, lc) {
+#ifdef DEBUG
+  printf("  bison: reduce Specifier[%d]\n", rhsf);
+#endif
+}
+
 void Specifier::visit(int indent_level) {
 #if defined(PARSE_TREE) || defined(DEBUG)
   this->print_indentation(indent_level);
@@ -10,7 +17,7 @@ void Specifier::visit(int indent_level) {
     case 0:  // Specifier := TYPE
 #if defined(PARSE_TREE) || defined(DEBUG)
       this->print_indentation(indent_level + 1);
-      printf("TYPE: %s\n", this->typeNode->type_token);
+      printf("TYPE: %s\n", this->type_node->type_token);
 #endif
       this->var_type = (VarType *)malloc(sizeof(VarType));
       memset(this->var_type, '\0', sizeof(VarType));

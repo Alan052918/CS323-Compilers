@@ -23,14 +23,9 @@ class Exp : public NonterminalNode {
   char *keyword;
   VarType *var_type;
 
-  Exp(int rhsf, int fl, int ll, int fc, int lc)
-      : NonterminalNode(rhsf, fl, ll, fc, lc) {
-#if defined(PARSE_TREE) || defined(DEBUG)
-    printf("  bison: reduce Exp[%d]\n", rhsf);
-#endif
-  }
+  Exp(int rhsf, int fl, int ll, int fc, int lc);
 
-  void visit(int indent_level) override;
+  void visit(int indent_level);
 };
 
 #endif  // EXP_H

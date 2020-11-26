@@ -2,6 +2,13 @@
 #include "../../../include/ast/comp_st.h"
 #include "../../../include/ast/exp.h"
 
+Stmt::Stmt(int rhsf, int fl, int ll, int fc, int lc)
+    : NonterminalNode(rhsf, fl, ll, fc, lc) {
+#ifdef DEBUG
+  printf("  bison: reduce Stmt[%d]\n", rhsf);
+#endif
+}
+
 void Stmt::visit(int indent_level) {
 #if defined(PARSE_TREE) || defined(DEBUG)
   this->print_indentation(indent_level);

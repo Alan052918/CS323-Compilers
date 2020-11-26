@@ -17,12 +17,7 @@ class VarDec : public NonterminalNode {
   bool is_array;
   std::vector<int> dim_list;
 
-  VarDec(int rhsf, int fl, int ll, int fc, int lc)
-      : NonterminalNode(rhsf, fl, ll, fc, lc) {
-#if defined(PARSE_TREE) || defined(DEBUG)
-    printf("  bison: reduce VarDec[%d]\n", rhsf);
-#endif
-  }
+  VarDec(int rhsf, int fl, int ll, int fc, int lc);
 
   /**
    * Array variable declaration is visited from outside to inside, i.e.:
@@ -37,7 +32,7 @@ class VarDec : public NonterminalNode {
    * 3. arr
    *    ^^^ id_node->id_token = arr
    */
-  void visit(int indent_level) override;
+  void visit(int indent_level);
 };
 
 #endif  // VAR_DEC_H

@@ -14,14 +14,9 @@ class DefList : public NonterminalNode {
 
   std::vector<std::pair<char *, VarType *> > var_list;
 
-  DefList(int rhsf, int fl, int ll, int fc, int lc)
-      : NonterminalNode(rhsf, fl, ll, fc, lc) {
-#if defined(PARSE_TREE) || defined(DEBUG)
-    printf("  bison: reduce DefList[%d]\n", rhsf);
-#endif
-  }
+  DefList(int rhsf, int fl, int ll, int fc, int lc);
 
-  void visit(int indent_level) override;
+  void visit(int indent_level);
 };
 
 #endif  // DEF_LIST_H
