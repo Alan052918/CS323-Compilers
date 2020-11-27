@@ -2,11 +2,9 @@
 #define AST_H
 
 #include "../common.h"
+#include "../enums.h"
 #include "../symtable.h"
 #include "../typedef.h"
-
-/* syntax tree node types */
-enum NodeType { Int, Float, Char, Type, Id, Keyword, Nonterminal };
 
 class ASTNode {
  public:

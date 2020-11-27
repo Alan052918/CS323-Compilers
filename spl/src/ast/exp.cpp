@@ -16,6 +16,7 @@ void Exp::visit(int indent_level, SymbolTable *st) {
   switch (this->rhs_form) {
     case 0:  // Exp := Exp ASSIGN || AND || OR || LT || LE || GT || GE || NE
              // || EQ || PLUS || MINUS || DIV Exp
+      this->exp_type = ComplexExp;
       this->exp_1->visit(indent_level + 1, st);
 #if defined(PARSE_TREE) || defined(DEBUG)
       this->print_indentation(indent_level + 1);
@@ -25,6 +26,7 @@ void Exp::visit(int indent_level, SymbolTable *st) {
       this->exp_2->visit(indent_level + 1, st);
       break;
     case 1:  // Exp := LP Exp RP
+      this->exp_type = ComplexExp;
 #if defined(PARSE_TREE) || defined(DEBUG)
       this->print_indentation(indent_level + 1);
       printf("LP\n");
@@ -36,6 +38,7 @@ void Exp::visit(int indent_level, SymbolTable *st) {
 #endif
       break;
     case 2:  // Exp := MINUS || NOT Exp
+      this->exp_type = ComplexExp;
 #if defined(PARSE_TREE) || defined(DEBUG)
       this->print_indentation(indent_level + 1);
       printf("%s\n", this->keyword_node->keyword_token);
@@ -45,6 +48,7 @@ void Exp::visit(int indent_level, SymbolTable *st) {
       break;
     case 3:  // Exp := ID LP Args RP
              // function call
+      this->exp_type = ComplexExp;
 #if defined(PARSE_TREE) || defined(DEBUG)
       this->print_indentation(indent_level + 1);
       printf("ID: %s\n", this->id_node->id_token);
@@ -60,6 +64,7 @@ void Exp::visit(int indent_level, SymbolTable *st) {
       break;
     case 4:  // Exp := ID LP RP
              // function call
+      this->exp_type = ComplexExp;
 #if defined(PARSE_TREE) || defined(DEBUG)
       this->print_indentation(indent_level + 1);
       printf("ID: %s\n", this->id_node->id_token);
@@ -71,6 +76,7 @@ void Exp::visit(int indent_level, SymbolTable *st) {
       this->id = this->id_node->id_token;
       break;
     case 5:  // Exp := Exp LB Exp RB
+      this->exp_type = ComplexExp;
       this->exp_1->visit(indent_level + 1, st);
 #if defined(PARSE_TREE) || defined(DEBUG)
       this->print_indentation(indent_level + 1);
@@ -84,6 +90,7 @@ void Exp::visit(int indent_level, SymbolTable *st) {
       break;
     case 6:  // Exp := Exp DOT ID
              // access member variable
+      this->exp_type = ComplexExp;
       this->exp_1->visit(indent_level + 1, st);
 #if defined(PARSE_TREE) || defined(DEBUG)
       this->print_indentation(indent_level + 1);
@@ -94,6 +101,7 @@ void Exp::visit(int indent_level, SymbolTable *st) {
       this->id = this->id_node->id_token;
       break;
     case 7:  // Exp := ID
+      this->exp_type = IdExp;
 #if defined(PARSE_TREE) || defined(DEBUG)
       this->print_indentation(indent_level + 1);
       printf("ID: %s\n", this->id_node->id_token);
@@ -101,6 +109,7 @@ void Exp::visit(int indent_level, SymbolTable *st) {
       this->id = this->id_node->id_token;
       break;
     case 8:  // Exp := INT
+      this->exp_type = IntegerExp;
 #if defined(PARSE_TREE) || defined(DEBUG)
       this->print_indentation(indent_level + 1);
       printf("INT: %ld\n", this->int_node->int_token);
@@ -108,6 +117,7 @@ void Exp::visit(int indent_level, SymbolTable *st) {
       this->integer = this->int_node->int_token;
       break;
     case 9:  // Exp := FLOAT
+      this->exp_type = FloatingPointExp;
 #if defined(PARSE_TREE) || defined(DEBUG)
       this->print_indentation(indent_level + 1);
       printf("FLOAT: %f\n", this->float_node->float_token);
@@ -115,6 +125,7 @@ void Exp::visit(int indent_level, SymbolTable *st) {
       this->floating_point = this->float_node->float_token;
       break;
     case 10:  // Exp := CHAR
+      this->exp_type = CharExp;
 #if defined(PARSE_TREE) || defined(DEBUG)
       this->print_indentation(indent_level + 1);
       printf("CHAR: %s\n", this->char_node->char_token);

@@ -2,14 +2,8 @@
 #define SYMTABLE_H
 
 #include "common.h"
+#include "enums.h"
 #include "typedef.h"
-
-/**
- * Search modes
- * - Decf: for declaration/definition, look for id in current scope only
- * - Use: for usage, look for id recursively in the scope hierarchy
- */
-enum SearchMode { DecfMode, UseMode };
 
 class SymbolTable {
  private:

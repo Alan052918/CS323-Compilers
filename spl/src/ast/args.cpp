@@ -18,7 +18,7 @@ void Args::visit(int indent_level, SymbolTable *st) {
         printf("Args (%d)\n", exp->first_line);
 #endif
         exp->visit(indent_level + 1 + i, st);
-        this->type_list.push_back(exp->var_type);
+        // this->type_list.push_back(exp->var_type);
 #if defined(PARSE_TREE) || defined(DEBUG)
         if (i < this->node_list.size() - 1) {
           this->print_indentation(indent_level + 1 + i);

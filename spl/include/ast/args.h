@@ -3,6 +3,7 @@
 
 #include "ast.h"
 #include "../common.h"
+#include "../enums.h"
 #include "../symtable.h"
 #include "../typedef.h"
 
@@ -17,6 +18,8 @@ class Args : public NonterminalNode {
   Args(int rhsf, int fl, int ll, int fc, int lc);
 
   void visit(int indent_level, SymbolTable *st) override;
+
+  VarType *exp_var_type();
 };
 
 #endif  // ARGS_H

@@ -16,6 +16,7 @@ void StructSpecifier::visit(int indent_level, SymbolTable *st) {
 #endif
   switch (this->rhs_form) {
     case 0: {  // StructSpecifier := STRUCT ID LC DefList RC
+               // structure type definition
 #if defined(PARSE_TREE) || defined(DEBUG)
       this->print_indentation(indent_level + 1);
       printf("STRUCT\n");
@@ -59,13 +60,22 @@ void StructSpecifier::visit(int indent_level, SymbolTable *st) {
       break;
     }
     case 1: {  // StructSpecifier := STRUCT ID
+               // structure type usage
 #if defined(PARSE_TREE) || defined(DEBUG)
       this->print_indentation(indent_level + 1);
       printf("STRUCT\n");
       this->print_indentation(indent_level + 1);
       printf("ID: %s\n", this->id_node->id_token);
 #endif
-      // this->var_type = st.find_var(this->id_node->id_token, UseMode);
+      VarType *vt = st->find_var(this->id_node->id_token, UseMode);
+      if (vt == NULL) {
+        fprintf(stderr,
+                "Error type 16 at Line %d: structure type is used without "
+                "definition\n",
+                this->first_line);
+      } else {
+        this->var_type = vt;
+      }
       break;
     }
 

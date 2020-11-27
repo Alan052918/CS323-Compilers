@@ -2,9 +2,7 @@
 #define TYPEDEF_H
 
 #include "common.h"
-
-enum Category { PRIMITIVE, ARRAY, STRUCTURE };
-enum Primitive { INTEGER, FLOATING_POINT, CHARACTER };
+#include "enums.h"
 
 // variable type
 typedef struct VarType {

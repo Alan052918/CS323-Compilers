@@ -3,6 +3,7 @@
 
 #include "ast.h"
 #include "../common.h"
+#include "../enums.h"
 #include "../symtable.h"
 #include "../typedef.h"
 

@@ -3,6 +3,7 @@
 
 #include "ast.h"
 #include "../common.h"
+#include "../enums.h"
 #include "../symtable.h"
 #include "../typedef.h"
 
@@ -21,7 +22,7 @@ class Exp : public NonterminalNode {
   char *id;
   long integer;
   char *keyword;
-  VarType *var_type;
+  ExpType exp_type;
 
   Exp(int rhsf, int fl, int ll, int fc, int lc);
 
