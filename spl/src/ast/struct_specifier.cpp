@@ -9,7 +9,7 @@ StructSpecifier::StructSpecifier(int rhsf, int fl, int ll, int fc, int lc)
 #endif
 }
 
-void StructSpecifier::visit(int indent_level) {
+void StructSpecifier::visit(int indent_level, SymbolTable *st) {
 #if defined(PARSE_TREE) || defined(DEBUG)
   this->print_indentation(indent_level);
   printf("StructSpecifier (%d)\n", this->first_line);
@@ -24,7 +24,7 @@ void StructSpecifier::visit(int indent_level) {
       this->print_indentation(indent_level + 1);
       printf("LC\n");
 #endif
-      this->def_list->visit(indent_level + 1);
+      this->def_list->visit(indent_level + 1, st);
 
       this->var_type = (VarType *)malloc(sizeof(VarType));
       memset(this->var_type, '\0', sizeof(VarType));

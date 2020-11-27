@@ -9,22 +9,22 @@ Dec::Dec(int rhsf, int fl, int ll, int fc, int lc)
 #endif
 }
 
-void Dec::visit(int indent_level) {
+void Dec::visit(int indent_level, SymbolTable *st) {
 #if defined(PARSE_TREE) || defined(DEBUG)
   this->print_indentation(indent_level);
   printf("Dec (%d)\n", this->first_line);
 #endif
   switch (this->rhs_form) {
     case 0:  // Dec := VarDec
-      this->var_dec->visit(indent_level + 1);
+      this->var_dec->visit(indent_level + 1, st);
       break;
     case 1:  // Dec := VarDec ASSIGN Exp
-      this->var_dec->visit(indent_level + 1);
+      this->var_dec->visit(indent_level + 1, st);
 #if defined(PARSE_TREE) || defined(DEBUG)
       this->print_indentation(indent_level + 1);
       printf("ASSIGN\n");
 #endif
-      this->exp->visit(indent_level + 1);
+      this->exp->visit(indent_level + 1, st);
       break;
 
     default:

@@ -14,7 +14,7 @@ class ExtDefList : public NonterminalNode {
 
   ExtDefList(int rhsf, int fl, int ll, int fc, int lc);
 
-  void visit(int indent_level) override;
+  void visit(int indent_level, SymbolTable *st) override;
 };
 
 #endif  // EXT_DEF_LIST_H

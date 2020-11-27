@@ -7,7 +7,7 @@ DefList::DefList(int rhsf, int fl, int ll, int fc, int lc)
   printf("  bison: reduce DefList[%d] l%d-%d c%d-%d\n", rhsf, fl, ll, fc, lc);
 #endif
 }
-void DefList::visit(int indent_level) {
+void DefList::visit(int indent_level, SymbolTable *st) {
   if (this->rhs_form == 1) {
     return;
   }
@@ -19,7 +19,7 @@ void DefList::visit(int indent_level) {
         this->print_indentation(indent_level + i);
         printf("DefList (%d)\n", def->first_line);
 #endif
-        def->visit(indent_level + 1 + i);
+        def->visit(indent_level + 1 + i, st);
       }
       break;
       /* case 1:  // DefList := %empty

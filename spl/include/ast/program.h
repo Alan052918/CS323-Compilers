@@ -14,7 +14,7 @@ class Program : public NonterminalNode {
 
   Program(int rhsf, int fl, int ll, int fc, int lc);
 
-  void visit(int indent_level);
+  void visit(int indent_level, SymbolTable *st) override;
 };
 
 #endif  // PROGRAM_H

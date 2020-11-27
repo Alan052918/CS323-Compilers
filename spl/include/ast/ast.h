@@ -19,7 +19,7 @@ class ASTNode {
 
   ASTNode(NodeType nt, int fl, int ll, int fc, int lc);
 
-  virtual void visit(int indent_level);
+  virtual void visit(int indent_level, SymbolTable *st);
   void print_indentation(int indent_level);
 };
 

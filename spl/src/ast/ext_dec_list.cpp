@@ -9,7 +9,7 @@ ExtDecList::ExtDecList(int rhsf, int fl, int ll, int fc, int lc)
 #endif
 }
 
-void ExtDecList::visit(int indent_level) {
+void ExtDecList::visit(int indent_level, SymbolTable *st) {
   switch (this->rhs_form) {
     case 0:  // ExtDecList := VarDec | VarDec COMMA ExtDecList
       for (int i = 0; i < this->node_list.size(); i++) {
@@ -18,7 +18,7 @@ void ExtDecList::visit(int indent_level) {
         this->print_indentation(indent_level + i);
         printf("ExtDecList (%d)\n", var_dec->first_line);
 #endif
-        var_dec->visit(indent_level + 1 + i);
+        var_dec->visit(indent_level + 1 + i, st);
 #if defined(PARSE_TREE) || defined(DEBUG)
         if (i < this->node_list.size() - 1) {
           this->print_indentation(indent_level + 1 + i);

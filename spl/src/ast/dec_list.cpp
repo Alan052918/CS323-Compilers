@@ -7,7 +7,7 @@ DecList::DecList(int rhsf, int fl, int ll, int fc, int lc)
   printf("  bison: reduce DecList[%d] l%d-%d c%d-%d\n", rhsf, fl, ll, fc, lc);
 #endif
 }
-void DecList::visit(int indent_level) {
+void DecList::visit(int indent_level, SymbolTable *st) {
   switch (this->rhs_form) {
     case 0:  // DecList := Dec | Dec COMMA DecList
       for (int i = 0; i < this->node_list.size(); i++) {
@@ -16,7 +16,7 @@ void DecList::visit(int indent_level) {
         this->print_indentation(indent_level + i);
         printf("DecList (%d)\n", dec->first_line);
 #endif
-        dec->visit(indent_level + 1 + i);
+        dec->visit(indent_level + 1 + i, st);
 #if defined(PARSE_TREE) || defined(DEBUG)
         if (i < this->node_list.size() - 1) {
           this->print_indentation(indent_level + 1 + i);

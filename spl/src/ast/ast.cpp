@@ -8,7 +8,7 @@ ASTNode::ASTNode(NodeType nt, int fl, int ll, int fc, int lc) {
   this->last_column = lc;
 }
 
-void ASTNode::visit(int indent_level) {
+void ASTNode::visit(int indent_level, SymbolTable *st) {
 #if defined(PARSE_TREE) || defined(DEBUG)
   this->print_indentation(indent_level);
   printf("Generic ASTNode (%d)\n", this->first_line);

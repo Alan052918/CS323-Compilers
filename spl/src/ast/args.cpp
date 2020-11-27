@@ -8,7 +8,7 @@ Args::Args(int rhsf, int fl, int ll, int fc, int lc)
 #endif
 }
 
-void Args::visit(int indent_level) {
+void Args::visit(int indent_level, SymbolTable *st) {
   switch (this->rhs_form) {
     case 0:  // Args := Exp COMMA Args | Exp
       for (int i = 0; i < this->node_list.size(); i++) {
@@ -17,7 +17,7 @@ void Args::visit(int indent_level) {
         this->print_indentation(indent_level + i);
         printf("Args (%d)\n", exp->first_line);
 #endif
-        exp->visit(indent_level + 1 + i);
+        exp->visit(indent_level + 1 + i, st);
         this->type_list.push_back(exp->var_type);
 #if defined(PARSE_TREE) || defined(DEBUG)
         if (i < this->node_list.size() - 1) {

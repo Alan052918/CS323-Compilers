@@ -9,7 +9,7 @@ Def::Def(int rhsf, int fl, int ll, int fc, int lc)
 #endif
 }
 
-void Def::visit(int indent_level) {
+void Def::visit(int indent_level, SymbolTable *st) {
 #if defined(PARSE_TREE) || defined(DEBUG)
   this->print_indentation(indent_level);
   printf("Def (%d)\n", this->first_line);
@@ -17,8 +17,8 @@ void Def::visit(int indent_level) {
   switch (this->rhs_form) {
     case 0:  // Def := Specifier DecList SEMI
              // local variable DECLARATOIN, PUSH MAP
-      this->specifier->visit(indent_level + 1);
-      this->dec_list->visit(indent_level + 1);
+      this->specifier->visit(indent_level + 1, st);
+      this->dec_list->visit(indent_level + 1, st);
 #if defined(PARSE_TREE) || defined(DEBUG)
       this->print_indentation(indent_level + 1);
       printf("SEMI\n");

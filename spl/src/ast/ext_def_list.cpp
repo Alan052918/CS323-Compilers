@@ -9,7 +9,7 @@ ExtDefList::ExtDefList(int rhsf, int fl, int ll, int fc, int lc)
 #endif
 }
 
-void ExtDefList::visit(int indent_level) {
+void ExtDefList::visit(int indent_level, SymbolTable *st) {
   if (this->rhs_form == 1) {
     return;
   }
@@ -21,7 +21,7 @@ void ExtDefList::visit(int indent_level) {
         this->print_indentation(indent_level + i);
         printf("ExtDefList (%d)\n", ext_def->first_line);
 #endif
-        ext_def->visit(indent_level + 1 + i);
+        ext_def->visit(indent_level + 1 + i, st);
       }
       break;
       /* case 1:  // ExtDefList := %empty

@@ -8,11 +8,11 @@ Program::Program(int rhsf, int fl, int ll, int fc, int lc)
 #endif
 }
 
-void Program::visit(int indent_level) {
+void Program::visit(int indent_level, SymbolTable *st) {
 #if defined(PARSE_TREE) || defined(DEBUG)
   this->print_indentation(indent_level);
   printf("Program (%d)\n", this->first_line);
 #endif
   // Program := ExtDefList
-  this->ext_def_list->visit(indent_level + 1);
+  this->ext_def_list->visit(indent_level + 1, st);
 }

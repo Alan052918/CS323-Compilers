@@ -3,13 +3,9 @@
 SymbolTable::SymbolTable() {
   this->scope_depth = 1;
   std::unordered_map<const char *, VarType *> vmap;
-  std::vector<std::unordered_map<const char *, VarType *> > vvec;
-  vvec.push_back(vmap);
-  this->vm_vec = vvec;
+  this->vm_vec.push_back(vmap);
   std::unordered_map<const char *, FunType *> fmap;
-  std::vector<std::unordered_map<const char *, FunType *> > fvec;
-  fvec.push_back(fmap);
-  this->fm_vec = fm_vec;
+  this->fm_vec.push_back(fmap);
 }
 
 std::unordered_map<const char *, VarType *> SymbolTable::top_varmap() {

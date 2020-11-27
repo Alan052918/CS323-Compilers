@@ -8,7 +8,7 @@ StmtList::StmtList(int rhsf, int fl, int ll, int fc, int lc)
 #endif
 }
 
-void StmtList::visit(int indent_level) {
+void StmtList::visit(int indent_level, SymbolTable *st) {
   if (this->rhs_form == 1) {
     return;
   }
@@ -20,7 +20,7 @@ void StmtList::visit(int indent_level) {
         this->print_indentation(indent_level + i);
         printf("StmtList (%d)\n", stmt->first_line);
 #endif
-        stmt->visit(indent_level + 1 + i);
+        stmt->visit(indent_level + 1 + i, st);
       }
       break;
       /* case 1:  // StmtList := %empty

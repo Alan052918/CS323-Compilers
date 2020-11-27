@@ -674,7 +674,8 @@ int main(int argc, char **argv) {
 #ifdef DEBUG
       printf("\n*********************\n");
 #endif
-      program_root->visit(0);
+      SymbolTable *st = new SymbolTable();
+      program_root->visit(0, st);
     } else if (result == 1) {
 #ifdef DEBUG
       fprintf(stderr, "Abort\n");

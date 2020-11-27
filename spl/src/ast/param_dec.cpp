@@ -9,15 +9,15 @@ ParamDec::ParamDec(int rhsf, int fl, int ll, int fc, int lc)
 #endif
 }
 
-void ParamDec::visit(int indent_level) {
+void ParamDec::visit(int indent_level, SymbolTable *st) {
 #if defined(PARSE_TREE) || defined(DEBUG)
   this->print_indentation(indent_level);
   printf("ParamDec (%d)\n", this->first_line);
 #endif
   switch (this->rhs_form) {
     case 0:  // ParamDec := Specifier VarDec
-      this->specifier->visit(indent_level + 1);
-      this->var_dec->visit(indent_level + 1);
+      this->specifier->visit(indent_level + 1, st);
+      this->var_dec->visit(indent_level + 1, st);
       break;
 
     default:

@@ -18,7 +18,7 @@ class FunDec : public NonterminalNode {
 
   FunDec(int rhsf, int fl, int ll, int fc, int lc);
 
-  void visit(int indent_level);
+  void visit(int indent_level, SymbolTable *st) override;
 };
 
 #endif  // FUN_DEC_H

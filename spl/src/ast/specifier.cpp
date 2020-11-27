@@ -8,7 +8,7 @@ Specifier::Specifier(int rhsf, int fl, int ll, int fc, int lc)
 #endif
 }
 
-void Specifier::visit(int indent_level) {
+void Specifier::visit(int indent_level, SymbolTable *st) {
 #if defined(PARSE_TREE) || defined(DEBUG)
   this->print_indentation(indent_level);
   printf("Specifier (%d)\n", this->first_line);
@@ -33,7 +33,7 @@ void Specifier::visit(int indent_level) {
       }
       break;
     case 1:  // Specifier := StructSpecifier
-      this->struct_specifier->visit(indent_level + 1);
+      this->struct_specifier->visit(indent_level + 1, st);
       this->var_type = this->struct_specifier->var_type;
       break;
 

@@ -32,7 +32,7 @@ class VarDec : public NonterminalNode {
    * 3. arr
    *    ^^^ id_node->id_token = arr
    */
-  void visit(int indent_level);
+  void visit(int indent_level, SymbolTable *st) override;
 };
 
 #endif  // VAR_DEC_H

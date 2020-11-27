@@ -16,7 +16,7 @@ class Dec : public NonterminalNode {
 
   Dec(int rhsf, int fl, int ll, int fc, int lc);
 
-  void visit(int indent_level);
+  void visit(int indent_level, SymbolTable *st) override;
 };
 
 #endif  // DEC_H

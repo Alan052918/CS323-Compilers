@@ -17,7 +17,7 @@ class Stmt : public NonterminalNode {
 
   Stmt(int rhsf, int fl, int ll, int fc, int lc);
 
-  void visit(int indent_level);
+  void visit(int indent_level, SymbolTable *st) override;
 };
 
 #endif  // STMT_H

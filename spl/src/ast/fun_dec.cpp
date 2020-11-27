@@ -8,7 +8,7 @@ FunDec::FunDec(int rhsf, int fl, int ll, int fc, int lc)
 #endif
 }
 
-void FunDec::visit(int indent_level) {
+void FunDec::visit(int indent_level, SymbolTable *st) {
 #if defined(PARSE_TREE) || defined(DEBUG)
   this->print_indentation(indent_level);
   printf("FunDec (%d)\n", this->first_line);
@@ -21,7 +21,7 @@ void FunDec::visit(int indent_level) {
       this->print_indentation(indent_level + 1);
       printf("LP\n");
 #endif
-      this->var_list->visit(indent_level + 1);
+      this->var_list->visit(indent_level + 1, st);
 #if defined(PARSE_TREE) || defined(DEBUG)
       this->print_indentation(indent_level + 1);
       printf("RP\n");

@@ -11,7 +11,7 @@ ExtDef::ExtDef(int rhsf, int fl, int ll, int fc, int lc)
 #endif
 }
 
-void ExtDef::visit(int indent_level) {
+void ExtDef::visit(int indent_level, SymbolTable *st) {
 #if defined(PARSE_TREE) || defined(DEBUG)
   this->print_indentation(indent_level);
   printf("ExtDef (%d)\n", this->first_line);
@@ -19,15 +19,15 @@ void ExtDef::visit(int indent_level) {
   switch (this->rhs_form) {
     case 0:  // ExtDef := Specifier ExtDecList SEMI
              // global variables (of the same type) DECLARATION, PUSH VAR
-      this->specifier->visit(indent_level + 1);
-      this->ext_dec_list->visit(indent_level + 1);
+      this->specifier->visit(indent_level + 1, st);
+      this->ext_dec_list->visit(indent_level + 1, st);
 #if defined(PARSE_TREE) || defined(DEBUG)
       this->print_indentation(indent_level + 1);
       printf("SEMI\n");
 #endif
       break;
     case 1:  // ExtDef := Specifier SEMI
-      this->specifier->visit(indent_level + 1);
+      this->specifier->visit(indent_level + 1, st);
 #if defined(PARSE_TREE) || defined(DEBUG)
       this->print_indentation(indent_level + 1);
       printf("SEMI\n");
@@ -35,9 +35,9 @@ void ExtDef::visit(int indent_level) {
       break;
     case 2:  // ExtDef := Specifier FunDec CompSt
              // function DEFINITION, PUSH FUN
-      this->specifier->visit(indent_level + 1);
-      this->fun_dec->visit(indent_level + 1);
-      this->comp_st->visit(indent_level + 1);
+      this->specifier->visit(indent_level + 1, st);
+      this->fun_dec->visit(indent_level + 1, st);
+      this->comp_st->visit(indent_level + 1, st);
       break;
 
     default:

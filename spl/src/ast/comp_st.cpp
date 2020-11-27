@@ -9,7 +9,7 @@ CompSt::CompSt(int rhsf, int fl, int ll, int fc, int lc)
 #endif
 }
 
-void CompSt::visit(int indent_level) {
+void CompSt::visit(int indent_level, SymbolTable *st) {
 #if defined(PARSE_TREE) || defined(DEBUG)
   this->print_indentation(indent_level);
   printf("CompSt (%d)\n", this->first_line);
@@ -22,8 +22,8 @@ void CompSt::visit(int indent_level) {
       printf("LC\n");
 #endif
       // st.push_maps();
-      this->def_list->visit(indent_level + 1);
-      this->stmt_list->visit(indent_level + 1);
+      this->def_list->visit(indent_level + 1, st);
+      this->stmt_list->visit(indent_level + 1, st);
 #if defined(PARSE_TREE) || defined(DEBUG)
       this->print_indentation(indent_level + 1);
       printf("RC\n");

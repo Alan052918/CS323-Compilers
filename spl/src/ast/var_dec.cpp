@@ -7,7 +7,7 @@ VarDec::VarDec(int rhsf, int fl, int ll, int fc, int lc)
 #endif
 }
 
-void VarDec::visit(int indent_level) {
+void VarDec::visit(int indent_level, SymbolTable *st) {
 #if defined(PARSE_TREE) || defined(DEBUG)
   this->print_indentation(indent_level);
   printf("VarDec (%d)\n", this->first_line);
@@ -25,7 +25,7 @@ void VarDec::visit(int indent_level) {
     }
     case 1: {  // VarDec := VarDec LB INT RB
                // array variable declaration
-      this->var_dec->visit(indent_level + 1);
+      this->var_dec->visit(indent_level + 1, st);
       this->is_array = true;
 
       this->dim_list.push_back(this->int_node->int_token);

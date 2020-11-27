@@ -8,7 +8,7 @@ VarList::VarList(int rhsf, int fl, int ll, int fc, int lc)
 #endif
 }
 
-void VarList::visit(int indent_level) {
+void VarList::visit(int indent_level, SymbolTable *st) {
   switch (this->rhs_form) {
     case 0:  // VarList := ParamDec COMMA VarList | ParamDec
       for (int i = 0; i < this->node_list.size(); i++) {
@@ -17,7 +17,7 @@ void VarList::visit(int indent_level) {
         this->print_indentation(indent_level + i);
         printf("VarList (%d)\n", param_dec->first_line);
 #endif
-        param_dec->visit(indent_level + 1 + i);
+        param_dec->visit(indent_level + 1 + i, st);
         this->type_list.push_back(param_dec->var_type);
 #if defined(PARSE_TREE) || defined(DEBUG)
         if (i < this->node_list.size() - 1) {
