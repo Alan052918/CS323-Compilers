@@ -17,6 +17,7 @@ void StructSpecifier::visit(int indent_level, SymbolTable *st) {
   switch (this->rhs_form) {
     case 0: {  // StructSpecifier := STRUCT ID LC DefList RC
                // structure type definition
+      this->var_type = new VarType();
       this->id = this->id_node->id_token;
 #if defined(PARSE_TREE) || defined(DEBUG)
       this->print_indentation(indent_level + 1);
@@ -28,7 +29,8 @@ void StructSpecifier::visit(int indent_level, SymbolTable *st) {
 #endif
       if (st->find_var(this->id, DecfMode) != NULL) {
         std::cout << "Error type 15 at Line " << this->first_line
-                  << ": redefine the same structure type\n";
+                  << ": redefine struct: " << this->id << std::endl;
+        break;
       }
       this->def_list->visit(indent_level + 1, st);
 
@@ -62,7 +64,6 @@ void StructSpecifier::visit(int indent_level, SymbolTable *st) {
       this->print_indentation(indent_level + 1);
       std::cout << "RC\n";
 #endif
-      st->push_var(this->id, this->var_type);
       break;
     }
     case 1: {  // StructSpecifier := STRUCT ID

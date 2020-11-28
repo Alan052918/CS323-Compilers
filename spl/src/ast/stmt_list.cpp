@@ -13,22 +13,26 @@ void StmtList::visit(int indent_level, SymbolTable *st) {
     return;
   }
   switch (this->rhs_form) {
-    case 0:  // StmtList := Stmt StmtList
+    case 0: {  // StmtList := Stmt StmtList
+      this->return_type = new VarType();
       for (int i = 0; i < this->node_list.size(); i++) {
         Stmt *stmt = this->node_list.at(i);
 #if defined(PARSE_TREE) || defined(DEBUG)
         this->print_indentation(indent_level + i);
         printf("StmtList (%d)\n", stmt->first_line);
 #endif
+        stmt->var_type = this->return_type;
         stmt->visit(indent_level + 1 + i, st);
       }
       break;
+    }
       /* case 1:  // StmtList := %empty
         break; */
 
-    default:
+    default: {
       fprintf(stderr, "Fail to visit <StmtList> Node: line %d\n",
               this->first_line);
       break;
+    }
   }
 }

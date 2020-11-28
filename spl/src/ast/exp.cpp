@@ -93,7 +93,7 @@ void Exp::visit(int indent_level, SymbolTable *st) {
       this->var_type = new VarType();
       this->is_funcall = true;
       this->is_rvalue = true;
-      this->id = this->id_node->id_token;
+      this->id = std::string(this->id_node->id_token);
 #if defined(PARSE_TREE) || defined(DEBUG)
       this->print_indentation(indent_level + 1);
       std::cout << "ID: " << this->id << std::endl;
@@ -107,16 +107,17 @@ void Exp::visit(int indent_level, SymbolTable *st) {
 #endif
       FunType *ft = st->find_fun(this->id, UseMode);
       VarType *vt = st->find_var(this->id, UseMode);
-      if (ft == NULL) {
-        std::cout << "Error type 2 at Line " << this->first_line
-                  << ": undefined function: " << this->id << std::endl;
-        break;
-      }
-      if (vt != NULL) {
-        std::cout << "Error type 11 at Line " << this->first_line
-                  << ": applying function invocation operator on non-function "
-                     "names\n";
-        break;
+      if (!ft) {
+        if (!vt) {
+          std::cout << "Error type 2 at Line " << this->first_line
+                    << ": undefined function: " << this->id << std::endl;
+          break;
+        } else {
+          std::cout << "Error type 11 at Line " << this->first_line
+                    << ": invoking non-function variable: " << this->id
+                    << std::endl;
+          break;
+        }
       }
       std::vector<VarType *> param_types = ft->arg_types;
       if (param_types.size() != this->args->type_list.size()) {
@@ -125,9 +126,10 @@ void Exp::visit(int indent_level, SymbolTable *st) {
                   << "] != declared parameter size [" << param_types.size()
                   << "]\n";
 #endif
-        std::cout
-            << "Error type 9 at Line " << this->first_line
-            << ": the function’s arguments mismatch the declared parameters\n";
+        std::cout << "Error type 9 at Line " << this->first_line
+                  << ": invalid argument number for " << this->id << ", expect "
+                  << param_types.size() << ", got "
+                  << this->args->type_list.size() << std::endl;
         break;
       }
       for (int i = 0; i < param_types.size(); i++) {
@@ -152,7 +154,7 @@ void Exp::visit(int indent_level, SymbolTable *st) {
       this->var_type = new VarType();
       this->is_funcall = true;
       this->is_rvalue = true;
-      this->id = this->id_node->id_token;
+      this->id = std::string(this->id_node->id_token);
 #if defined(PARSE_TREE) || defined(DEBUG)
       this->print_indentation(indent_level + 1);
       std::cout << "ID: " << this->id << std::endl;
@@ -219,8 +221,8 @@ void Exp::visit(int indent_level, SymbolTable *st) {
     case 6: {  // Exp := Exp DOT ID
                // access member variable of structure type variable
       this->var_type = new VarType();
+      this->id = std::string(this->id_node->id_token);
       this->exp_1->visit(indent_level + 1, st);
-      this->id = this->id_node->id_token;
 #if defined(PARSE_TREE) || defined(DEBUG)
       this->print_indentation(indent_level + 1);
       std::cout << "DOT\n";
@@ -228,11 +230,6 @@ void Exp::visit(int indent_level, SymbolTable *st) {
       std::cout << "ID: " << this->id << std::endl;
 #endif
       VarType *vt = st->find_var(this->exp_1->id, UseMode);
-      if (vt == NULL) {
-        std::cout << "Error type 1 at Line " << this->first_line
-                  << ": undefined variable: " << this->exp_1->id << std::endl;
-        break;
-      }
       if (vt->category != STRUCTURE) {
         std::cout << "Error type 13 at Line " << this->first_line
                   << ": accessing member of non-structure "
@@ -255,7 +252,7 @@ void Exp::visit(int indent_level, SymbolTable *st) {
       break;
     }
     case 7: {  // Exp := ID
-      this->id = this->id_node->id_token;
+      this->id = std::string(this->id_node->id_token);
 #if defined(PARSE_TREE) || defined(DEBUG)
       this->print_indentation(indent_level + 1);
       std::cout << "ID: " << this->id << std::endl;

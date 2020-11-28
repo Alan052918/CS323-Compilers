@@ -16,6 +16,9 @@ class CompSt : public NonterminalNode {
   DefList *def_list;
   StmtList *stmt_list;
 
+  // data member variables
+  VarType *return_type;
+
   CompSt(int rhsf, int fl, int ll, int fc, int lc);
 
   void visit(int indent_level, SymbolTable *st) override;

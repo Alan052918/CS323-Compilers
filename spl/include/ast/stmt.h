@@ -12,9 +12,13 @@ class Exp;
 
 class Stmt : public NonterminalNode {
  public:
+  // nonterminal member variables
   CompSt *comp_st;
   Exp *exp;
   Stmt *stmt_1, *stmt_2;
+
+  // data member variables
+  VarType *var_type;
 
   Stmt(int rhsf, int fl, int ll, int fc, int lc);
 

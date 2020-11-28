@@ -11,7 +11,11 @@ class Stmt;
 
 class StmtList : public NonterminalNode {
  public:
+  // nonterminal member variables
   std::vector<Stmt *> node_list;
+
+  // data member variables
+  VarType *return_type;
 
   StmtList(int rhsf, int fl, int ll, int fc, int lc);
 

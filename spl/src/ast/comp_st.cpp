@@ -23,6 +23,7 @@ void CompSt::visit(int indent_level, SymbolTable *st) {
       printf("LC\n");
 #endif
       this->def_list->visit(indent_level + 1, st);
+      this->stmt_list->return_type = this->return_type;
       this->stmt_list->visit(indent_level + 1, st);
 #if defined(PARSE_TREE) || defined(DEBUG)
       this->print_indentation(indent_level + 1);
