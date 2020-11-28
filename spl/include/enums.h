@@ -11,7 +11,7 @@ enum SearchMode { DecfMode, UseMode };
 /**
  * Type definition categories
  */
-enum Category { PRIMITIVE, ARRAY, STRUCTURE };
+enum Category { PRIMITIVE, ARRAY, STRUCTURE, UNDEFINED };
 enum Primitive { INTEGER, FLOATING_POINT, CHARACTER };
 
 /**

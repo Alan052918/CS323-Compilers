@@ -29,7 +29,7 @@ void FunDec::visit(int indent_level, SymbolTable *st) {
 #endif
       this->id = this->id_node->id_token;
       if (st->find_fun(this->id, DecfMode) != NULL) {
-        std::cout << "Error Type 4 at Line " << this->first_line
+        std::cout << "Error type 4 at Line " << this->first_line
                   << ": function is redefined\n";
         break;
       }
@@ -46,7 +46,7 @@ void FunDec::visit(int indent_level, SymbolTable *st) {
 #endif
       this->id = this->id_node->id_token;
       if (st->find_fun(this->id, DecfMode) != NULL) {
-        std::cout << "Error Type 4 at Line " << this->first_line
+        std::cout << "Error type 4 at Line " << this->first_line
                   << ": function is redefined\n";
         break;
       }

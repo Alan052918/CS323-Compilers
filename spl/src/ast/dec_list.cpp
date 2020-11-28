@@ -4,7 +4,8 @@
 DecList::DecList(int rhsf, int fl, int ll, int fc, int lc)
     : NonterminalNode(rhsf, fl, ll, fc, lc) {
 #ifdef DEBUG
-  printf("  bison: reduce DecList[%d] l%d-%d c%d-%d\n", rhsf, fl, ll, fc, lc);
+  std::cout << "  bison: reduce DecList[" << rhsf << "] l" << fl << "-" << ll
+            << " c" << fc << "-" << lc << std::endl;
 #endif
 }
 void DecList::visit(int indent_level, SymbolTable *st) {
@@ -15,47 +16,45 @@ void DecList::visit(int indent_level, SymbolTable *st) {
         Dec *dec = this->node_list.at(i);
 #if defined(PARSE_TREE) || defined(DEBUG)
         this->print_indentation(indent_level + i);
-        printf("DecList (%d)\n", dec->first_line);
+        std::cout << "DecList (" << dec->first_line << ")\n";
 #endif
         dec->visit(indent_level + 1 + i, st);
-        if (dec->is_assign == false && dec->is_array == false) {
+        if (!dec->is_assign && !dec->is_array) {
           // not assigned, not array
           st->push_var(dec->id, this->var_type);
-        } else if (dec->is_assign == false && dec->is_array == true) {
+        } else if (!dec->is_assign && dec->is_array) {
           // not assigned, is array
           // TODO: call add_arr_dimension() and add_arr_basetype() to build
           // array type
-        } else if (dec->is_assign == true && dec->is_array == false) {
+        } else if (dec->is_assign && !dec->is_array) {
           // is assigned, not array
-          if (dec->var_type != this->var_type) {
-            fprintf(stderr,
-                    "Error Type 17 at Line %d: the variable’s assigned type "
-                    "mismatches the declared type\n",
-                    this->first_line);
+          if (!compare_var_type(dec->var_type, this->var_type)) {
+            std::cout << "Error type 17 at Line " << this->first_line
+                      << ": the variable’s assigned type mismatches the "
+                         "declared type\n";
           }
           st->push_var(dec->id, this->var_type);
         } else {
           // is assigned, is array
           if (this->var_type->category != ARRAY) {
-            fprintf(stderr,
-                    "Error Type 17 at Line %d: the variable’s assigned type "
-                    "mismatches the declared type\n",
-                    this->first_line);
+            std::cout << "Error type 17 at Line " << this->first_line
+                      << ": the variable’s assigned type mismatches the "
+                         "declared type\n";
           }
           st->push_var(dec->id, this->var_type);
         }
 #if defined(PARSE_TREE) || defined(DEBUG)
         if (i < this->node_list.size() - 1) {
           this->print_indentation(indent_level + 1 + i);
-          printf("COMMA\n");
+          std::cout << "COMMA\n";
         }
 #endif
       }
       break;
 
     default:
-      fprintf(stderr, "Fail to visit <DecList> Node: line %d\n",
-              this->first_line);
+      std::cout << "Fail to visit <DecList> Node: line " << this->first_line
+                << std::endl;
       break;
   }
 }

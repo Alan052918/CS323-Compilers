@@ -24,9 +24,10 @@ void Exp::visit(int indent_level, SymbolTable *st) {
                // || EQ || PLUS || MINUS || DIV Exp
                // strict operand type checking: must be of the exact same
                // variable types
+      this->var_type = new VarType();
       this->exp_1->visit(indent_level + 1, st);
       if (!this->exp_1->id.empty() && !st->find_var(this->exp_1->id, UseMode)) {
-        std::cout << "Error Type 1 at Line " << this->first_line
+        std::cout << "Error type 1 at Line " << this->first_line
                   << ": undefined variable: " << this->exp_1->id << std::endl;
         break;
       }
@@ -37,19 +38,19 @@ void Exp::visit(int indent_level, SymbolTable *st) {
 #endif
       this->exp_2->visit(indent_level + 1, st);
       if (!this->exp_2->id.empty() && !st->find_var(this->exp_2->id, UseMode)) {
-        std::cout << "Error Type 1 at Line " << this->first_line
-                  << ": undefined variable: " << this->exp_1->id << std::endl;
+        std::cout << "Error type 1 at Line " << this->first_line
+                  << ": undefined variable: " << this->exp_2->id << std::endl;
         break;
       }
       VarType *vt_1 = this->exp_1->var_type;
       VarType *vt_2 = this->exp_2->var_type;
-      if (vt_1 != vt_2) {
+      if (!compare_var_type(vt_1, vt_2)) {
         if (this->keyword == "ASSIGN") {
           std::cout
-              << "Error Type 5 at Line " << this->first_line
+              << "Error type 5 at Line " << this->first_line
               << ": unmatching types on both sides of assignment operator\n";
         } else {
-          std::cout << "Error Type 7 at Line " << this->first_line
+          std::cout << "Error type 7 at Line " << this->first_line
                     << ": unmatching operands\n";
         }
         break;
@@ -68,7 +69,7 @@ void Exp::visit(int indent_level, SymbolTable *st) {
       std::cout << "RP\n";
 #endif
       if (!this->exp_1->id.empty() && !st->find_var(this->exp_1->id, UseMode)) {
-        std::cout << "Error Type 1 at Line " << this->first_line
+        std::cout << "Error type 1 at Line " << this->first_line
                   << ": undefined variable: " << this->exp_1->id << std::endl;
       }
       this->var_type = this->exp_1->var_type;
@@ -83,7 +84,7 @@ void Exp::visit(int indent_level, SymbolTable *st) {
       this->exp_1->visit(indent_level + 1, st);
       this->var_type = this->exp_1->var_type;
       if (!this->exp_1->id.empty() && !st->find_var(this->exp_1->id, UseMode)) {
-        std::cout << "Error Type 1 at Line " << this->first_line
+        std::cout << "Error type 1 at Line " << this->first_line
                   << ": undefined variable: " << this->exp_1->id << std::endl;
       }
       break;
@@ -106,12 +107,12 @@ void Exp::visit(int indent_level, SymbolTable *st) {
       FunType *ft = st->find_fun(this->id, UseMode);
       VarType *vt = st->find_var(this->id, UseMode);
       if (ft == NULL) {
-        std::cout << "Error Type 2 at Line " << this->first_line
+        std::cout << "Error type 2 at Line " << this->first_line
                   << ": function is invoked without definition\n";
         break;
       }
       if (vt != NULL) {
-        std::cout << "Error Type 11 at Line " << this->first_line
+        std::cout << "Error type 11 at Line " << this->first_line
                   << ": applying function invocation operator on non-function "
                      "names\n";
         break;
@@ -119,13 +120,13 @@ void Exp::visit(int indent_level, SymbolTable *st) {
       std::vector<VarType *> at = ft->arg_types;
       if (at.size() != this->args->type_list.size()) {
         std::cout
-            << "Error Type 9 at Line " << this->first_line
+            << "Error type 9 at Line " << this->first_line
             << ": the function’s arguments mismatch the declared parameters\n";
         break;
       }
       for (int i = 0; i < at.size(); i++) {
         if (at.at(i) != this->args->type_list.at(i)) {
-          std::cout << "Error Type 9 at Line " << this->first_line
+          std::cout << "Error type 9 at Line " << this->first_line
                     << ": the function’s arguments mismatch the declared "
                        "parameters\n";
           break;
@@ -149,12 +150,12 @@ void Exp::visit(int indent_level, SymbolTable *st) {
       FunType *ft = st->find_fun(this->id, UseMode);
       VarType *vt = st->find_var(this->id, UseMode);
       if (ft == NULL) {
-        std::cout << "Error Type 2 at Line " << this->first_line
+        std::cout << "Error type 2 at Line " << this->first_line
                   << ": function is invoked without definition\n";
         break;
       }
       if (vt != NULL) {
-        std::cout << "Error Type 11 at Line " << this->first_line
+        std::cout << "Error type 11 at Line " << this->first_line
                   << ": applying function invocation operator on non-function "
                      "names\n";
         break;
@@ -177,23 +178,23 @@ void Exp::visit(int indent_level, SymbolTable *st) {
       VarType *vt_1 = st->find_var(this->exp_1->id, UseMode);
       VarType *vt_2 = st->find_var(this->exp_2->id, UseMode);
       if (vt_1 == NULL) {
-        std::cout << "Error Type 1 at Line " << this->first_line
+        std::cout << "Error type 1 at Line " << this->first_line
                   << ": undefined variable: " << this->exp_1->id << std::endl;
         break;
       }
       if (vt_1->category != ARRAY) {
         std::cout
-            << "Error Type 10 at Line " << this->first_line
+            << "Error type 10 at Line " << this->first_line
             << ": applying indexing operator on non-array type variable\n";
         break;
       }
       if (vt_2 == NULL) {
-        std::cout << "Error Type 1 at Line " << this->first_line
-                  << ": undefined variable: " << this->exp_1->id << std::endl;
+        std::cout << "Error type 1 at Line " << this->first_line
+                  << ": undefined variable: " << this->exp_2->id << std::endl;
         break;
       }
       if (vt_2->category != PRIMITIVE || vt_2->primitive != INTEGER) {
-        std::cout << "Error Type 12 at Line " << this->first_line
+        std::cout << "Error type 12 at Line " << this->first_line
                   << ": array indexing with non-integer type expression\n";
         break;
       }
@@ -212,12 +213,12 @@ void Exp::visit(int indent_level, SymbolTable *st) {
 #endif
       VarType *vt = st->find_var(this->exp_1->id, UseMode);
       if (vt == NULL) {
-        std::cout << "Error Type 1 at Line " << this->first_line
+        std::cout << "Error type 1 at Line " << this->first_line
                   << ": undefined variable: " << this->exp_1->id << std::endl;
         break;
       }
       if (vt->category != STRUCTURE) {
-        std::cout << "Error Type 13 at Line " << this->first_line
+        std::cout << "Error type 13 at Line " << this->first_line
                   << ": accessing member of non-structure "
                      "variable\n";
         break;
@@ -232,7 +233,7 @@ void Exp::visit(int indent_level, SymbolTable *st) {
         fl_ptr = fl_ptr->next;
       }
       if (found == false) {
-        std::cout << "Error Type 14 at Line " << this->first_line
+        std::cout << "Error type 14 at Line " << this->first_line
                   << ": accessing an undefined structure member\n";
       }
       break;

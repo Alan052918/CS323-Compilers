@@ -27,7 +27,7 @@ void StructSpecifier::visit(int indent_level, SymbolTable *st) {
       std::cout << "LC\n";
 #endif
       if (st->find_var(this->id, DecfMode) != NULL) {
-        std::cout << "Error Type 15 at Line " << this->first_line
+        std::cout << "Error type 15 at Line " << this->first_line
                   << ": redefine the same structure type\n";
       }
       this->def_list->visit(indent_level + 1, st);

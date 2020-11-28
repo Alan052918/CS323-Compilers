@@ -74,7 +74,7 @@ bool SymbolTable::push_fun(std::string id, FunType *ftype) {
 
 VarType *SymbolTable::find_var(std::string id, SearchMode mode) {
   std::unordered_map<std::string, VarType *> map = this->top_varmap();
-  auto search = map.find(std::string(id));
+  auto search = map.find(id);
   if (search != map.end()) {
 #ifdef DEBUG
     std::cout << ">>> SymbolTable.find_var(): " << this->get_search_mode(mode)
@@ -99,7 +99,7 @@ VarType *SymbolTable::find_var(std::string id, SearchMode mode) {
 
 FunType *SymbolTable::find_fun(std::string id, SearchMode mode) {
   std::unordered_map<std::string, FunType *> map = this->top_funmap();
-  auto search = map.find(std::string(id));
+  auto search = map.find(id);
   if (search != map.end()) {
 #ifdef DEBUG
     std::cout << ">>> SymbolTable.find_fun(): " << this->get_search_mode(mode)

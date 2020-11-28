@@ -44,7 +44,7 @@ void Dec::visit(int indent_level, SymbolTable *st) {
         VarType *vt = this->exp->var_type;
         if (vt->category != ARRAY) {
           std::cout
-              << "Error Type 5 at Line " << this->first_line
+              << "Error type 5 at Line " << this->first_line
               << ": unmatching types on both sides of assignment operator\n";
           break;
         }

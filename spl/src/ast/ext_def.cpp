@@ -33,7 +33,7 @@ void ExtDef::visit(int indent_level, SymbolTable *st) {
           // non-array variable declaration
           if (st->find_var(dec.first, DecfMode) != NULL) {
             fprintf(stderr,
-                    "Error Type 3 at Line %d: variable is redefined in the "
+                    "Error type 3 at Line %d: variable is redefined in the "
                     "same scope\n",
                     this->first_line);
             break;
@@ -43,7 +43,7 @@ void ExtDef::visit(int indent_level, SymbolTable *st) {
           // array variable declaration
           if (st->find_var(dec.first, DecfMode) != NULL) {
             fprintf(stderr,
-                    "Error Type 3 at Line %d: variable is redefined in the "
+                    "Error type 3 at Line %d: variable is redefined in the "
                     "same scope\n",
                     this->first_line);
             break;
