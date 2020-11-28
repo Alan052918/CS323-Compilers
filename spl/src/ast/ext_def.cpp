@@ -49,13 +49,11 @@ void ExtDef::visit(int indent_level, SymbolTable *st) {
                     this->first_line);
             break;
           }
-          VarType *array_type = new VarType();
-          array_type->name = std::string("array");
-          array_type->category = ARRAY;
-          // TODO: call add_arr_dimension() and add_arr_basetype() to build
-          // array type
+          VarType *array_type = NULL;
           for (int dim : dec.second) {
+            add_arr_dimension(array_type, dim);
           }
+          add_arr_basetype(array_type, this->var_type);
           st->push_var(dec.first, array_type);
         }
       }

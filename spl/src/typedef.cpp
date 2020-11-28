@@ -1,18 +1,30 @@
 #include "../include/enums.h"
 #include "../include/typedef.h"
 
-// TODO: finish this
 void add_arr_dimension(VarType *at, int dim) {
   if (at->category != ARRAY) {
     fprintf(stderr, "Error! Add array dimension to non-array type!\n");
   }
+  VarType *ptr = at;
+  while (ptr) {
+    ptr = ptr->array->base;
+  }
+  ptr = new VarType();
+  ptr->name = std::string("array");
+  ptr->category = ARRAY;
+  ptr->array = new Array();
+  ptr->array->size = dim;
 }
 
-// TODO: finish this
 void add_arr_basetype(VarType *at, VarType *bt) {
   if (at->category != ARRAY) {
     fprintf(stderr, "Error! Add array base type to non-array type!\n");
   }
+  VarType *ptr = at;
+  while (ptr) {
+    ptr = ptr->array->base;
+  }
+  ptr = bt;
 }
 
 bool compare_var_type(VarType *vt1, VarType *vt2) {
