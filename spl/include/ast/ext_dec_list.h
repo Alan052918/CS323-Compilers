@@ -16,6 +16,7 @@ class ExtDecList : public NonterminalNode {
 
   // data member variables
   std::vector<std::pair<std::string, std::vector<int> > > dec_list;
+  VarType *var_type;
 
   ExtDecList(int rhsf, int fl, int ll, int fc, int lc);
 

@@ -15,6 +15,7 @@ class ParamDec : public NonterminalNode {
   Specifier *specifier;
   VarDec *var_dec;
 
+  std::string id;
   VarType *var_type;
 
   ParamDec(int rhsf, int fl, int ll, int fc, int lc);

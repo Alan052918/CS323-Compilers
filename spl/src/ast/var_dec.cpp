@@ -20,6 +20,10 @@ void VarDec::visit(int indent_level, SymbolTable *st) {
       printf("ID: %s\n", this->id_node->id_token);
 #endif
       this->id = this->id_node->id_token;
+      if (st->find_var(this->id, DecfMode)) {
+        std::cout << "Error type 3 at Line " << this->first_line
+                  << ": redefine variable: " << this->id << std::endl;
+      }
       break;
     }
     case 1: {  // VarDec := VarDec LB INT RB

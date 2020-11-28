@@ -24,13 +24,13 @@ void Specifier::visit(int indent_level, SymbolTable *st) {
 #endif
       VarType *vt = new VarType();
       vt->category = PRIMITIVE;
-      if ("int" == this->primitive_type) {
+      if (this->primitive_type == "int") {
         vt->name = std::string("integer");
         vt->primitive = INTEGER;
-      } else if ("char" == this->primitive_type) {
+      } else if (this->primitive_type == "char") {
         vt->name = std::string("character");
         vt->primitive = CHARACTER;
-      } else if ("float" == this->primitive_type) {
+      } else if (this->primitive_type == "float") {
         vt->name = std::string("floatingpoint");
         vt->primitive = FLOATING_POINT;
       } else {

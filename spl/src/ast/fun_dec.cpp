@@ -22,13 +22,14 @@ void FunDec::visit(int indent_level, SymbolTable *st) {
       this->print_indentation(indent_level + 1);
       std::cout << "LP\n";
 #endif
+      this->var_list->var_type = this->var_type;
       this->var_list->visit(indent_level + 1, st);
 #if defined(PARSE_TREE) || defined(DEBUG)
       this->print_indentation(indent_level + 1);
       std::cout << "RP\n";
 #endif
       this->id = this->id_node->id_token;
-      if (st->find_fun(this->id, DecfMode) != NULL) {
+      if (st->find_fun(this->id, DecfMode)) {
         std::cout << "Error type 4 at Line " << this->first_line
                   << ": function is redefined\n";
         break;

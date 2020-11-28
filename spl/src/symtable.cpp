@@ -40,7 +40,8 @@ void SymbolTable::pop_maps() {
 
 bool SymbolTable::push_var(std::string id, VarType *vtype) {
 #ifdef DEBUG
-  std::cout << ">>> SymbolTable.push_var(): variable [" << id << "]\n  ";
+  std::cout << ">>> SymbolTable.push_var(): variable [" << id << "] type ["
+            << vtype->name << "]\n  ";
 #endif
   if (this->find_var(id, DecfMode) != NULL) {
 #ifdef DEBUG
@@ -73,51 +74,82 @@ bool SymbolTable::push_fun(std::string id, FunType *ftype) {
 }
 
 VarType *SymbolTable::find_var(std::string id, SearchMode mode) {
-  std::unordered_map<std::string, VarType *> map = this->top_varmap();
-  auto search = map.find(id);
-  if (search != map.end()) {
+  if (mode == DecfMode) {
+    std::unordered_map<std::string, VarType *> map = this->top_varmap();
+    auto search = map.find(id);
+    if (search != map.end()) {
 #ifdef DEBUG
-    std::cout << ">>> SymbolTable.find_var(): " << this->get_search_mode(mode)
-              << " [" << id << "] FOUND variable { ";
-    for (auto itr = map.begin(); itr != map.end(); itr++) {
-      std::cout << itr->first << " ";
-    }
-    std::cout << "}\n";
+      std::cout << ">>> SymbolTable.find_var(): " << this->get_search_mode(mode)
+                << " [" << id << "] FOUND type [" << search->second->name
+                << "] { ";
+      for (auto itr = map.begin(); itr != map.end(); itr++) {
+        std::cout << itr->first << " ";
+      }
+      std::cout << "}\n";
 #endif
-    return search->second;
+      return search->second;
+    }
+  }
+  if (mode == UseMode) {
+    for (std::unordered_map<std::string, VarType *> map : this->vm_vec) {
+      auto search = map.find(id);
+      if (search != map.end()) {
+#ifdef DEBUG
+        std::cout << ">>> SymbolTable.find_var(): "
+                  << this->get_search_mode(mode) << " [" << id
+                  << "] FOUND type [" << search->second->name << "] { ";
+        for (auto itr = map.begin(); itr != map.end(); itr++) {
+          std::cout << itr->first << " ";
+        }
+        std::cout << "}\n";
+#endif
+        return search->second;
+      }
+    }
   }
 #ifdef DEBUG
   std::cout << ">>> SymbolTable.find_var(): " << this->get_search_mode(mode)
-            << " [" << id << "] NOT found: { ";
-  for (auto itr = map.begin(); itr != map.end(); itr++) {
-    std::cout << itr->first << " ";
-  }
-  std::cout << "}\n";
+            << " [" << id << "] NOT found\n";
 #endif
   return NULL;
 }
 
 FunType *SymbolTable::find_fun(std::string id, SearchMode mode) {
-  std::unordered_map<std::string, FunType *> map = this->top_funmap();
-  auto search = map.find(id);
-  if (search != map.end()) {
+  if (mode == DecfMode) {
+    std::unordered_map<std::string, FunType *> map = this->top_funmap();
+    auto search = map.find(id);
+    if (search != map.end()) {
 #ifdef DEBUG
-    std::cout << ">>> SymbolTable.find_fun(): " << this->get_search_mode(mode)
-              << " [" << id << "] FOUND function { ";
-    for (auto itr = map.begin(); itr != map.end(); itr++) {
-      std::cout << itr->first << " ";
-    }
-    std::cout << "}\n";
+      std::cout << ">>> SymbolTable.find_fun(): " << this->get_search_mode(mode)
+                << " [" << id << "] FOUND function { ";
+      for (auto itr = map.begin(); itr != map.end(); itr++) {
+        std::cout << itr->first << " ";
+      }
+      std::cout << "}\n";
 #endif
-    return search->second;
+      return search->second;
+    }
+  }
+  if (mode == UseMode) {
+    for (std::unordered_map<std::string, FunType *> map : this->fm_vec) {
+      auto search = map.find(id);
+      if (search != map.end()) {
+#ifdef DEBUG
+        std::cout << ">>> SymbolTable.find_fun(): "
+                  << this->get_search_mode(mode) << " [" << id
+                  << "] FOUND function { ";
+        for (auto itr = map.begin(); itr != map.end(); itr++) {
+          std::cout << itr->first << " ";
+        }
+        std::cout << "}\n";
+#endif
+        return search->second;
+      }
+    }
   }
 #ifdef DEBUG
   std::cout << ">>> SymbolTable.find_fun(): " << this->get_search_mode(mode)
-            << " [" << id << "] NOT found: { ";
-  for (auto itr = map.begin(); itr != map.end(); itr++) {
-    std::cout << itr->first << " ";
-  }
-  std::cout << "}\n";
+            << " [" << id << "] NOT found\n";
 #endif
   return NULL;
 }

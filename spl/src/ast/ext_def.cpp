@@ -21,12 +21,13 @@ void ExtDef::visit(int indent_level, SymbolTable *st) {
     case 0:  // ExtDef := Specifier ExtDecList SEMI
              // global variables (of the same type) DECLARATION, PUSH VAR
       this->specifier->visit(indent_level + 1, st);
+      this->var_type = this->specifier->var_type;
+      this->ext_dec_list->var_type = this->var_type;
       this->ext_dec_list->visit(indent_level + 1, st);
 #if defined(PARSE_TREE) || defined(DEBUG)
       this->print_indentation(indent_level + 1);
       printf("SEMI\n");
 #endif
-      this->var_type = this->specifier->var_type;
       for (std::pair<std::string, std::vector<int> > dec :
            this->ext_dec_list->dec_list) {
         if (dec.second.empty() == true) {

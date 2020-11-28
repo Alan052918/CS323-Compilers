@@ -20,8 +20,8 @@
 %option yylineno
 
 SPC     [ \t\r\f\v]
+FLOAT   -?[0-9]*\.[0-9]+
 INT     0|-?[1-9][0-9]{0,9}|-?0[xX][1-9a-fA-F][0-9a-fA-F]*
-FLOAT   -?[1-9][0-9]*\.[0-9]+
 CHAR    \'[a-zA-Z]\'|\'\\x[1-9a-fA-F][0-9a-fA-F]*\'
 TYPE    "int"|"char"|"float"
 ID      [a-zA-Z_][0-9a-zA-Z_]*
@@ -237,7 +237,13 @@ SINGLE_LINE_COMMENT "//".*
             yylval.keyword_value = (char *)"RETURN";
             return RETURN;
           }
-
+{FLOAT} {
+#ifdef DEBUG
+          printf("flex: found FLOAT %f, line %d\n", yylval.float_value, yylineno);
+#endif
+          yylval.float_value = atof(yytext);
+          return FLOAT;
+        }
 {INT} {
         if (yytext[0] == '0' && yytext[1] == 'x') {
           int i = strtol(yytext, NULL, 0);
@@ -257,13 +263,6 @@ SINGLE_LINE_COMMENT "//".*
 #endif
         return INT;
       }
-{FLOAT} {
-#ifdef DEBUG
-          printf("flex: found FLOAT %f, line %d\n", yylval.float_value, yylineno);
-#endif
-          yylval.float_value = atof(yytext);
-          return FLOAT;
-        }
 {CHAR}  {
           if (yytext[1] == '\\' && yytext[2] == 'x') {
             // hexadecimal-form char

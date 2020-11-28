@@ -26,22 +26,13 @@ void Exp::visit(int indent_level, SymbolTable *st) {
                // variable types
       this->var_type = new VarType();
       this->exp_1->visit(indent_level + 1, st);
-      if (!this->exp_1->id.empty() && !st->find_var(this->exp_1->id, UseMode)) {
-        std::cout << "Error type 1 at Line " << this->first_line
-                  << ": undefined variable: " << this->exp_1->id << std::endl;
-        break;
-      }
       this->keyword = this->keyword_node->keyword_token;
 #if defined(PARSE_TREE) || defined(DEBUG)
       this->print_indentation(indent_level + 1);
       std::cout << this->keyword << std::endl;
 #endif
       this->exp_2->visit(indent_level + 1, st);
-      if (!this->exp_2->id.empty() && !st->find_var(this->exp_2->id, UseMode)) {
-        std::cout << "Error type 1 at Line " << this->first_line
-                  << ": undefined variable: " << this->exp_2->id << std::endl;
-        break;
-      }
+
       VarType *vt_1 = this->exp_1->var_type;
       VarType *vt_2 = this->exp_2->var_type;
       if (!compare_var_type(vt_1, vt_2)) {
@@ -59,6 +50,7 @@ void Exp::visit(int indent_level, SymbolTable *st) {
       break;
     }
     case 1: {  // Exp := LP Exp RP
+      this->var_type = new VarType();
 #if defined(PARSE_TREE) || defined(DEBUG)
       this->print_indentation(indent_level + 1);
       std::cout << "LP\n";
@@ -76,6 +68,7 @@ void Exp::visit(int indent_level, SymbolTable *st) {
       break;
     }
     case 2: {  // Exp := MINUS || NOT Exp
+      this->var_type = new VarType();
       this->keyword = this->keyword_node->keyword_token;
 #if defined(PARSE_TREE) || defined(DEBUG)
       this->print_indentation(indent_level + 1);
@@ -91,6 +84,7 @@ void Exp::visit(int indent_level, SymbolTable *st) {
     }
     case 3: {  // Exp := ID LP Args RP
                // function call, this Exp node has no type
+      this->var_type = new VarType();
       this->id = this->id_node->id_token;
 #if defined(PARSE_TREE) || defined(DEBUG)
       this->print_indentation(indent_level + 1);
@@ -108,7 +102,7 @@ void Exp::visit(int indent_level, SymbolTable *st) {
       VarType *vt = st->find_var(this->id, UseMode);
       if (ft == NULL) {
         std::cout << "Error type 2 at Line " << this->first_line
-                  << ": function is invoked without definition\n";
+                  << ": undefined function: " << this->id << std::endl;
         break;
       }
       if (vt != NULL) {
@@ -137,6 +131,7 @@ void Exp::visit(int indent_level, SymbolTable *st) {
     }
     case 4: {  // Exp := ID LP RP
                // function call, this Exp node has no type
+      this->var_type = new VarType();
       this->id = this->id_node->id_token;
 #if defined(PARSE_TREE) || defined(DEBUG)
       this->print_indentation(indent_level + 1);
@@ -151,7 +146,7 @@ void Exp::visit(int indent_level, SymbolTable *st) {
       VarType *vt = st->find_var(this->id, UseMode);
       if (ft == NULL) {
         std::cout << "Error type 2 at Line " << this->first_line
-                  << ": function is invoked without definition\n";
+                  << ": undefined function: " << this->id << std::endl;
         break;
       }
       if (vt != NULL) {
@@ -165,6 +160,7 @@ void Exp::visit(int indent_level, SymbolTable *st) {
     }
     case 5: {  // Exp := Exp LB Exp RB
                // array indexing
+      this->var_type = new VarType();
       this->exp_1->visit(indent_level + 1, st);
 #if defined(PARSE_TREE) || defined(DEBUG)
       this->print_indentation(indent_level + 1);
@@ -203,6 +199,7 @@ void Exp::visit(int indent_level, SymbolTable *st) {
     }
     case 6: {  // Exp := Exp DOT ID
                // access member variable of structure type variable
+      this->var_type = new VarType();
       this->exp_1->visit(indent_level + 1, st);
       this->id = this->id_node->id_token;
 #if defined(PARSE_TREE) || defined(DEBUG)
@@ -244,11 +241,14 @@ void Exp::visit(int indent_level, SymbolTable *st) {
       this->print_indentation(indent_level + 1);
       std::cout << "ID: " << this->id << std::endl;
 #endif
-      VarType *vt = new VarType();
-      vt->name = std::string("identifier");
-      vt->category = PRIMITIVE;
-      vt->primitive = CHARACTER;
-      this->var_type = vt;
+      VarType *vt = st->find_var(this->id, UseMode);
+      if (!vt) {
+        std::cout << "Error type 1 at Line " << this->first_line
+                  << ": undefined variable: " << this->id << std::endl;
+        this->var_type = new VarType();
+      } else {
+        this->var_type = vt;
+      }
       break;
     }
     case 8: {  // Exp := INT
