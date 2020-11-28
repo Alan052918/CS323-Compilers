@@ -12,6 +12,7 @@ Exp::Exp(int rhsf, int fl, int ll, int fc, int lc)
   // Thus it is important that the parent node access children nodes' data
   // member variables after invoking visit() method on them
   this->is_funcall = false;
+  this->is_rvalue = false;
 }
 
 void Exp::visit(int indent_level, SymbolTable *st) {
@@ -31,6 +32,11 @@ void Exp::visit(int indent_level, SymbolTable *st) {
       this->print_indentation(indent_level + 1);
       std::cout << this->keyword << std::endl;
 #endif
+      if (this->keyword == "ASSIGN" && this->exp_1->is_rvalue) {
+        std::cout << "Error type 6 at Line " << this->first_line
+                  << ": rvalue on the left side of assignment operator\n";
+        break;
+      }
       this->exp_2->visit(indent_level + 1, st);
 
       VarType *vt_1 = this->exp_1->var_type;
@@ -65,6 +71,8 @@ void Exp::visit(int indent_level, SymbolTable *st) {
                   << ": undefined variable: " << this->exp_1->id << std::endl;
       }
       this->var_type = this->exp_1->var_type;
+      this->is_funcall = this->exp_1->is_funcall;
+      this->is_rvalue = this->exp_1->is_rvalue;
       break;
     }
     case 2: {  // Exp := MINUS || NOT Exp
@@ -76,15 +84,15 @@ void Exp::visit(int indent_level, SymbolTable *st) {
 #endif
       this->exp_1->visit(indent_level + 1, st);
       this->var_type = this->exp_1->var_type;
-      if (!this->exp_1->id.empty() && !st->find_var(this->exp_1->id, UseMode)) {
-        std::cout << "Error type 1 at Line " << this->first_line
-                  << ": undefined variable: " << this->exp_1->id << std::endl;
-      }
+      this->is_funcall = this->exp_1->is_funcall;
+      this->is_rvalue = this->exp_1->is_rvalue;
       break;
     }
     case 3: {  // Exp := ID LP Args RP
                // function call, this Exp node has no type
       this->var_type = new VarType();
+      this->is_funcall = true;
+      this->is_rvalue = true;
       this->id = this->id_node->id_token;
 #if defined(PARSE_TREE) || defined(DEBUG)
       this->print_indentation(indent_level + 1);
@@ -97,7 +105,6 @@ void Exp::visit(int indent_level, SymbolTable *st) {
       this->print_indentation(indent_level + 1);
       std::cout << "RP\n";
 #endif
-      this->is_funcall = true;
       FunType *ft = st->find_fun(this->id, UseMode);
       VarType *vt = st->find_var(this->id, UseMode);
       if (ft == NULL) {
@@ -111,15 +118,26 @@ void Exp::visit(int indent_level, SymbolTable *st) {
                      "names\n";
         break;
       }
-      std::vector<VarType *> at = ft->arg_types;
-      if (at.size() != this->args->type_list.size()) {
+      std::vector<VarType *> param_types = ft->arg_types;
+      if (param_types.size() != this->args->type_list.size()) {
+#ifdef DEBUG
+        std::cout << "*** Argument size [" << this->args->type_list.size()
+                  << "] != declared parameter size [" << param_types.size()
+                  << "]\n";
+#endif
         std::cout
             << "Error type 9 at Line " << this->first_line
             << ": the function’s arguments mismatch the declared parameters\n";
         break;
       }
-      for (int i = 0; i < at.size(); i++) {
-        if (at.at(i) != this->args->type_list.at(i)) {
+      for (int i = 0; i < param_types.size(); i++) {
+        if (!compare_var_type(param_types.at(i), this->args->type_list.at(i))) {
+#ifdef DEBUG
+          std::cout << "*** Argument type ["
+                    << this->args->type_list.at(i)->name
+                    << "] != declared parameter type ["
+                    << param_types.at(i)->name << "]\n";
+#endif
           std::cout << "Error type 9 at Line " << this->first_line
                     << ": the function’s arguments mismatch the declared "
                        "parameters\n";
@@ -132,6 +150,8 @@ void Exp::visit(int indent_level, SymbolTable *st) {
     case 4: {  // Exp := ID LP RP
                // function call, this Exp node has no type
       this->var_type = new VarType();
+      this->is_funcall = true;
+      this->is_rvalue = true;
       this->id = this->id_node->id_token;
 #if defined(PARSE_TREE) || defined(DEBUG)
       this->print_indentation(indent_level + 1);
@@ -141,7 +161,6 @@ void Exp::visit(int indent_level, SymbolTable *st) {
       this->print_indentation(indent_level + 1);
       std::cout << "RP\n";
 #endif
-      this->is_funcall = true;
       FunType *ft = st->find_fun(this->id, UseMode);
       VarType *vt = st->find_var(this->id, UseMode);
       if (ft == NULL) {
@@ -252,6 +271,7 @@ void Exp::visit(int indent_level, SymbolTable *st) {
       break;
     }
     case 8: {  // Exp := INT
+      this->is_rvalue = true;
       this->integer = this->int_node->int_token;
 #if defined(PARSE_TREE) || defined(DEBUG)
       this->print_indentation(indent_level + 1);
@@ -265,6 +285,7 @@ void Exp::visit(int indent_level, SymbolTable *st) {
       break;
     }
     case 9: {  // Exp := FLOAT
+      this->is_rvalue = true;
       this->floating_point = this->float_node->float_token;
 #if defined(PARSE_TREE) || defined(DEBUG)
       this->print_indentation(indent_level + 1);
@@ -278,6 +299,7 @@ void Exp::visit(int indent_level, SymbolTable *st) {
       break;
     }
     case 10: {  // Exp := CHAR
+      this->is_rvalue = true;
       this->character = this->char_node->char_token;
 #if defined(PARSE_TREE) || defined(DEBUG)
       this->print_indentation(indent_level + 1);

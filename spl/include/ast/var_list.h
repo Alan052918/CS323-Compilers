@@ -13,7 +13,7 @@ class VarList : public NonterminalNode {
  public:
   std::vector<ParamDec *> node_list;
 
-  // std::vector<VarType *> type_list;
+  std::vector<VarType *> type_list;
   VarType *var_type;
 
   VarList(int rhsf, int fl, int ll, int fc, int lc);

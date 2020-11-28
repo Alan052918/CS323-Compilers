@@ -5,7 +5,7 @@ int test_2_r06(int i, int n)
   {
     1 = res;
   }
-  else 
+  else
   {
     res = -n;
   }

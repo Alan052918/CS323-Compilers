@@ -26,6 +26,7 @@ class Exp : public NonterminalNode {
   long integer;
   std::string keyword;
   bool is_funcall;
+  bool is_rvalue;
   VarType *var_type;
 
   Exp(int rhsf, int fl, int ll, int fc, int lc);

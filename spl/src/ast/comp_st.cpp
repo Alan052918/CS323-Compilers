@@ -28,6 +28,7 @@ void CompSt::visit(int indent_level, SymbolTable *st) {
       this->print_indentation(indent_level + 1);
       printf("RC\n");
 #endif
+      st->pop_maps();
       break;
 
     default:

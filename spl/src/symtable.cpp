@@ -43,14 +43,14 @@ bool SymbolTable::push_var(std::string id, VarType *vtype) {
   std::cout << ">>> SymbolTable.push_var(): variable [" << id << "] type ["
             << vtype->name << "]\n  ";
 #endif
-  if (this->find_var(id, DecfMode) != NULL) {
+  if (this->find_var(id, DecfMode)) {
 #ifdef DEBUG
-    std::cout << "  >>> REDEFINED!\n";
+    std::cout << "  >>> push FAILURE!!!\n";
 #endif
     return false;
   }
 #ifdef DEBUG
-  std::cout << "  >>> push success\n";
+  std::cout << "  >>> push SUCCESS\n";
 #endif
   this->vm_vec.back().insert(std::make_pair(id, vtype));
   return true;
@@ -60,14 +60,14 @@ bool SymbolTable::push_fun(std::string id, FunType *ftype) {
 #ifdef DEBUG
   std::cout << ">>> SymbolTable.push_fun(): function [" << id << "]\n  ";
 #endif
-  if (this->find_fun(id, DecfMode) != NULL) {
+  if (this->find_fun(id, DecfMode)) {
 #ifdef DEBUG
-    std::cout << "  >>> REDEFINED!\n";
+    std::cout << "  >>> push FAILURE\n";
 #endif
     return false;
   }
 #ifdef DEBUG
-  std::cout << "  >>> push success\n";
+  std::cout << "  >>> push SUCCESS\n";
 #endif
   this->fm_vec.back().insert(std::make_pair(id, ftype));
   return true;

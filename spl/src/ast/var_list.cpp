@@ -20,6 +20,7 @@ void VarList::visit(int indent_level, SymbolTable *st) {
         param_dec->visit(indent_level + 1 + i, st);
         // this->type_list.push_back(param_dec->var_type);
         st->push_var(param_dec->id, param_dec->var_type);
+        this->type_list.push_back(param_dec->var_type);
 #if defined(PARSE_TREE) || defined(DEBUG)
         if (i < this->node_list.size() - 1) {
           this->print_indentation(indent_level + 1 + i);
