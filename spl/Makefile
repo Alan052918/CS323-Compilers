@@ -143,25 +143,34 @@ BISON=bison
 .symtable_p: src/symtable.cpp
 	$(CC) src/symtable.cpp -c -o mid/symtable.o -DPARSE_TREE
 
+.typedef: src/typedef.cpp
+	$(CC) src/typedef.cpp -c -o mid/typedef.o
+
+.typedef_d: src/typedef.cpp
+	$(CC) src/typedef.cpp -c -o mid/typedef.o -DDEBUG
+
+.typedef_p: src/typedef.cpp
+	$(CC) src/typedef.cpp -c -o mid/typedef.o -DPARSE_TREE
+
 .syntax: src/C/flex/bison/syntax.y
 	$(BISON) -dtv src/C/flex/bison/syntax.y
 .lex: src/C/flex/bison/lex.l
 	$(FLEX) src/C/flex/bison/lex.l
-splc: .syntax .lex .args .ast .comp_st .dec_list .dec .def_list .def .exp .ext_dec_list .ext_def_list .ext_def .fun_dec .param_dec .program .specifier .stmt_list .stmt .struct_specifier .var_dec .var_list .symtable
+splc: .syntax .lex .args .ast .comp_st .dec_list .dec .def_list .def .exp .ext_dec_list .ext_def_list .ext_def .fun_dec .param_dec .program .specifier .stmt_list .stmt .struct_specifier .var_dec .var_list .symtable .typedef
 	@if ! test -d "./bin"; then \
 		mkdir bin; \
 	fi
-	$(CC) syntax.tab.c lex.yy.c mid/args.o mid/ast.o mid/comp_st.o mid/dec_list.o mid/dec.o mid/def_list.o mid/def.o mid/exp.o mid/ext_dec_list.o mid/ext_def_list.o mid/ext_def.o mid/fun_dec.o mid/param_dec.o mid/program.o mid/specifier.o mid/stmt_list.o mid/stmt.o mid/struct_specifier.o mid/var_dec.o mid/var_list.o mid/symtable.o -lfl -ly -o bin/splc
-debug: .syntax .lex .args_d .ast_d .comp_st_d .dec_list_d .dec_d .def_list_d .def_d .exp_d .ext_dec_list_d .ext_def_list_d .ext_def_d .fun_dec_d .param_dec_d .program_d .specifier_d .stmt_list_d .stmt_d .struct_specifier_d .var_dec_d .var_list_d .symtable_d
+	$(CC) syntax.tab.c lex.yy.c mid/args.o mid/ast.o mid/comp_st.o mid/dec_list.o mid/dec.o mid/def_list.o mid/def.o mid/exp.o mid/ext_dec_list.o mid/ext_def_list.o mid/ext_def.o mid/fun_dec.o mid/param_dec.o mid/program.o mid/specifier.o mid/stmt_list.o mid/stmt.o mid/struct_specifier.o mid/var_dec.o mid/var_list.o mid/symtable.o mid/typedef.o -lfl -ly -o bin/splc
+debug: .syntax .lex .args_d .ast_d .comp_st_d .dec_list_d .dec_d .def_list_d .def_d .exp_d .ext_dec_list_d .ext_def_list_d .ext_def_d .fun_dec_d .param_dec_d .program_d .specifier_d .stmt_list_d .stmt_d .struct_specifier_d .var_dec_d .var_list_d .symtable_d .typedef_d
 	@if ! test -d "./bin"; then \
 		mkdir bin; \
 	fi
-	$(CC) syntax.tab.c lex.yy.c mid/args.o mid/ast.o mid/comp_st.o mid/dec_list.o mid/dec.o mid/def_list.o mid/def.o mid/exp.o mid/ext_dec_list.o mid/ext_def_list.o mid/ext_def.o mid/fun_dec.o mid/param_dec.o mid/program.o mid/specifier.o mid/stmt_list.o mid/stmt.o mid/struct_specifier.o mid/var_dec.o mid/var_list.o mid/symtable.o -lfl -ly -DDEBUG -o bin/debug
-parse_tree: .syntax .lex .args_p .ast_p .comp_st_p .dec_list_p .dec_p .def_list_p .def_p .exp_p .ext_dec_list_p .ext_def_list_p .ext_def_p .fun_dec_p .param_dec_p .program_p .specifier_p .stmt_list_p .stmt_p .struct_specifier_p .var_dec_p .var_list_p .symtable_p
+	$(CC) syntax.tab.c lex.yy.c mid/args.o mid/ast.o mid/comp_st.o mid/dec_list.o mid/dec.o mid/def_list.o mid/def.o mid/exp.o mid/ext_dec_list.o mid/ext_def_list.o mid/ext_def.o mid/fun_dec.o mid/param_dec.o mid/program.o mid/specifier.o mid/stmt_list.o mid/stmt.o mid/struct_specifier.o mid/var_dec.o mid/var_list.o mid/symtable.o mid/typedef.o -lfl -ly -DDEBUG -o bin/debug
+parse_tree: .syntax .lex .args_p .ast_p .comp_st_p .dec_list_p .dec_p .def_list_p .def_p .exp_p .ext_dec_list_p .ext_def_list_p .ext_def_p .fun_dec_p .param_dec_p .program_p .specifier_p .stmt_list_p .stmt_p .struct_specifier_p .var_dec_p .var_list_p .symtable_p .typedef_p
 	@if ! test -d "./bin"; then \
 		mkdir bin; \
 	fi
-	$(CC) syntax.tab.c lex.yy.c mid/args.o mid/ast.o mid/comp_st.o mid/dec_list.o mid/dec.o mid/def_list.o mid/def.o mid/exp.o mid/ext_dec_list.o mid/ext_def_list.o mid/ext_def.o mid/fun_dec.o mid/param_dec.o mid/program.o mid/specifier.o mid/stmt_list.o mid/stmt.o mid/struct_specifier.o mid/var_dec.o mid/var_list.o mid/symtable.o -lfl -ly -DPARSE_TREE -o bin/parse_tree
+	$(CC) syntax.tab.c lex.yy.c mid/args.o mid/ast.o mid/comp_st.o mid/dec_list.o mid/dec.o mid/def_list.o mid/def.o mid/exp.o mid/ext_dec_list.o mid/ext_def_list.o mid/ext_def.o mid/fun_dec.o mid/param_dec.o mid/program.o mid/specifier.o mid/stmt_list.o mid/stmt.o mid/struct_specifier.o mid/var_dec.o mid/var_list.o mid/symtable.o mid/typedef.o -lfl -ly -DPARSE_TREE -o bin/parse_tree
 clean:
 	@rm -rf bin/ mid/
 	@rm lex.yy.c syntax.tab.* syntax.output

@@ -11,8 +11,10 @@ class Exp;
 
 class Args : public NonterminalNode {
  public:
+  // nonterminal member variables
   std::vector<Exp *> node_list;
 
+  // data member variables
   std::vector<VarType *> type_list;
 
   Args(int rhsf, int fl, int ll, int fc, int lc);

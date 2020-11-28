@@ -18,6 +18,8 @@ void Def::visit(int indent_level, SymbolTable *st) {
     case 0:  // Def := Specifier DecList SEMI
              // local variable DECLARATOIN, PUSH MAP
       this->specifier->visit(indent_level + 1, st);
+      this->var_type = this->specifier->var_type;
+      this->dec_list->var_type = this->var_type;
       this->dec_list->visit(indent_level + 1, st);
 #if defined(PARSE_TREE) || defined(DEBUG)
       this->print_indentation(indent_level + 1);

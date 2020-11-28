@@ -11,11 +11,14 @@ class VarList;
 
 class FunDec : public NonterminalNode {
  public:
+  // terminal member variables
   TerminalNode *id_node;
 
+  // nonterminal member variables
   VarList *var_list;
 
-  char *id;
+  // data member variables
+  std::string id;
 
   FunDec(int rhsf, int fl, int ll, int fc, int lc);
 

@@ -5,30 +5,58 @@
 Dec::Dec(int rhsf, int fl, int ll, int fc, int lc)
     : NonterminalNode(rhsf, fl, ll, fc, lc) {
 #ifdef DEBUG
-  printf("  bison: reduce Dec[%d] l%d-%d c%d-%d\n", rhsf, fl, ll, fc, lc);
+  std::cout << "  bison: reduce Dec[" << rhsf << "] l" << fl << "-" << ll
+            << " c" << fc << "-" << lc << std::endl;
 #endif
+  this->is_array = false;
+  this->is_assign = false;
 }
 
 void Dec::visit(int indent_level, SymbolTable *st) {
 #if defined(PARSE_TREE) || defined(DEBUG)
   this->print_indentation(indent_level);
-  printf("Dec (%d)\n", this->first_line);
+  std::cout << "Dec (" << this->first_line << ")\n";
 #endif
   switch (this->rhs_form) {
-    case 0:  // Dec := VarDec
+    case 0: {  // Dec := VarDec
+               // no assignment, this Dec has no type
       this->var_dec->visit(indent_level + 1, st);
+      this->id = this->var_dec->id;
+      this->is_array = this->var_dec->is_array;
       break;
-    case 1:  // Dec := VarDec ASSIGN Exp
+    }
+    case 1: {  // Dec := VarDec ASSIGN Exp
       this->var_dec->visit(indent_level + 1, st);
 #if defined(PARSE_TREE) || defined(DEBUG)
       this->print_indentation(indent_level + 1);
-      printf("ASSIGN\n");
+      std::cout << "ASSIGN\n";
 #endif
       this->exp->visit(indent_level + 1, st);
-      break;
 
-    default:
-      fprintf(stderr, "Fail to visit <Dec> Node: line %d\n", this->first_line);
+      this->id = this->var_dec->id;
+      this->is_array = this->var_dec->is_array;
+      this->is_assign = true;
+      if (this->is_array == false) {
+        // 1. VarDec is non-array: Dec's type = Exp's type
+        this->var_type = this->exp->var_type;
+      } else {
+        // 2. VarDec is array: error if Exp's type is not array
+        VarType *vt = this->exp->var_type;
+        if (vt->category != ARRAY) {
+          std::cout
+              << "Error Type 5 at Line " << this->first_line
+              << ": unmatching types on both sides of assignment operator\n";
+          break;
+        }
+        this->var_type = vt;
+      }
       break;
+    }
+
+    default: {
+      std::cout << "Fail to visit <Dec> Node: line " << this->first_line
+                << std::endl;
+      break;
+    }
   }
 }

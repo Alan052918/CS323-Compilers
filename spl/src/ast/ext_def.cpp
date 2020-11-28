@@ -7,7 +7,8 @@
 ExtDef::ExtDef(int rhsf, int fl, int ll, int fc, int lc)
     : NonterminalNode(rhsf, fl, ll, fc, lc) {
 #ifdef DEBUG
-  printf("  bison: reduce ExtDef[%d] l%d-%d c%d-%d\n", rhsf, fl, ll, fc, lc);
+  std::cout << "  bison: reduce ExtDef[" << rhsf << "] l" << fl << "-" << ll
+            << " c" << fc << "-" << lc << std::endl;
 #endif
 }
 
@@ -25,8 +26,41 @@ void ExtDef::visit(int indent_level, SymbolTable *st) {
       this->print_indentation(indent_level + 1);
       printf("SEMI\n");
 #endif
+      this->var_type = this->specifier->var_type;
+      for (std::pair<std::string, std::vector<int> > dec :
+           this->ext_dec_list->dec_list) {
+        if (dec.second.empty() == true) {
+          // non-array variable declaration
+          if (st->find_var(dec.first, DecfMode) != NULL) {
+            fprintf(stderr,
+                    "Error Type 3 at Line %d: variable is redefined in the "
+                    "same scope\n",
+                    this->first_line);
+            break;
+          }
+          st->push_var(dec.first, this->var_type);
+        } else {
+          // array variable declaration
+          if (st->find_var(dec.first, DecfMode) != NULL) {
+            fprintf(stderr,
+                    "Error Type 3 at Line %d: variable is redefined in the "
+                    "same scope\n",
+                    this->first_line);
+            break;
+          }
+          VarType *array_type = new VarType();
+          array_type->name = std::string("array");
+          array_type->category = ARRAY;
+          // TODO: call add_arr_dimension() and add_arr_basetype() to build
+          // array type
+          for (int dim : dec.second) {
+          }
+          st->push_var(dec.first, array_type);
+        }
+      }
       break;
     case 1:  // ExtDef := Specifier SEMI
+             // mind structure definition
       this->specifier->visit(indent_level + 1, st);
 #if defined(PARSE_TREE) || defined(DEBUG)
       this->print_indentation(indent_level + 1);

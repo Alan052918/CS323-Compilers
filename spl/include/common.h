@@ -4,6 +4,9 @@
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
+#include <functional>
+#include <iostream>
+#include <string>
 #include <unordered_map>  // hash map
 #include <utility>        // pair
 #include <vector>         // vector

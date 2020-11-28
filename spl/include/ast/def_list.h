@@ -11,8 +11,10 @@ class Def;
 
 class DefList : public NonterminalNode {
  public:
+  // nonterminal member variables
   std::vector<Def *> node_list;
 
+  // data member variables
   std::vector<std::pair<char *, VarType *> > var_list;
 
   DefList(int rhsf, int fl, int ll, int fc, int lc);

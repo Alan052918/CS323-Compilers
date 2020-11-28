@@ -17,11 +17,11 @@ void CompSt::visit(int indent_level, SymbolTable *st) {
   switch (this->rhs_form) {
     case 0:  // CompSt := LC DefList StmtList RC
              // enter new scope, PUSH MAP
+      st->push_maps();
 #if defined(PARSE_TREE) || defined(DEBUG)
       this->print_indentation(indent_level + 1);
       printf("LC\n");
 #endif
-      // st.push_maps();
       this->def_list->visit(indent_level + 1, st);
       this->stmt_list->visit(indent_level + 1, st);
 #if defined(PARSE_TREE) || defined(DEBUG)

@@ -5,6 +5,7 @@ VarDec::VarDec(int rhsf, int fl, int ll, int fc, int lc)
 #ifdef DEBUG
   printf("  bison: reduce VarDec[%d] l%d-%d c%d-%d\n", rhsf, fl, ll, fc, lc);
 #endif
+  this->is_array = false;
 }
 
 void VarDec::visit(int indent_level, SymbolTable *st) {
@@ -19,15 +20,12 @@ void VarDec::visit(int indent_level, SymbolTable *st) {
       printf("ID: %s\n", this->id_node->id_token);
 #endif
       this->id = this->id_node->id_token;
-      // strcpy(this->id, this->id_node->id_token);
-      this->is_array = false;
       break;
     }
     case 1: {  // VarDec := VarDec LB INT RB
                // array variable declaration
       this->var_dec->visit(indent_level + 1, st);
       this->is_array = true;
-
       this->dim_list.push_back(this->int_node->int_token);
 #if defined(PARSE_TREE) || defined(DEBUG)
       this->print_indentation(indent_level + 1);

@@ -4,50 +4,55 @@
 StructSpecifier::StructSpecifier(int rhsf, int fl, int ll, int fc, int lc)
     : NonterminalNode(rhsf, fl, ll, fc, lc) {
 #ifdef DEBUG
-  printf("  bison: reduce StructSpecifier[%d] l%d-%d c%d-%d\n", rhsf, fl, ll,
-         fc, lc);
+  std::cout << "  bison: reduce StructSpecifier[" << rhsf << "] l" << fl << "-"
+            << ll << " c" << fc << "-" << lc << std::endl;
 #endif
 }
 
 void StructSpecifier::visit(int indent_level, SymbolTable *st) {
 #if defined(PARSE_TREE) || defined(DEBUG)
   this->print_indentation(indent_level);
-  printf("StructSpecifier (%d)\n", this->first_line);
+  std::cout << "StructSpecifier (" << this->first_line << ")\n";
 #endif
   switch (this->rhs_form) {
     case 0: {  // StructSpecifier := STRUCT ID LC DefList RC
                // structure type definition
+      this->id = this->id_node->id_token;
 #if defined(PARSE_TREE) || defined(DEBUG)
       this->print_indentation(indent_level + 1);
-      printf("STRUCT\n");
+      std::cout << "STRUCT\n";
       this->print_indentation(indent_level + 1);
-      printf("ID: %s\n", this->id_node->id_token);
+      std::cout << "ID: " << this->id << std::endl;
       this->print_indentation(indent_level + 1);
-      printf("LC\n");
+      std::cout << "LC\n";
 #endif
+      if (st->find_var(this->id, DecfMode) != NULL) {
+        std::cout << "Error Type 15 at Line " << this->first_line
+                  << ": redefine the same structure type\n";
+      }
       this->def_list->visit(indent_level + 1, st);
 
-      this->var_type = (VarType *)malloc(sizeof(VarType));
-      memset(this->var_type, '\0', sizeof(VarType));
-      strcpy(this->var_type->name, this->id_node->id_token);
-      this->var_type->category = STRUCTURE;
-      this->var_type->structure = NULL;
+      VarType *vt = new VarType();
+      vt->name = std::string(this->id);
+      vt->category = STRUCTURE;
+      vt->structure = NULL;
       if (this->def_list != NULL && this->def_list->var_list.size() > 0) {
         std::pair<char *, VarType *> p = this->def_list->var_list.at(0);
-        FieldList *field_list = (FieldList *)malloc(sizeof(FieldList));
-        strcpy(field_list->name, p.first);
+        FieldList *field_list = new FieldList();
+        field_list->name = std::string(p.first);
         field_list->type = p.second;
         field_list->next = NULL;
-        this->var_type->structure = field_list;
+        vt->structure = field_list;
       }
+      this->var_type = vt;
       if (this->def_list->var_list.size() == 1) {
         break;
       }
       FieldList *fl_ptr = this->var_type->structure;
       for (int i = 1; i < this->def_list->var_list.size(); i++) {
         std::pair<char *, VarType *> p = this->def_list->var_list.at(i);
-        FieldList *field_list = (FieldList *)malloc(sizeof(FieldList));
-        strcpy(field_list->name, p.first);
+        FieldList *field_list = new FieldList();
+        field_list->name = std::string(p.first);
         field_list->type = p.second;
         field_list->next = NULL;
         fl_ptr->next = field_list;
@@ -55,24 +60,24 @@ void StructSpecifier::visit(int indent_level, SymbolTable *st) {
       free(fl_ptr);
 #if defined(PARSE_TREE) || defined(DEBUG)
       this->print_indentation(indent_level + 1);
-      printf("RC\n");
+      std::cout << "RC\n";
 #endif
+      st->push_var(this->id, this->var_type);
       break;
     }
     case 1: {  // StructSpecifier := STRUCT ID
                // structure type usage
+      this->id = this->id_node->id_token;
 #if defined(PARSE_TREE) || defined(DEBUG)
       this->print_indentation(indent_level + 1);
-      printf("STRUCT\n");
+      std::cout << "STRUCT\n";
       this->print_indentation(indent_level + 1);
-      printf("ID: %s\n", this->id_node->id_token);
+      std::cout << "ID: " << this->id << std::endl;
 #endif
-      VarType *vt = st->find_var(this->id_node->id_token, UseMode);
+      VarType *vt = st->find_var(this->id, UseMode);
       if (vt == NULL) {
-        fprintf(stderr,
-                "Error type 16 at Line %d: structure type is used without "
-                "definition\n",
-                this->first_line);
+        std::cout << "Error type 16 at Line " << this->first_line
+                  << ": structure type is used without definition\n";
       } else {
         this->var_type = vt;
       }
@@ -80,8 +85,8 @@ void StructSpecifier::visit(int indent_level, SymbolTable *st) {
     }
 
     default: {
-      fprintf(stderr, "Fail to visit <StructSpecifier> Node: line %d\n",
-              this->first_line);
+      std::cout << "Fail to visit <StructSpecifier> Node: line "
+                << this->first_line << std::endl;
       break;
     }
   }

@@ -2,18 +2,6 @@
 #define ENUMS_H
 
 /**
- * Exp types
- */
-enum ExpType {
-  ComplexExp,
-  CharExp,
-  FloatingPointExp,
-  IdExp,
-  IntegerExp,
-  KeywordExp
-};
-
-/**
  * Symbol table search modes
  * - Decf: for declaration/definition, look for id in current scope only
  * - Use: for usage, look for id recursively in the scope hierarchy

@@ -2,94 +2,132 @@
 
 SymbolTable::SymbolTable() {
   this->scope_depth = 1;
-  std::unordered_map<const char *, VarType *> vmap;
-  this->vm_vec.push_back(vmap);
-  std::unordered_map<const char *, FunType *> fmap;
-  this->fm_vec.push_back(fmap);
+  this->vm_vec.push_back(std::unordered_map<std::string, VarType *>());
+  this->fm_vec.push_back(std::unordered_map<std::string, FunType *>());
 }
 
-std::unordered_map<const char *, VarType *> SymbolTable::top_varmap() {
+std::unordered_map<std::string, VarType *> SymbolTable::top_varmap() {
   return this->vm_vec.back();
 }
 
-std::unordered_map<const char *, FunType *> SymbolTable::top_funmap() {
+std::unordered_map<std::string, FunType *> SymbolTable::top_funmap() {
   return this->fm_vec.back();
 }
 
 void SymbolTable::push_maps() {
   this->scope_depth++;
-  std::unordered_map<const char *, VarType *> vmap;
-  this->vm_vec.push_back(vmap);
-  std::unordered_map<const char *, FunType *> fmap;
-  this->fm_vec.push_back(fmap);
+  this->vm_vec.push_back(std::unordered_map<std::string, VarType *>());
+  this->fm_vec.push_back(std::unordered_map<std::string, FunType *>());
 #ifdef DEBUG
-  printf("SymbolTable.push_maps(): new scope, scope_depth %d\n",
-         this->scope_depth);
+  std::cout << ">>> SymbolTable.push_maps(): enter new scope, scope_depth "
+            << this->scope_depth << "\n";
 #endif
 }
 
 void SymbolTable::pop_maps() {
   if (this->scope_depth == 1) {
-    fprintf(stderr, "Cannot pop global scope map\n");
+    std::cout << "Cannot pop global scope map\n";
     return;
   }
   this->scope_depth--;
   this->vm_vec.pop_back();
   this->fm_vec.pop_back();
 #ifdef DEBUG
-  printf("SymbolTable.push_map(): out of scope, scope_depth %d\n",
-         this->scope_depth);
+  std::cout << ">>> SymbolTable.push_map(): out of scope, scope_depth "
+            << this->scope_depth << "\n";
 #endif
 }
 
-void SymbolTable::push_var(const char *id, VarType *vtype) {
+bool SymbolTable::push_var(std::string id, VarType *vtype) {
 #ifdef DEBUG
-  printf("SymbolTable.push_var(): variable [%s]\n", id);
+  std::cout << ">>> SymbolTable.push_var(): variable [" << id << "]\n  ";
 #endif
-  if (find_var(id, DecfMode) != NULL) {
-    fprintf(stderr, "Redefining variable %s\n", id);
-    return;
+  if (this->find_var(id, DecfMode) != NULL) {
+#ifdef DEBUG
+    std::cout << "  >>> REDEFINED!\n";
+#endif
+    return false;
   }
+#ifdef DEBUG
+  std::cout << "  >>> push success\n";
+#endif
   this->vm_vec.back().insert(std::make_pair(id, vtype));
+  return true;
 }
 
-void SymbolTable::push_fun(const char *id, FunType *ftype) {
+bool SymbolTable::push_fun(std::string id, FunType *ftype) {
 #ifdef DEBUG
-  printf("SymbolTable.push_fun(): function [%s]\n", id);
+  std::cout << ">>> SymbolTable.push_fun(): function [" << id << "]\n  ";
 #endif
-  if (find_fun(id, DecfMode) != NULL) {
-    fprintf(stderr, "Redefining function %s\n", id);
-    return;
+  if (this->find_fun(id, DecfMode) != NULL) {
+#ifdef DEBUG
+    std::cout << "  >>> REDEFINED!\n";
+#endif
+    return false;
   }
+#ifdef DEBUG
+  std::cout << "  >>> push success\n";
+#endif
   this->fm_vec.back().insert(std::make_pair(id, ftype));
+  return true;
 }
 
-VarType *SymbolTable::find_var(const char *id, SearchMode mode) {
-  std::unordered_map<const char *, VarType *> map = this->top_varmap();
-  auto search = map.find(id);
+VarType *SymbolTable::find_var(std::string id, SearchMode mode) {
+  std::unordered_map<std::string, VarType *> map = this->top_varmap();
+  auto search = map.find(std::string(id));
   if (search != map.end()) {
 #ifdef DEBUG
-    printf("SymbolTable.find_var(): FOUND variable type\n");
+    std::cout << ">>> SymbolTable.find_var(): " << this->get_search_mode(mode)
+              << " [" << id << "] FOUND variable { ";
+    for (auto itr = map.begin(); itr != map.end(); itr++) {
+      std::cout << itr->first << " ";
+    }
+    std::cout << "}\n";
 #endif
     return search->second;
   }
 #ifdef DEBUG
-  printf("SymbolTable.find_var(): NOT found\n");
+  std::cout << ">>> SymbolTable.find_var(): " << this->get_search_mode(mode)
+            << " [" << id << "] NOT found: { ";
+  for (auto itr = map.begin(); itr != map.end(); itr++) {
+    std::cout << itr->first << " ";
+  }
+  std::cout << "}\n";
 #endif
   return NULL;
 }
 
-FunType *SymbolTable::find_fun(const char *id, SearchMode mode) {
-  std::unordered_map<const char *, FunType *> map = this->top_funmap();
-  auto search = map.find(id);
+FunType *SymbolTable::find_fun(std::string id, SearchMode mode) {
+  std::unordered_map<std::string, FunType *> map = this->top_funmap();
+  auto search = map.find(std::string(id));
   if (search != map.end()) {
 #ifdef DEBUG
-    printf("SymbolTable.find_fun(): FOUND function type\n");
+    std::cout << ">>> SymbolTable.find_fun(): " << this->get_search_mode(mode)
+              << " [" << id << "] FOUND function { ";
+    for (auto itr = map.begin(); itr != map.end(); itr++) {
+      std::cout << itr->first << " ";
+    }
+    std::cout << "}\n";
 #endif
     return search->second;
   }
 #ifdef DEBUG
-  printf("SymbolTable.find_fun(): NOT found\n");
+  std::cout << ">>> SymbolTable.find_fun(): " << this->get_search_mode(mode)
+            << " [" << id << "] NOT found: { ";
+  for (auto itr = map.begin(); itr != map.end(); itr++) {
+    std::cout << itr->first << " ";
+  }
+  std::cout << "}\n";
 #endif
   return NULL;
+}
+
+std::string SymbolTable::get_search_mode(SearchMode mode) {
+  switch (mode) {
+    case DecfMode:
+      return std::string("Decf Mode");
+    case UseMode:
+      return std::string("Use Mode");
+  }
+  return std::string();
 }

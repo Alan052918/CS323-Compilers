@@ -4,42 +4,52 @@
 Specifier::Specifier(int rhsf, int fl, int ll, int fc, int lc)
     : NonterminalNode(rhsf, fl, ll, fc, lc) {
 #ifdef DEBUG
-  printf("  bison: reduce Specifier[%d] l%d-%d c%d-%d\n", rhsf, fl, ll, fc, lc);
+  std::cout << "  bison: reduce Specifier[" << rhsf << "] l" << fl << "-" << ll
+            << " c" << fc << "-" << lc << std::endl;
 #endif
+  this->is_struct = false;
 }
 
 void Specifier::visit(int indent_level, SymbolTable *st) {
 #if defined(PARSE_TREE) || defined(DEBUG)
   this->print_indentation(indent_level);
-  printf("Specifier (%d)\n", this->first_line);
+  std::cout << "Specifier (" << this->first_line << ")\n";
 #endif
   switch (this->rhs_form) {
-    case 0:  // Specifier := TYPE
+    case 0: {  // Specifier := TYPE
+      this->primitive_type = std::string(this->type_node->type_token);
 #if defined(PARSE_TREE) || defined(DEBUG)
       this->print_indentation(indent_level + 1);
-      printf("TYPE: %s\n", this->type_node->type_token);
+      std::cout << "TYPE: " << this->primitive_type << std::endl;
 #endif
-      this->var_type = (VarType *)malloc(sizeof(VarType));
-      memset(this->var_type, '\0', sizeof(VarType));
-      this->var_type->category = PRIMITIVE;
-      if (strcmp("int", this->type_node->type_token) == 0) {
-        this->var_type->primitive = INTEGER;
-      } else if (strcmp("char", this->type_node->type_token) == 0) {
-        this->var_type->primitive = CHARACTER;
-      } else if (strcmp("float", this->type_node->type_token) == 0) {
-        this->var_type->primitive = FLOATING_POINT;
+      VarType *vt = new VarType();
+      vt->category = PRIMITIVE;
+      if ("int" == this->primitive_type) {
+        vt->name = std::string("integer");
+        vt->primitive = INTEGER;
+      } else if ("char" == this->primitive_type) {
+        vt->name = std::string("character");
+        vt->primitive = CHARACTER;
+      } else if ("float" == this->primitive_type) {
+        vt->name = std::string("floatingpoint");
+        vt->primitive = FLOATING_POINT;
       } else {
-        fprintf(stderr, "Unidentified type token\n");
+        std::cout << "Unidentified type token\n";
       }
+      this->var_type = vt;
       break;
-    case 1:  // Specifier := StructSpecifier
+    }
+    case 1: {  // Specifier := StructSpecifier
       this->struct_specifier->visit(indent_level + 1, st);
+      this->is_struct = true;
       this->var_type = this->struct_specifier->var_type;
       break;
+    }
 
-    default:
-      fprintf(stderr, "Fail to visit <Specifier> Node: line %d\n",
-              this->first_line);
+    default: {
+      std::cout << "Fail to visit <Specifier> Node: line " << this->first_line
+                << std::endl;
       break;
+    }
   }
 }

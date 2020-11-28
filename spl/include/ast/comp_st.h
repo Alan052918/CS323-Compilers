@@ -12,6 +12,7 @@ class StmtList;
 
 class CompSt : public NonterminalNode {
  public:
+  // nonterminal member variables
   DefList *def_list;
   StmtList *stmt_list;
 

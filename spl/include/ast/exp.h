@@ -12,17 +12,21 @@ class Exp;
 
 class Exp : public NonterminalNode {
  public:
+  // terminal member variables
   TerminalNode *char_node, *float_node, *id_node, *int_node, *keyword_node;
 
+  // nonterminal member variables
   Args *args;
   Exp *exp_1, *exp_2;
 
-  char *character;
+  // data member variables
+  std::string character;
   float floating_point;
-  char *id;
+  std::string id;
   long integer;
-  char *keyword;
-  ExpType exp_type;
+  std::string keyword;
+  bool is_funcall;
+  VarType *var_type;
 
   Exp(int rhsf, int fl, int ll, int fc, int lc);
 

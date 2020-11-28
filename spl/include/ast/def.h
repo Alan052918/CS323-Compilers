@@ -12,9 +12,11 @@ class Specifier;
 
 class Def : public NonterminalNode {
  public:
+  // nonterminal member variables
   DecList *dec_list;
   Specifier *specifier;
 
+  // data member variables
   VarType *var_type;
 
   Def(int rhsf, int fl, int ll, int fc, int lc);

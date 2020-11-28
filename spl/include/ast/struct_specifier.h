@@ -18,6 +18,7 @@ class StructSpecifier : public NonterminalNode {
   DefList *def_list;
 
   // data member variables
+  std::string id;
   VarType *var_type;
 
   StructSpecifier(int rhsf, int fl, int ll, int fc, int lc);
