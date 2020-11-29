@@ -14,7 +14,6 @@ void StmtList::visit(int indent_level, SymbolTable *st) {
   }
   switch (this->rhs_form) {
     case 0: {  // StmtList := Stmt StmtList
-      this->return_type = new VarType();
       for (int i = 0; i < this->node_list.size(); i++) {
         Stmt *stmt = this->node_list.at(i);
 #if defined(PARSE_TREE) || defined(DEBUG)
@@ -22,6 +21,10 @@ void StmtList::visit(int indent_level, SymbolTable *st) {
         printf("StmtList (%d)\n", stmt->first_line);
 #endif
         stmt->var_type = this->return_type;
+#ifdef DEBUG
+        std::cout << "*** StmtList->return_type: " << this->return_type->name
+                  << std::endl;
+#endif
         stmt->visit(indent_level + 1 + i, st);
       }
       break;

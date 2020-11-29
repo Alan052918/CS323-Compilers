@@ -11,13 +11,13 @@ ASTNode::ASTNode(NodeType nt, int fl, int ll, int fc, int lc) {
 void ASTNode::visit(int indent_level, SymbolTable *st) {
 #if defined(PARSE_TREE) || defined(DEBUG)
   this->print_indentation(indent_level);
-  printf("Generic ASTNode (%d)\n", this->first_line);
+  std::cout << "Generic ASTNode (" << this->first_line << ")\n";
 #endif
 }
 
 void ASTNode::print_indentation(int indent_level) {
   for (int i = 0; i < indent_level; i++) {
-    printf("  ");  // indent with 2 spaces
+    std::cout << "  ";  // indent with 2 spaces
   }
 }
 

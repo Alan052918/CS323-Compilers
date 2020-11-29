@@ -15,7 +15,7 @@ ExtDef::ExtDef(int rhsf, int fl, int ll, int fc, int lc)
 void ExtDef::visit(int indent_level, SymbolTable *st) {
 #if defined(PARSE_TREE) || defined(DEBUG)
   this->print_indentation(indent_level);
-  printf("ExtDef (%d)\n", this->first_line);
+  std::cout << "ExtDef (" << this->first_line << ")\n";
 #endif
   switch (this->rhs_form) {
     case 0: {  // ExtDef := Specifier ExtDecList SEMI
@@ -26,27 +26,23 @@ void ExtDef::visit(int indent_level, SymbolTable *st) {
       this->ext_dec_list->visit(indent_level + 1, st);
 #if defined(PARSE_TREE) || defined(DEBUG)
       this->print_indentation(indent_level + 1);
-      printf("SEMI\n");
+      std::cout << "SEMI\n";
 #endif
       for (std::pair<std::string, std::vector<int> > dec :
            this->ext_dec_list->dec_list) {
         if (dec.second.empty() == true) {
           // non-array variable declaration
           if (st->find_var(dec.first, DecfMode) != NULL) {
-            fprintf(stderr,
-                    "Error type 3 at Line %d: variable is redefined in the "
-                    "same scope\n",
-                    this->first_line);
+            std::cout << "Error type 3 at Line " << this->first_line
+                      << ": variable is redefined in the same scope\n";
             break;
           }
           st->push_var(dec.first, this->var_type);
         } else {
           // array variable declaration
           if (st->find_var(dec.first, DecfMode) != NULL) {
-            fprintf(stderr,
-                    "Error type 3 at Line %d: variable is redefined in the "
-                    "same scope\n",
-                    this->first_line);
+            std::cout << "Error type 3 at Line " << this->first_line
+                      << ": variable is redefined in the same scope\n";
             break;
           }
           VarType *array_type = NULL;
@@ -68,7 +64,7 @@ void ExtDef::visit(int indent_level, SymbolTable *st) {
       }
 #if defined(PARSE_TREE) || defined(DEBUG)
       this->print_indentation(indent_level + 1);
-      printf("SEMI\n");
+      std::cout << "SEMI\n";
 #endif
       break;
     }
@@ -79,13 +75,17 @@ void ExtDef::visit(int indent_level, SymbolTable *st) {
       this->fun_dec->var_type = this->var_type;
       this->fun_dec->visit(indent_level + 1, st);
       this->comp_st->return_type = this->var_type;
+#ifdef DEBUG
+      std::cout << "*** ExtDef->var_type: " << this->var_type->name
+                << std::endl;
+#endif
       this->comp_st->visit(indent_level + 1, st);
       break;
     }
 
     default: {
-      fprintf(stderr, "Fail to visit <ExtDef> Node: line %d\n",
-              this->first_line);
+      std::cout << "Fail to visit <ExtDef> Node: line " << this->first_line
+                << std::endl;
       break;
     }
   }

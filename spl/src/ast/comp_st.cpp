@@ -15,8 +15,8 @@ void CompSt::visit(int indent_level, SymbolTable *st) {
   printf("CompSt (%d)\n", this->first_line);
 #endif
   switch (this->rhs_form) {
-    case 0:  // CompSt := LC DefList StmtList RC
-             // enter new scope, PUSH MAP
+    case 0: {  // CompSt := LC DefList StmtList RC
+               // enter new scope, PUSH MAP
       st->push_maps();
 #if defined(PARSE_TREE) || defined(DEBUG)
       this->print_indentation(indent_level + 1);
@@ -24,6 +24,10 @@ void CompSt::visit(int indent_level, SymbolTable *st) {
 #endif
       this->def_list->visit(indent_level + 1, st);
       this->stmt_list->return_type = this->return_type;
+#ifdef DEBUG
+      std::cout << "*** CompSt->return_type: " << this->return_type->name
+                << std::endl;
+#endif
       this->stmt_list->visit(indent_level + 1, st);
 #if defined(PARSE_TREE) || defined(DEBUG)
       this->print_indentation(indent_level + 1);
@@ -31,10 +35,12 @@ void CompSt::visit(int indent_level, SymbolTable *st) {
 #endif
       st->pop_maps();
       break;
+    }
 
-    default:
+    default: {
       fprintf(stderr, "Fail to visit <CompSt> Node: line %d\n",
               this->first_line);
       break;
+    }
   }
 }
