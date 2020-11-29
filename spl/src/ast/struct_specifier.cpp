@@ -79,6 +79,7 @@ void StructSpecifier::visit(int indent_level, SymbolTable *st) {
       if (vt == NULL) {
         std::cout << "Error type 16 at Line " << this->first_line
                   << ": structure type is used without definition\n";
+        this->var_type = new VarType();
       } else {
         this->var_type = vt;
       }
