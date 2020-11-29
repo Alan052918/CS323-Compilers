@@ -25,6 +25,8 @@ void FunDec::visit(int indent_level, SymbolTable *st) {
 #endif
       this->var_list->var_type = this->var_type;
       this->var_list->visit(indent_level + 1, st);
+      this->id_list = this->var_list->id_list;
+      this->type_list = this->var_list->type_list;
 #if defined(PARSE_TREE) || defined(DEBUG)
       this->print_indentation(indent_level + 1);
       std::cout << "RP\n";
@@ -32,7 +34,7 @@ void FunDec::visit(int indent_level, SymbolTable *st) {
       FunType *ft = new FunType();
       ft->name = this->id;
       ft->return_type = this->var_type;
-      ft->arg_types = this->var_list->type_list;
+      ft->arg_types = this->type_list;
       if (!st->push_fun(this->id, ft)) {
         std::cout << "Error type 4 at Line " << this->first_line
                   << ": redefine function: " << this->id << std::endl;

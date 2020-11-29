@@ -1,5 +1,6 @@
 #include "../../include/ast/comp_st.h"
 #include "../../include/ast/def_list.h"
+#include "../../include/ast/fun_dec.h"
 #include "../../include/ast/stmt_list.h"
 
 CompSt::CompSt(int rhsf, int fl, int ll, int fc, int lc)
@@ -7,6 +8,7 @@ CompSt::CompSt(int rhsf, int fl, int ll, int fc, int lc)
 #ifdef DEBUG
   printf("  bison: reduce CompSt[%d] l%d-%d c%d-%d\n", rhsf, fl, ll, fc, lc);
 #endif
+  this->is_fun = false;
 }
 
 void CompSt::visit(int indent_level, SymbolTable *st) {
@@ -18,6 +20,12 @@ void CompSt::visit(int indent_level, SymbolTable *st) {
     case 0: {  // CompSt := LC DefList StmtList RC
                // enter new scope, PUSH MAP
       st->push_maps();
+      if (this->is_fun) {
+        FunDec *fd = this->fun_dec;
+        for (int i = 0; i < fd->id_list.size(); i++) {
+          st->push_var(fd->id_list.at(i), fd->type_list.at(i));
+        }
+      }
 #if defined(PARSE_TREE) || defined(DEBUG)
       this->print_indentation(indent_level + 1);
       printf("LC\n");

@@ -20,6 +20,8 @@ class FunDec : public NonterminalNode {
   // data member variables
   std::string id;
   VarType *var_type;
+  std::vector<std::string> id_list;
+  std::vector<VarType *> type_list;
 
   FunDec(int rhsf, int fl, int ll, int fc, int lc);
 

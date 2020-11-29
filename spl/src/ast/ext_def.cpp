@@ -75,6 +75,8 @@ void ExtDef::visit(int indent_level, SymbolTable *st) {
       this->fun_dec->var_type = this->var_type;
       this->fun_dec->visit(indent_level + 1, st);
       this->comp_st->return_type = this->var_type;
+      this->comp_st->is_fun = true;
+      this->comp_st->fun_dec = this->fun_dec;
 #ifdef DEBUG
       std::cout << "*** ExtDef->var_type: " << this->var_type->name
                 << std::endl;
