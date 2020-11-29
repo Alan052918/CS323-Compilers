@@ -6,10 +6,10 @@ void add_arr_dimension(VarType *at, int dim) {
     fprintf(stderr, "Error! Add array dimension to non-array type!\n");
   }
   VarType *ptr = at;
-  while (ptr) {
+  while (ptr->array->size != -1) {
     ptr = ptr->array->base;
   }
-  ptr = new VarType();
+  ptr = ptr->array->base;
   ptr->name = std::string("array");
   ptr->category = ARRAY;
   ptr->array = new Array();
@@ -21,7 +21,7 @@ void add_arr_basetype(VarType *at, VarType *bt) {
     fprintf(stderr, "Error! Add array base type to non-array type!\n");
   }
   VarType *ptr = at;
-  while (ptr) {
+  while (ptr->array->size != -1) {
     ptr = ptr->array->base;
   }
   ptr = bt;

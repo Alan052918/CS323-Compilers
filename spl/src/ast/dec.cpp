@@ -8,8 +8,6 @@ Dec::Dec(int rhsf, int fl, int ll, int fc, int lc)
   std::cout << "  bison: reduce Dec[" << rhsf << "] l" << fl << "-" << ll
             << " c" << fc << "-" << lc << std::endl;
 #endif
-  this->is_array = false;
-  this->is_assign = false;
 }
 
 void Dec::visit(int indent_level, SymbolTable *st) {
@@ -21,8 +19,19 @@ void Dec::visit(int indent_level, SymbolTable *st) {
     case 0: {  // Dec := VarDec
                // no assignment, this Dec has no type
       this->var_dec->visit(indent_level + 1, st);
-      this->id = this->var_dec->id;
-      this->is_array = this->var_dec->is_array;
+      if (this->var_dec->is_array) {
+        VarType *at = new VarType();
+        at->name = std::string("array");
+        at->category = ARRAY;
+        at->array = new Array();
+        for (int i : this->var_dec->dim_list) {
+          add_arr_dimension(at, i);
+        }
+        add_arr_basetype(at, this->var_type);
+        st->push_var(this->var_dec->id, at);
+      } else {
+        st->push_var(this->var_dec->id, this->var_type);
+      }
       break;
     }
     case 1: {  // Dec := VarDec ASSIGN Exp
@@ -33,23 +42,24 @@ void Dec::visit(int indent_level, SymbolTable *st) {
 #endif
       this->exp->visit(indent_level + 1, st);
 
-      this->id = this->var_dec->id;
-      this->is_array = this->var_dec->is_array;
-      this->is_assign = true;
-      if (this->is_array == false) {
+      if (!this->var_dec->is_array) {
         // 1. VarDec is non-array: Dec's type = Exp's type
-        this->var_type = this->exp->var_type;
-      } else {
-        // 2. VarDec is array: error if Exp's type is not array
-        VarType *vt = this->exp->var_type;
-        if (vt->category != ARRAY) {
-          std::cout
-              << "Error type 5 at Line " << this->first_line
-              << ": unmatching types on both sides of assignment operator\n";
+        if (!compare_var_type(this->var_type, this->exp->var_type)) {
+          std::cout << "Error type 17 at Line " << this->first_line
+                    << ": the variable’s assigned type mismatches the "
+                       "declared type\n";
           break;
         }
-        this->var_type = vt;
+      } else {
+        // 2. VarDec is array: error if Exp's type is not array
+        if (this->exp->var_type->category != ARRAY) {
+          std::cout << "Error type 17 at Line " << this->first_line
+                    << ": the variable’s assigned type mismatches the "
+                       "declared type\n";
+          break;
+        }
       }
+      st->push_var(this->var_dec->id, this->var_type);
       break;
     }
 

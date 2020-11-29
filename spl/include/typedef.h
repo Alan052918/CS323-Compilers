@@ -26,6 +26,11 @@ typedef struct VarType {
 typedef struct Array {
   struct VarType *base;
   int size;
+
+  Array() {
+    this->base = new VarType();
+    this->size = -1;
+  }
 } Array;
 
 typedef struct FieldList {
