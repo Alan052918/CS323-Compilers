@@ -1,0 +1,2 @@
+Error type 4 at Line 5: redefine function: foo
+Error type 9 at Line 10: the function’s arguments mismatch the declared parameters

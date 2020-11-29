@@ -1,0 +1,12 @@
+struct Type {
+  char name[32];
+};
+
+struct Type {
+  int size;
+};
+
+int main() {
+  struct Type t;
+}
+

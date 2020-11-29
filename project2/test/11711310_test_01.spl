@@ -1,0 +1,12 @@
+int foo() {
+  int a = 12;
+  if (a > 0) {
+    return a;
+  }
+  return 0;
+}
+
+int main() {
+  foo();
+}
+

@@ -1,0 +1,11 @@
+float foo(float a, float b) {
+  return a * b;
+}
+
+int foo(int a, int b) {
+  return a * b;
+}
+
+int main() {
+  foo(1, 2);
+}
