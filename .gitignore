@@ -16,3 +16,4 @@ pt.txt
 !*/test-ex/*.out
 .vscode/
 venv/
+dist/irsim
