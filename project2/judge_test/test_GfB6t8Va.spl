@@ -1,0 +1,30 @@
+int a(int a, float b) {
+	a = 1;
+	b = 0.1;
+	if (a == 1) {
+		int c = 20;
+		float d = a + b + c;
+		b = a + b;
+		if (a + b == 0.7) {
+			int c = 10;
+			int k = 1;
+			b + a = b;
+		}
+		c = 1;
+		k = c;
+		if (c == b) {
+			a = 10;
+		}
+		else {
+			c = 1;
+		}
+		b = d;
+		if (a < b) {
+			a = a + 3;
+		}
+		else {
+			a = a - 1;
+		}
+	}
+	return a;
+}

@@ -1,0 +1,17 @@
+float foo(int a, int b){
+	if (a>0){
+		return 1.0;
+	}
+	return 0.0;
+}
+
+int test_2_r02()
+{
+  int a=0;
+  int c;
+  c=foo(a,10);
+  if (a==0){
+	return c;
+  }
+  return foo(c,a);
+}

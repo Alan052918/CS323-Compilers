@@ -1,0 +1,7 @@
+int g1[2][2];
+
+int test_11711906_5(int v1) {
+    float v2 = 1.0;
+    int v3 = v1[v2*g1[0][0]];
+    return v3;
+}

@@ -1,0 +1,8 @@
+struct Type {
+    int a;
+};
+
+int main() {
+    struct Type t;
+    char c = t.b;
+}

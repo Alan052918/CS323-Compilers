@@ -1,0 +1,19 @@
+struct A {
+    int a;
+};
+
+struct B {
+    struct A ba;
+    int b;
+};
+
+int main() {
+    struct A aa;
+    struct B bb;
+    aa.a = 1;
+    bb.ba = aa;
+    bb.b = 2;
+    bb.b = 2.0;     
+    bb.ba.a = 2;
+    bb.ba.a = 2.0;  
+}

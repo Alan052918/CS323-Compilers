@@ -1,0 +1,11 @@
+int add1(int n)
+{
+  return n*n;
+}
+
+int test_2_r02()
+{
+  int k = 4;
+  int r = add2(k);
+  return r;
+}

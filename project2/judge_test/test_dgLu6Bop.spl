@@ -1,0 +1,8 @@
+int test(int x, int y)
+{
+ return 0;
+}
+float test(float a, int b)
+{
+  return 1.0;
+}

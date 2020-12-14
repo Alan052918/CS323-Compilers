@@ -1,0 +1,17 @@
+int foo()
+{
+  int a = 14;
+  return a;
+}
+int testw(int a, int b)
+{
+  int c;
+  c = foo();
+  if (b > 0)
+  {
+    a = c + 3;
+    b = b - a + 5;
+  }
+  a = a + 5;
+  return c;
+}

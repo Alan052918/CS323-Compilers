@@ -1,0 +1,5 @@
+int test_2_r12()
+{
+  float arr1[10];
+  return arr1[11];
+}

@@ -1,0 +1,14 @@
+struct A
+{
+    int a;
+    char b; 
+};
+
+int main()
+{
+    struct A aa;
+    aa.a = 1;
+    aa.b = 'c';
+
+    return 0;
+}

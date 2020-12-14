@@ -1,0 +1,10 @@
+int test_2_r03(int i, int m, int n)
+{
+  int a[5][4];
+  int b[5];
+  a[i][m]=4;
+  if(i>n){
+	return b[a[m]];
+  }
+  return b[a[i][m]];
+}

@@ -1,0 +1,15 @@
+char func() {
+'a' = 'c';
+    return 'a';
+}
+
+char fun2() {
+    return func() = 'd';
+}
+
+int fun3() {
+int a, b, c;
+a=b=c;
+(a=b)=c;
+return b=c;
+}

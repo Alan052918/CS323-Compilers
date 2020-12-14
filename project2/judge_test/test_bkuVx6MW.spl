@@ -1,0 +1,19 @@
+struct Attr {};
+
+struct Demo {
+    int m1[2];
+    struct Attr m2;
+} v1, v2[2];
+
+int test_11711906_2() {
+    float v3 = 1.0;
+    int v4[3][2];
+    struct Attr v5;
+
+    v1.m1[0] = v3;
+    v1.m1 = v4[2];
+    v2[0].m2 = v5;
+    v2[0].m3 = v6;
+
+    return 0;
+}

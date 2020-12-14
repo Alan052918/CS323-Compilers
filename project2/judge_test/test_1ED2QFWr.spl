@@ -1,0 +1,11 @@
+struct my_struct2{
+    float k[100][200];
+};
+
+struct my_struct{
+    struct my_struct2 b[300][400];
+};
+
+float test_2(int c, struct my_struct d){
+    return d.b[50][60].k[70][80];
+}

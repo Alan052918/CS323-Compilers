@@ -1,0 +1,15 @@
+struct A
+{
+    int a;
+};
+
+struct A
+{
+    int b;
+};
+
+int main()
+{
+    struct A aa;
+    return 0;
+}

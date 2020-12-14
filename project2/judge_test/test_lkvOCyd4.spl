@@ -1,0 +1,14 @@
+struct a {
+	int a;
+	char b;
+};
+
+int funA() {
+	struct a a;
+	return a;
+}
+
+int funB() {
+	int a;
+	funA(a);
+}

@@ -1,0 +1,10 @@
+int add(int m, int n)
+{
+  return m + n;
+}
+int test_2_r02()
+{
+  int a = 4;
+  int b = add(a);
+  return b;
+}

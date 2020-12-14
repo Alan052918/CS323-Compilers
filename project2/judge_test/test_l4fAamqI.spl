@@ -1,0 +1,19 @@
+struct string {
+  int size;
+  int value[256];
+};
+
+int strcpy(struct string s1, struct string s2) {
+    int i = 0;
+    while (i < 256) {
+        s1.value[i] = s2.value[i];
+        i = i + 1;
+    }
+    s1.size = s2.size;
+    return string.size + i * 5;
+}
+
+int main() {
+    struct string from;
+    strcpy(from, 1);
+}

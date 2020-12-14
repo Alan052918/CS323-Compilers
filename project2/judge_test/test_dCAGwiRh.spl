@@ -1,0 +1,13 @@
+struct aa {
+    int num;
+    int size;
+};
+
+struct aa {
+    int size;
+    int num;
+};
+
+int main () {
+    struct aa a;
+}

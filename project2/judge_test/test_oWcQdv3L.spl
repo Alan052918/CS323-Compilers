@@ -1,0 +1,10 @@
+struct foo{
+    int a;
+};
+
+int main(){
+    struct foo b;
+    int d;
+    d.a = 1;
+    b.c = 0;
+}

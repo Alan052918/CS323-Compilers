@@ -1,0 +1,15 @@
+struct string {
+  int size;
+  int value[256];
+};
+
+float inc(int n) {
+  return n + 1;
+}
+
+int test_2_r02()
+{
+  struct string str;
+  str.size = 5;
+  return inc(str.size) + (0-1);
+}
