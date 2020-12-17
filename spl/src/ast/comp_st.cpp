@@ -6,7 +6,8 @@
 CompSt::CompSt(int fl, int ll, int fc, int lc, int rhsf)
     : NonterminalNode(fl, ll, fc, lc, rhsf) {
 #ifdef DEBUG
-  printf("  bison: reduce CompSt[%d] l%d-%d c%d-%d\n", fl, ll, fc, lc, rhsf);
+  std::cout << "  bison: reduce CompSt[" << rhsf << "] l" << fl << "-" << ll
+            << " c" << fc << "-" << lc << std::endl;
 #endif
   this->is_fun = false;
 }
@@ -14,7 +15,7 @@ CompSt::CompSt(int fl, int ll, int fc, int lc, int rhsf)
 void CompSt::visit(int indent_level, SymbolTable *st) {
 #if defined(TREE) || defined(DEBUG)
   this->print_indentation(indent_level);
-  printf("CompSt (%d)\n", this->first_line);
+  std::cout << "CompSt (" << this->first_line << ")\n";
 #endif
   switch (this->rhs_form) {
     case 0: {  // CompSt := LC DefList StmtList RC
@@ -28,7 +29,7 @@ void CompSt::visit(int indent_level, SymbolTable *st) {
       }
 #if defined(TREE) || defined(DEBUG)
       this->print_indentation(indent_level + 1);
-      printf("LC\n");
+      std::cout << "LC\n";
 #endif
       this->def_list->visit(indent_level + 1, st);
       this->stmt_list->return_type = this->return_type;
@@ -39,15 +40,15 @@ void CompSt::visit(int indent_level, SymbolTable *st) {
       this->stmt_list->visit(indent_level + 1, st);
 #if defined(TREE) || defined(DEBUG)
       this->print_indentation(indent_level + 1);
-      printf("RC\n");
+      std::cout << "RC\n";
 #endif
       st->pop_maps();
       break;
     }
 
     default: {
-      fprintf(stderr, "Fail to visit <CompSt> Node: line %d\n",
-              this->first_line);
+      std::cout << "Fail to visit <CompSt> Node: line " << this->first_line
+                << std::endl;
       break;
     }
   }

@@ -3,7 +3,7 @@
 
 void add_arr_dimension(VarType *at, int dim) {
   if (at->category != ARRAY) {
-    fprintf(stderr, "Error! Add array dimension to non-array type!\n");
+    std::cout << "Error! Add array dimension to non-array type!\n";
   }
   VarType *ptr = at;
   while (ptr->array->size != -1) {
@@ -18,7 +18,7 @@ void add_arr_dimension(VarType *at, int dim) {
 
 void add_arr_basetype(VarType *at, VarType *bt) {
   if (at->category != ARRAY) {
-    fprintf(stderr, "Error! Add array base type to non-array type!\n");
+    std::cout << "Error! Add array base type to non-array type!\n";
   }
   VarType *ptr = at;
   while (ptr->array->size != -1) {

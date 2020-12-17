@@ -4,7 +4,8 @@
 StmtList::StmtList(int fl, int ll, int fc, int lc, int rhsf)
     : NonterminalNode(fl, ll, fc, lc, rhsf) {
 #ifdef DEBUG
-  printf("  bison: reduce StmtList[%d] l%d-%d c%d-%d\n", fl, ll, fc, lc, rhsf);
+  std::cout << "  bison: reduce StmtList[" << rhsf << "] l" << fl << "-" << ll
+            << " c" << fc << "-" << lc << std::endl;
 #endif
 }
 
@@ -18,7 +19,7 @@ void StmtList::visit(int indent_level, SymbolTable *st) {
         Stmt *stmt = this->node_list.at(i);
 #if defined(TREE) || defined(DEBUG)
         this->print_indentation(indent_level + i);
-        printf("StmtList (%d)\n", stmt->first_line);
+        std::cout << "StmtList (" << stmt->first_line << ")\n";
 #endif
         stmt->var_type = this->return_type;
 #ifdef DEBUG
@@ -33,8 +34,8 @@ void StmtList::visit(int indent_level, SymbolTable *st) {
         break; */
 
     default: {
-      fprintf(stderr, "Fail to visit <StmtList> Node: line %d\n",
-              this->first_line);
+      std::cout << "Fail to visit <StmtList> Node: line " << this->first_line
+                << std::endl;
       break;
     }
   }

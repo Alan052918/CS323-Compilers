@@ -135,11 +135,11 @@ ExtDef:
       $$->comp_st = $3;
     }
   | ExtDecList error {
-      printf("Error type B at Line %d: Missing specifier\n", @$.first_line);
+      std::cout << "Error type B at Line " << @$.first_line << ": Missing specifier\n";
       $$ = new ExtDef(-1, @1.first_line, @1.last_line, @1.first_column, @1.last_column);
     }
   | Specifier ExtDecList error {
-      printf("Error type B at Line %d: Missing semicolon ';'\n", @$.first_line);
+      std::cout << "Error type B at Line " << @$.first_line << ": Missing semicolon\n";
       $$ = new ExtDef(-1, @1.first_line, @2.last_line, @1.first_column, @2.last_column);
     }
   ;

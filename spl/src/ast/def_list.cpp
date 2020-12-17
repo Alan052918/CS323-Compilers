@@ -4,7 +4,8 @@
 DefList::DefList(int fl, int ll, int fc, int lc, int rhsf)
     : NonterminalNode(fl, ll, fc, lc, rhsf) {
 #ifdef DEBUG
-  printf("  bison: reduce DefList[%d] l%d-%d c%d-%d\n", fl, ll, fc, lc, rhsf);
+  std::cout << "  bison: reduce DefList[" << rhsf << "] l" << fl << "-" << ll
+            << " c" << fc << "-" << lc << std::endl;
 #endif
 }
 void DefList::visit(int indent_level, SymbolTable *st) {
@@ -17,7 +18,7 @@ void DefList::visit(int indent_level, SymbolTable *st) {
         Def *def = this->node_list.at(i);
 #if defined(TREE) || defined(DEBUG)
         this->print_indentation(indent_level + i);
-        printf("DefList (%d)\n", def->first_line);
+        std::cout << "DefList (" << def->first_line << ")\n";
 #endif
         def->visit(indent_level + 1 + i, st);
       }
@@ -26,8 +27,9 @@ void DefList::visit(int indent_level, SymbolTable *st) {
         break; */
 
     default:
-      fprintf(stderr, "Fail to visit <DefList> Node: line %d\n",
-              this->first_line);
+      std::cout << "Fail to visit <DefList> Node: line " << this->first_line
+                << std::endl;
+
       break;
   }
 }

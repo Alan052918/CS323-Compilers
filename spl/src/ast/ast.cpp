@@ -27,6 +27,6 @@ TerminalNode::TerminalNode(NodeType nt, int fl, int ll, int fc, int lc)
 NonterminalNode::NonterminalNode(int fl, int ll, int fc, int lc, int rhsf)
     : ASTNode(Nonterminal, fl, ll, fc, lc), rhs_form(rhsf) {
   // #ifdef DEBUG
-  //     printf("  bison: reduce NonterminalNode[%d]\n", rhsf);
+  //     std::cout << "  bison: reduce NonterminalNode[" << rhsf << "]\n";
   // #endif
 }

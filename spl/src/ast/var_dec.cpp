@@ -3,7 +3,8 @@
 VarDec::VarDec(int fl, int ll, int fc, int lc, int rhsf)
     : NonterminalNode(fl, ll, fc, lc, rhsf) {
 #ifdef DEBUG
-  printf("  bison: reduce VarDec[%d] l%d-%d c%d-%d\n", fl, ll, fc, lc, rhsf);
+  std::cout << "  bison: reduce VarDec[" << rhsf << "] l" << fl << "-" << ll
+            << " c" << fc << "-" << lc << std::endl;
 #endif
   this->is_array = false;
 }
@@ -11,15 +12,15 @@ VarDec::VarDec(int fl, int ll, int fc, int lc, int rhsf)
 void VarDec::visit(int indent_level, SymbolTable *st) {
 #if defined(TREE) || defined(DEBUG)
   this->print_indentation(indent_level);
-  printf("VarDec (%d)\n", this->first_line);
+  std::cout << "VarDec (" << this->first_line << ")\n";
 #endif
   switch (this->rhs_form) {
     case 0: {  // VarDec := ID
+      this->id = this->id_node->id_token;
 #if defined(TREE) || defined(DEBUG)
       this->print_indentation(indent_level + 1);
-      printf("ID: %s\n", this->id_node->id_token);
+      std::cout << "ID: " << this->id << std::endl;
 #endif
-      this->id = this->id_node->id_token;
       if (st->find_var(this->id, DecfMode)) {
         std::cout << "Error type 3 at Line " << this->first_line
                   << ": redefine variable: " << this->id << std::endl;
@@ -33,18 +34,18 @@ void VarDec::visit(int indent_level, SymbolTable *st) {
       this->dim_list.push_back(this->int_node->int_token);
 #if defined(TREE) || defined(DEBUG)
       this->print_indentation(indent_level + 1);
-      printf("LB\n");
+      std::cout << "LB\n";
       this->print_indentation(indent_level + 1);
-      printf("INT: %ld\n", this->int_node->int_token);
+      std::cout << "INT: " << this->int_node->int_token << std::endl;
       this->print_indentation(indent_level + 1);
-      printf("RB\n");
+      std::cout << "RB\n";
 #endif
       break;
     }
 
     default: {
-      fprintf(stderr, "Fail to visit <VarDec> Node: line %d\n",
-              this->first_line);
+      std::cout << "Fail to visit <VarDec> Node: line " << this->first_line
+                << std::endl;
       break;
     }
   }
