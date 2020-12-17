@@ -1,0 +1,8 @@
+float func () {
+    return 2.1;
+}
+
+int main () {
+    int a[5];
+    a[func()];
+}

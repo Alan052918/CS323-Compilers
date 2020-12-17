@@ -1,0 +1,14 @@
+int a[50][50];
+
+struct my_struct{
+    int b[50][50];
+    float c[50][50];
+};
+
+int main(){
+    int c;
+    struct my_struct d;
+
+    c = a[d.b[10][11]][d.b[10][12]];
+    c = a[d.b[10][11]][d.c[10][12]];
+}

@@ -1,0 +1,23 @@
+int a;
+int main() {
+	int b = 0;
+	if (1) {
+		int c = 0;
+		if (1) {
+			int d = 0;
+			if (1) {
+				int e = 0;
+				if (1) {
+					int f = 3;
+					if (1) {
+						int j = 0;
+						if (1) {
+							int l = 0;
+							int l = 0;
+						}
+					}
+				}
+			}
+		}
+	}
+}

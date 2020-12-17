@@ -1,0 +1,10 @@
+int test(int x, int y)
+{
+	return x+y;
+}
+
+int test2(){
+  	float a = 5.8;
+  	int b = 9;
+	return test(a,b);
+}

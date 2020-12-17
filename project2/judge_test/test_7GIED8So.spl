@@ -1,0 +1,11 @@
+struct Apple{
+    int price;
+};
+int test_11710204_7()
+{
+  int a = 2;
+  struct Apple apple;
+  apple.price = apple + a;
+  return a;
+}
+

@@ -1,0 +1,7 @@
+int test_11712212_1(){
+  int a = 5;
+  int b = 10;
+  int c = 100;
+  int d = a * b + c;
+  return d;
+}

@@ -1,0 +1,6 @@
+int test_11712702_1()
+{
+  int i=0,j=0;
+  i = j + a;
+  return 0.1;
+}

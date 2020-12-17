@@ -1,0 +1,4 @@
+int test1(int n)
+{
+  return n * 1.0;
+}

@@ -1,0 +1,18 @@
+int add_2(int a1, int a2){
+    int x = a1 + a2;
+    int y = x + 0;
+    return y;
+}
+
+int add_3(int b1, int b2, int b3){
+    return add_2(b1, add_2(b2, b3));
+}
+
+int add_5(int c1, int c2, int c3, int c4, int c5){
+    return add_2(c1, c2) + add_3(c3, c4, c5);
+}
+
+int add_6(int d1, int d2, int d3, int d4, int d5, int d6){
+    int result = add_5(d1, d2, d3, d3, d3);
+    return result + d7;
+}

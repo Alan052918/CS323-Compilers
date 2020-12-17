@@ -1,0 +1,34 @@
+struct number{
+    int int_num;
+    float float_num;
+    char char_value;
+};
+
+int compare(struct number n1, struct number n2){
+    if(n1.int_num==1){
+        return n1.float_num - n2.float_num;
+    }
+    return n1.int_num - n2.int_num;
+}
+
+float compare_float(struct number n3, struct number n4){
+    return n4.float_num - n3.float_num;
+}
+
+char compare_char(struct number n5, struct number n6){
+    while(n5.int_num){
+        n5.int_num = n6.int_num - 10;
+        if(n5.int_num - n6.int_num){
+            return n6.char_value;
+        }
+    }
+    return n5.char_value;
+}
+
+int test_6(){
+    struct number x;
+    struct number y;
+    compare_char(x, y);
+    compare(x, y);
+    compare_float(x, y);
+}

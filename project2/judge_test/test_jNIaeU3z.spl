@@ -1,0 +1,10 @@
+int multiply(int a, int b){
+    return a*b;
+}
+
+int test_11711335_5()
+{
+    int temp=100;
+    int ttt=1;
+    temp = multiply(temp, temp, ttt);
+}

@@ -1,0 +1,12 @@
+int add(int a,int b){
+    return a+b;
+}
+int mul(int c,int d){
+    return c*d;
+}
+int test_11712702_1()
+{
+  int i=0,j=0;
+  i = mul(j,add(i,j));
+  return i;
+}

@@ -1,0 +1,29 @@
+struct AST {
+    int lineno, op;
+    int val;
+    char str;
+    struct AST children[10];
+    int num_children;
+};
+
+struct AST makeAST(int lineno, int op) {
+    struct AST ast;
+    ast.lineno = lineno;
+    ast.op = op;
+    ast.str = '0';
+    ast.num_children = 0;
+    return ast;
+}
+
+struct AST insertChildren(struct AST ast, struct AST child) {
+    ast.num_children = ast.num_children + 1;
+    ast.children[ast.num_children] = child;
+    return ast;
+}
+
+int main() {
+    struct AST root = makeAST(0, 0);
+    root = insertChildren(root, makeAST(1, 1));
+    root = insertChildren(root, makeAST(2, 2));
+    return root.children[0].num_children;
+}

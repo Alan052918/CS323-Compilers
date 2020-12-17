@@ -1,0 +1,7 @@
+struct node {
+    struct node value;
+    struct node leftchild;
+    struct node rightchilt;
+    struct node parent;
+    int value;
+};
