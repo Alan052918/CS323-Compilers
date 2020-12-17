@@ -1,10 +1,10 @@
-#include "../../include/ast/stmt_list.h"
-#include "../../include/ast/stmt.h"
+#include "../../include/ast/stmt_list.hpp"
+#include "../../include/ast/stmt.hpp"
 
-StmtList::StmtList(int rhsf, int fl, int ll, int fc, int lc)
-    : NonterminalNode(rhsf, fl, ll, fc, lc) {
+StmtList::StmtList(int fl, int ll, int fc, int lc, int rhsf)
+    : NonterminalNode(fl, ll, fc, lc, rhsf) {
 #ifdef DEBUG
-  printf("  bison: reduce StmtList[%d] l%d-%d c%d-%d\n", rhsf, fl, ll, fc, lc);
+  printf("  bison: reduce StmtList[%d] l%d-%d c%d-%d\n", fl, ll, fc, lc, rhsf);
 #endif
 }
 
@@ -14,9 +14,9 @@ void StmtList::visit(int indent_level, SymbolTable *st) {
   }
   switch (this->rhs_form) {
     case 0: {  // StmtList := Stmt StmtList
-      for (int i = 0; i < this->node_list.size(); i++) {
+      for (unsigned int i = 0; i < this->node_list.size(); i++) {
         Stmt *stmt = this->node_list.at(i);
-#if defined(PARSE_TREE) || defined(DEBUG)
+#if defined(TREE) || defined(DEBUG)
         this->print_indentation(indent_level + i);
         printf("StmtList (%d)\n", stmt->first_line);
 #endif

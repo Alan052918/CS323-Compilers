@@ -1,8 +1,8 @@
-#include "../../include/ast/fun_dec.h"
-#include "../../include/ast/var_list.h"
+#include "../../include/ast/fun_dec.hpp"
+#include "../../include/ast/var_list.hpp"
 
-FunDec::FunDec(int rhsf, int fl, int ll, int fc, int lc)
-    : NonterminalNode(rhsf, fl, ll, fc, lc) {
+FunDec::FunDec(int fl, int ll, int fc, int lc, int rhsf)
+    : NonterminalNode(fl, ll, fc, lc, rhsf) {
 #ifdef DEBUG
   std::cout << "  bison: reduce FunDec[" << rhsf << "] l" << fl << "-" << ll
             << " c" << fc << "-" << lc << std::endl;
@@ -10,14 +10,14 @@ FunDec::FunDec(int rhsf, int fl, int ll, int fc, int lc)
 }
 
 void FunDec::visit(int indent_level, SymbolTable *st) {
-#if defined(PARSE_TREE) || defined(DEBUG)
+#if defined(TREE) || defined(DEBUG)
   this->print_indentation(indent_level);
   std::cout << "FunDec (" << this->first_line << ")\n";
 #endif
   switch (this->rhs_form) {
     case 0: {  // FunDec := ID LP VarList RP
       this->id = std::string(this->id_node->id_token);
-#if defined(PARSE_TREE) || defined(DEBUG)
+#if defined(TREE) || defined(DEBUG)
       this->print_indentation(indent_level + 1);
       std::cout << "ID: " << this->id << std::endl;
       this->print_indentation(indent_level + 1);
@@ -27,7 +27,7 @@ void FunDec::visit(int indent_level, SymbolTable *st) {
       this->var_list->visit(indent_level + 1, st);
       this->id_list = this->var_list->id_list;
       this->type_list = this->var_list->type_list;
-#if defined(PARSE_TREE) || defined(DEBUG)
+#if defined(TREE) || defined(DEBUG)
       this->print_indentation(indent_level + 1);
       std::cout << "RP\n";
 #endif
@@ -44,7 +44,7 @@ void FunDec::visit(int indent_level, SymbolTable *st) {
     }
     case 1: {  // FunDec := ID LP RP
       this->id = std::string(this->id_node->id_token);
-#if defined(PARSE_TREE) || defined(DEBUG)
+#if defined(TREE) || defined(DEBUG)
       this->print_indentation(indent_level + 1);
       std::cout << "ID: " << this->id << std::endl;
       this->print_indentation(indent_level + 1);

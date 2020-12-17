@@ -1,9 +1,9 @@
-#include "../../include/ast/dec.h"
-#include "../../include/ast/exp.h"
-#include "../../include/ast/var_dec.h"
+#include "../../include/ast/dec.hpp"
+#include "../../include/ast/exp.hpp"
+#include "../../include/ast/var_dec.hpp"
 
-Dec::Dec(int rhsf, int fl, int ll, int fc, int lc)
-    : NonterminalNode(rhsf, fl, ll, fc, lc) {
+Dec::Dec(int fl, int ll, int fc, int lc, int rhsf)
+    : NonterminalNode(fl, ll, fc, lc, rhsf) {
 #ifdef DEBUG
   std::cout << "  bison: reduce Dec[" << rhsf << "] l" << fl << "-" << ll
             << " c" << fc << "-" << lc << std::endl;
@@ -11,7 +11,7 @@ Dec::Dec(int rhsf, int fl, int ll, int fc, int lc)
 }
 
 void Dec::visit(int indent_level, SymbolTable *st) {
-#if defined(PARSE_TREE) || defined(DEBUG)
+#if defined(TREE) || defined(DEBUG)
   this->print_indentation(indent_level);
   std::cout << "Dec (" << this->first_line << ")\n";
 #endif
@@ -36,7 +36,7 @@ void Dec::visit(int indent_level, SymbolTable *st) {
     }
     case 1: {  // Dec := VarDec ASSIGN Exp
       this->var_dec->visit(indent_level + 1, st);
-#if defined(PARSE_TREE) || defined(DEBUG)
+#if defined(TREE) || defined(DEBUG)
       this->print_indentation(indent_level + 1);
       std::cout << "ASSIGN\n";
 #endif

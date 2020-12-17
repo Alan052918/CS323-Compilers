@@ -1,9 +1,9 @@
-#include "../../include/ast/param_dec.h"
-#include "../../include/ast/specifier.h"
-#include "../../include/ast/var_dec.h"
+#include "../../include/ast/param_dec.hpp"
+#include "../../include/ast/specifier.hpp"
+#include "../../include/ast/var_dec.hpp"
 
-ParamDec::ParamDec(int rhsf, int fl, int ll, int fc, int lc)
-    : NonterminalNode(rhsf, fl, ll, fc, lc) {
+ParamDec::ParamDec(int fl, int ll, int fc, int lc, int rhsf)
+    : NonterminalNode(fl, ll, fc, lc, rhsf) {
 #ifdef DEBUG
   std::cout << "  bison: reduce ParamDec[" << rhsf << "] l" << fl << "-" << ll
             << " c" << fc << "-" << lc << std::endl;
@@ -11,7 +11,7 @@ ParamDec::ParamDec(int rhsf, int fl, int ll, int fc, int lc)
 }
 
 void ParamDec::visit(int indent_level, SymbolTable *st) {
-#if defined(PARSE_TREE) || defined(DEBUG)
+#if defined(TREE) || defined(DEBUG)
   this->print_indentation(indent_level);
   std::cout << "ParamDec (" << this->first_line << ")\n";
 #endif

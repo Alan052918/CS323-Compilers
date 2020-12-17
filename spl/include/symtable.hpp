@@ -1,9 +1,9 @@
 #ifndef SYMTABLE_H
 #define SYMTABLE_H
 
-#include "common.h"
-#include "enums.h"
-#include "typedef.h"
+#include "common.hpp"
+#include "enums.hpp"
+#include "typedef.hpp"
 
 namespace std {
 

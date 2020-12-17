@@ -1,5 +1,5 @@
-#include "../include/enums.h"
-#include "../include/typedef.h"
+#include "../include/enums.hpp"
+#include "../include/typedef.hpp"
 
 void add_arr_dimension(VarType *at, int dim) {
   if (at->category != ARRAY) {
@@ -77,7 +77,7 @@ bool compare_fun_type(FunType *ft1, FunType *ft2) {
 #endif
     return false;
   }
-  for (int i = 0; i < ft1->arg_types.size(); i++) {
+  for (unsigned int i = 0; i < ft1->arg_types.size(); i++) {
     if (compare_var_type(ft1->arg_types.at(i), ft2->arg_types.at(i)) == false) {
 #ifdef DEBUG
       std::cout << "--- compare_fun_type(): inconsistent argument, NOT equal\n";

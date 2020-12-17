@@ -1,10 +1,10 @@
-#include "../../include/ast/def_list.h"
-#include "../../include/ast/def.h"
+#include "../../include/ast/def_list.hpp"
+#include "../../include/ast/def.hpp"
 
-DefList::DefList(int rhsf, int fl, int ll, int fc, int lc)
-    : NonterminalNode(rhsf, fl, ll, fc, lc) {
+DefList::DefList(int fl, int ll, int fc, int lc, int rhsf)
+    : NonterminalNode(fl, ll, fc, lc, rhsf) {
 #ifdef DEBUG
-  printf("  bison: reduce DefList[%d] l%d-%d c%d-%d\n", rhsf, fl, ll, fc, lc);
+  printf("  bison: reduce DefList[%d] l%d-%d c%d-%d\n", fl, ll, fc, lc, rhsf);
 #endif
 }
 void DefList::visit(int indent_level, SymbolTable *st) {
@@ -13,9 +13,9 @@ void DefList::visit(int indent_level, SymbolTable *st) {
   }
   switch (this->rhs_form) {
     case 0:  // DefList := Def DefList
-      for (int i = 0; i < this->node_list.size(); i++) {
+      for (unsigned int i = 0; i < this->node_list.size(); i++) {
         Def *def = this->node_list.at(i);
-#if defined(PARSE_TREE) || defined(DEBUG)
+#if defined(TREE) || defined(DEBUG)
         this->print_indentation(indent_level + i);
         printf("DefList (%d)\n", def->first_line);
 #endif

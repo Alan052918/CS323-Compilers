@@ -1,11 +1,11 @@
 #ifndef DEF_H
 #define DEF_H
 
-#include "ast.h"
-#include "../common.h"
-#include "../enums.h"
-#include "../symtable.h"
-#include "../typedef.h"
+#include "ast.hpp"
+#include "../common.hpp"
+#include "../enums.hpp"
+#include "../symtable.hpp"
+#include "../typedef.hpp"
 
 class DecList;
 class Specifier;
@@ -19,7 +19,7 @@ class Def : public NonterminalNode {
   // data member variables
   VarType *var_type;
 
-  Def(int rhsf, int fl, int ll, int fc, int lc);
+  Def(int fl, int ll, int fc, int lc, int rhsf);
 
   void visit(int indent_level, SymbolTable *st) override;
 };

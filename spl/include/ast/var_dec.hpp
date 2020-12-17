@@ -1,11 +1,11 @@
 #ifndef VAR_DEC_H
 #define VAR_DEC_H
 
-#include "ast.h"
-#include "../common.h"
-#include "../enums.h"
-#include "../symtable.h"
-#include "../typedef.h"
+#include "ast.hpp"
+#include "../common.hpp"
+#include "../enums.hpp"
+#include "../symtable.hpp"
+#include "../typedef.hpp"
 
 class VarDec : public NonterminalNode {
  public:
@@ -21,7 +21,7 @@ class VarDec : public NonterminalNode {
   bool is_array;
   std::vector<int> dim_list;
 
-  VarDec(int rhsf, int fl, int ll, int fc, int lc);
+  VarDec(int fl, int ll, int fc, int lc, int rhsf);
 
   /**
    * Array variable declaration is visited from outside to inside, but int

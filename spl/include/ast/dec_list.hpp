@@ -1,11 +1,11 @@
 #ifndef DEC_LIST_H
 #define DEC_LIST_H
 
-#include "ast.h"
-#include "../common.h"
-#include "../enums.h"
-#include "../symtable.h"
-#include "../typedef.h"
+#include "ast.hpp"
+#include "../common.hpp"
+#include "../enums.hpp"
+#include "../symtable.hpp"
+#include "../typedef.hpp"
 
 class Dec;
 
@@ -18,7 +18,7 @@ class DecList : public NonterminalNode {
   // This variable type is inherited from parent (Def) node
   VarType *var_type;
 
-  DecList(int rhsf, int fl, int ll, int fc, int lc);
+  DecList(int fl, int ll, int fc, int lc, int rhsf);
 
   void visit(int indent_level, SymbolTable *st) override;
 };

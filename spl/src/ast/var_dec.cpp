@@ -1,21 +1,21 @@
-#include "../../include/ast/var_dec.h"
+#include "../../include/ast/var_dec.hpp"
 
-VarDec::VarDec(int rhsf, int fl, int ll, int fc, int lc)
-    : NonterminalNode(rhsf, fl, ll, fc, lc) {
+VarDec::VarDec(int fl, int ll, int fc, int lc, int rhsf)
+    : NonterminalNode(fl, ll, fc, lc, rhsf) {
 #ifdef DEBUG
-  printf("  bison: reduce VarDec[%d] l%d-%d c%d-%d\n", rhsf, fl, ll, fc, lc);
+  printf("  bison: reduce VarDec[%d] l%d-%d c%d-%d\n", fl, ll, fc, lc, rhsf);
 #endif
   this->is_array = false;
 }
 
 void VarDec::visit(int indent_level, SymbolTable *st) {
-#if defined(PARSE_TREE) || defined(DEBUG)
+#if defined(TREE) || defined(DEBUG)
   this->print_indentation(indent_level);
   printf("VarDec (%d)\n", this->first_line);
 #endif
   switch (this->rhs_form) {
     case 0: {  // VarDec := ID
-#if defined(PARSE_TREE) || defined(DEBUG)
+#if defined(TREE) || defined(DEBUG)
       this->print_indentation(indent_level + 1);
       printf("ID: %s\n", this->id_node->id_token);
 #endif
@@ -31,7 +31,7 @@ void VarDec::visit(int indent_level, SymbolTable *st) {
       this->var_dec->visit(indent_level + 1, st);
       this->is_array = true;
       this->dim_list.push_back(this->int_node->int_token);
-#if defined(PARSE_TREE) || defined(DEBUG)
+#if defined(TREE) || defined(DEBUG)
       this->print_indentation(indent_level + 1);
       printf("LB\n");
       this->print_indentation(indent_level + 1);

@@ -1,8 +1,8 @@
 #ifndef TYPEDEF_H
 #define TYPEDEF_H
 
-#include "common.h"
-#include "enums.h"
+#include "common.hpp"
+#include "enums.hpp"
 
 // variable type
 typedef struct VarType {

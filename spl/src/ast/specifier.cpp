@@ -1,8 +1,8 @@
-#include "../../include/ast/specifier.h"
-#include "../../include/ast/struct_specifier.h"
+#include "../../include/ast/specifier.hpp"
+#include "../../include/ast/struct_specifier.hpp"
 
-Specifier::Specifier(int rhsf, int fl, int ll, int fc, int lc)
-    : NonterminalNode(rhsf, fl, ll, fc, lc) {
+Specifier::Specifier(int fl, int ll, int fc, int lc, int rhsf)
+    : NonterminalNode(fl, ll, fc, lc, rhsf) {
 #ifdef DEBUG
   std::cout << "  bison: reduce Specifier[" << rhsf << "] l" << fl << "-" << ll
             << " c" << fc << "-" << lc << std::endl;
@@ -11,14 +11,14 @@ Specifier::Specifier(int rhsf, int fl, int ll, int fc, int lc)
 }
 
 void Specifier::visit(int indent_level, SymbolTable *st) {
-#if defined(PARSE_TREE) || defined(DEBUG)
+#if defined(TREE) || defined(DEBUG)
   this->print_indentation(indent_level);
   std::cout << "Specifier (" << this->first_line << ")\n";
 #endif
   switch (this->rhs_form) {
     case 0: {  // Specifier := TYPE
       this->primitive_type = std::string(this->type_node->type_token);
-#if defined(PARSE_TREE) || defined(DEBUG)
+#if defined(TREE) || defined(DEBUG)
       this->print_indentation(indent_level + 1);
       std::cout << "TYPE: " << this->primitive_type << std::endl;
 #endif

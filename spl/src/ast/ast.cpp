@@ -1,4 +1,4 @@
-#include "../../include/ast/ast.h"
+#include "../../include/ast/ast.hpp"
 
 ASTNode::ASTNode(NodeType nt, int fl, int ll, int fc, int lc) {
   this->node_type = nt;
@@ -9,7 +9,7 @@ ASTNode::ASTNode(NodeType nt, int fl, int ll, int fc, int lc) {
 }
 
 void ASTNode::visit(int indent_level, SymbolTable *st) {
-#if defined(PARSE_TREE) || defined(DEBUG)
+#if defined(TREE) || defined(DEBUG)
   this->print_indentation(indent_level);
   std::cout << "Generic ASTNode (" << this->first_line << ")\n";
 #endif
@@ -24,8 +24,8 @@ void ASTNode::print_indentation(int indent_level) {
 TerminalNode::TerminalNode(NodeType nt, int fl, int ll, int fc, int lc)
     : ASTNode(nt, fl, ll, fc, lc) {}
 
-NonterminalNode::NonterminalNode(int rhsf, int fl, int ll, int fc, int lc)
-    : rhs_form(rhsf), ASTNode(Nonterminal, fl, ll, fc, lc) {
+NonterminalNode::NonterminalNode(int fl, int ll, int fc, int lc, int rhsf)
+    : ASTNode(Nonterminal, fl, ll, fc, lc), rhs_form(rhsf) {
   // #ifdef DEBUG
   //     printf("  bison: reduce NonterminalNode[%d]\n", rhsf);
   // #endif

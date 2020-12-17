@@ -1,11 +1,11 @@
 #ifndef FUN_DEC_H
 #define FUN_DEC_H
 
-#include "ast.h"
-#include "../common.h"
-#include "../enums.h"
-#include "../symtable.h"
-#include "../typedef.h"
+#include "ast.hpp"
+#include "../common.hpp"
+#include "../enums.hpp"
+#include "../symtable.hpp"
+#include "../typedef.hpp"
 
 class VarList;
 
@@ -23,7 +23,7 @@ class FunDec : public NonterminalNode {
   std::vector<std::string> id_list;
   std::vector<VarType *> type_list;
 
-  FunDec(int rhsf, int fl, int ll, int fc, int lc);
+  FunDec(int fl, int ll, int fc, int lc, int rhsf);
 
   void visit(int indent_level, SymbolTable *st) override;
 };

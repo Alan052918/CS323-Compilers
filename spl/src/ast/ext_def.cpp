@@ -1,11 +1,11 @@
-#include "../../include/ast/ext_def.h"
-#include "../../include/ast/comp_st.h"
-#include "../../include/ast/ext_dec_list.h"
-#include "../../include/ast/fun_dec.h"
-#include "../../include/ast/specifier.h"
+#include "../../include/ast/ext_def.hpp"
+#include "../../include/ast/comp_st.hpp"
+#include "../../include/ast/ext_dec_list.hpp"
+#include "../../include/ast/fun_dec.hpp"
+#include "../../include/ast/specifier.hpp"
 
-ExtDef::ExtDef(int rhsf, int fl, int ll, int fc, int lc)
-    : NonterminalNode(rhsf, fl, ll, fc, lc) {
+ExtDef::ExtDef(int fl, int ll, int fc, int lc, int rhsf)
+    : NonterminalNode(fl, ll, fc, lc, rhsf) {
 #ifdef DEBUG
   std::cout << "  bison: reduce ExtDef[" << rhsf << "] l" << fl << "-" << ll
             << " c" << fc << "-" << lc << std::endl;
@@ -13,7 +13,7 @@ ExtDef::ExtDef(int rhsf, int fl, int ll, int fc, int lc)
 }
 
 void ExtDef::visit(int indent_level, SymbolTable *st) {
-#if defined(PARSE_TREE) || defined(DEBUG)
+#if defined(TREE) || defined(DEBUG)
   this->print_indentation(indent_level);
   std::cout << "ExtDef (" << this->first_line << ")\n";
 #endif
@@ -24,7 +24,7 @@ void ExtDef::visit(int indent_level, SymbolTable *st) {
       this->var_type = this->specifier->var_type;
       this->ext_dec_list->var_type = this->var_type;
       this->ext_dec_list->visit(indent_level + 1, st);
-#if defined(PARSE_TREE) || defined(DEBUG)
+#if defined(TREE) || defined(DEBUG)
       this->print_indentation(indent_level + 1);
       std::cout << "SEMI\n";
 #endif
@@ -62,7 +62,7 @@ void ExtDef::visit(int indent_level, SymbolTable *st) {
         VarType *vt = this->specifier->var_type;
         st->push_var(vt->name, vt);
       }
-#if defined(PARSE_TREE) || defined(DEBUG)
+#if defined(TREE) || defined(DEBUG)
       this->print_indentation(indent_level + 1);
       std::cout << "SEMI\n";
 #endif

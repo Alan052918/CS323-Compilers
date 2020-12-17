@@ -1,16 +1,16 @@
-#include "../../include/ast/def.h"
-#include "../../include/ast/dec_list.h"
-#include "../../include/ast/specifier.h"
+#include "../../include/ast/def.hpp"
+#include "../../include/ast/dec_list.hpp"
+#include "../../include/ast/specifier.hpp"
 
-Def::Def(int rhsf, int fl, int ll, int fc, int lc)
-    : NonterminalNode(rhsf, fl, ll, fc, lc) {
+Def::Def(int fl, int ll, int fc, int lc, int rhsf)
+    : NonterminalNode(fl, ll, fc, lc, rhsf) {
 #ifdef DEBUG
-  printf("  bison: reduce Def[%d] l%d-%d c%d-%d\n", rhsf, fl, ll, fc, lc);
+  printf("  bison: reduce Def[%d] l%d-%d c%d-%d\n", fl, ll, fc, lc, rhsf);
 #endif
 }
 
 void Def::visit(int indent_level, SymbolTable *st) {
-#if defined(PARSE_TREE) || defined(DEBUG)
+#if defined(TREE) || defined(DEBUG)
   this->print_indentation(indent_level);
   printf("Def (%d)\n", this->first_line);
 #endif
@@ -21,7 +21,7 @@ void Def::visit(int indent_level, SymbolTable *st) {
       this->var_type = this->specifier->var_type;
       this->dec_list->var_type = this->var_type;
       this->dec_list->visit(indent_level + 1, st);
-#if defined(PARSE_TREE) || defined(DEBUG)
+#if defined(TREE) || defined(DEBUG)
       this->print_indentation(indent_level + 1);
       printf("SEMI\n");
 #endif

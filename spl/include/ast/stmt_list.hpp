@@ -1,11 +1,11 @@
 #ifndef STMT_LIST_H
 #define STMT_LIST_H
 
-#include "ast.h"
-#include "../common.h"
-#include "../enums.h"
-#include "../symtable.h"
-#include "../typedef.h"
+#include "ast.hpp"
+#include "../common.hpp"
+#include "../enums.hpp"
+#include "../symtable.hpp"
+#include "../typedef.hpp"
 
 class Stmt;
 
@@ -17,7 +17,7 @@ class StmtList : public NonterminalNode {
   // data member variables
   VarType *return_type;
 
-  StmtList(int rhsf, int fl, int ll, int fc, int lc);
+  StmtList(int fl, int ll, int fc, int lc, int rhsf);
 
   void visit(int indent_level, SymbolTable *st) override;
 };

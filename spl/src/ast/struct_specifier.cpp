@@ -1,8 +1,8 @@
-#include "../../include/ast/struct_specifier.h"
-#include "../../include/ast/def_list.h"
+#include "../../include/ast/struct_specifier.hpp"
+#include "../../include/ast/def_list.hpp"
 
-StructSpecifier::StructSpecifier(int rhsf, int fl, int ll, int fc, int lc)
-    : NonterminalNode(rhsf, fl, ll, fc, lc) {
+StructSpecifier::StructSpecifier(int fl, int ll, int fc, int lc, int rhsf)
+    : NonterminalNode(fl, ll, fc, lc, rhsf) {
 #ifdef DEBUG
   std::cout << "  bison: reduce StructSpecifier[" << rhsf << "] l" << fl << "-"
             << ll << " c" << fc << "-" << lc << std::endl;
@@ -10,7 +10,7 @@ StructSpecifier::StructSpecifier(int rhsf, int fl, int ll, int fc, int lc)
 }
 
 void StructSpecifier::visit(int indent_level, SymbolTable *st) {
-#if defined(PARSE_TREE) || defined(DEBUG)
+#if defined(TREE) || defined(DEBUG)
   this->print_indentation(indent_level);
   std::cout << "StructSpecifier (" << this->first_line << ")\n";
 #endif
@@ -19,7 +19,7 @@ void StructSpecifier::visit(int indent_level, SymbolTable *st) {
                // structure type definition
       this->var_type = new VarType();
       this->id = this->id_node->id_token;
-#if defined(PARSE_TREE) || defined(DEBUG)
+#if defined(TREE) || defined(DEBUG)
       this->print_indentation(indent_level + 1);
       std::cout << "STRUCT\n";
       this->print_indentation(indent_level + 1);
@@ -51,7 +51,7 @@ void StructSpecifier::visit(int indent_level, SymbolTable *st) {
         break;
       }
       FieldList *fl_ptr = this->var_type->structure;
-      for (int i = 1; i < this->def_list->var_list.size(); i++) {
+      for (unsigned int i = 1; i < this->def_list->var_list.size(); i++) {
         std::pair<char *, VarType *> p = this->def_list->var_list.at(i);
         FieldList *field_list = new FieldList();
         field_list->name = std::string(p.first);
@@ -60,7 +60,7 @@ void StructSpecifier::visit(int indent_level, SymbolTable *st) {
         fl_ptr->next = field_list;
       }
       free(fl_ptr);
-#if defined(PARSE_TREE) || defined(DEBUG)
+#if defined(TREE) || defined(DEBUG)
       this->print_indentation(indent_level + 1);
       std::cout << "RC\n";
 #endif
@@ -69,7 +69,7 @@ void StructSpecifier::visit(int indent_level, SymbolTable *st) {
     case 1: {  // StructSpecifier := STRUCT ID
                // structure type usage
       this->id = this->id_node->id_token;
-#if defined(PARSE_TREE) || defined(DEBUG)
+#if defined(TREE) || defined(DEBUG)
       this->print_indentation(indent_level + 1);
       std::cout << "STRUCT\n";
       this->print_indentation(indent_level + 1);

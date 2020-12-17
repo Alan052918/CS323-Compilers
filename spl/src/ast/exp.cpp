@@ -1,8 +1,8 @@
-#include "../../include/ast/exp.h"
-#include "../../include/ast/args.h"
+#include "../../include/ast/exp.hpp"
+#include "../../include/ast/args.hpp"
 
-Exp::Exp(int rhsf, int fl, int ll, int fc, int lc)
-    : NonterminalNode(rhsf, fl, ll, fc, lc) {
+Exp::Exp(int fl, int ll, int fc, int lc, int rhsf)
+    : NonterminalNode(fl, ll, fc, lc, rhsf) {
 #ifdef DEBUG
   std::cout << "  bison: reduce Exp[" << rhsf << "] l" << fl << "-" << ll
             << " c" << fc << "-" << lc << std::endl;
@@ -16,7 +16,7 @@ Exp::Exp(int rhsf, int fl, int ll, int fc, int lc)
 }
 
 void Exp::visit(int indent_level, SymbolTable *st) {
-#if defined(PARSE_TREE) || defined(DEBUG)
+#if defined(TREE) || defined(DEBUG)
   this->print_indentation(indent_level);
   std::cout << "Exp (" << this->first_line << ")\n";
 #endif
@@ -28,7 +28,7 @@ void Exp::visit(int indent_level, SymbolTable *st) {
       this->var_type = new VarType();
       this->exp_1->visit(indent_level + 1, st);
       this->keyword = this->keyword_node->keyword_token;
-#if defined(PARSE_TREE) || defined(DEBUG)
+#if defined(TREE) || defined(DEBUG)
       this->print_indentation(indent_level + 1);
       std::cout << this->keyword << std::endl;
 #endif
@@ -57,12 +57,12 @@ void Exp::visit(int indent_level, SymbolTable *st) {
     }
     case 1: {  // Exp := LP Exp RP
       this->var_type = new VarType();
-#if defined(PARSE_TREE) || defined(DEBUG)
+#if defined(TREE) || defined(DEBUG)
       this->print_indentation(indent_level + 1);
       std::cout << "LP\n";
 #endif
       this->exp_1->visit(indent_level + 1, st);
-#if defined(PARSE_TREE) || defined(DEBUG)
+#if defined(TREE) || defined(DEBUG)
       this->print_indentation(indent_level + 1);
       std::cout << "RP\n";
 #endif
@@ -78,7 +78,7 @@ void Exp::visit(int indent_level, SymbolTable *st) {
     case 2: {  // Exp := MINUS || NOT Exp
       this->var_type = new VarType();
       this->keyword = this->keyword_node->keyword_token;
-#if defined(PARSE_TREE) || defined(DEBUG)
+#if defined(TREE) || defined(DEBUG)
       this->print_indentation(indent_level + 1);
       std::cout << this->keyword << std::endl;
 #endif
@@ -94,14 +94,14 @@ void Exp::visit(int indent_level, SymbolTable *st) {
       this->is_funcall = true;
       this->is_rvalue = true;
       this->id = std::string(this->id_node->id_token);
-#if defined(PARSE_TREE) || defined(DEBUG)
+#if defined(TREE) || defined(DEBUG)
       this->print_indentation(indent_level + 1);
       std::cout << "ID: " << this->id << std::endl;
       this->print_indentation(indent_level + 1);
       std::cout << "LP\n";
 #endif
       this->args->visit(indent_level + 1, st);
-#if defined(PARSE_TREE) || defined(DEBUG)
+#if defined(TREE) || defined(DEBUG)
       this->print_indentation(indent_level + 1);
       std::cout << "RP\n";
 #endif
@@ -132,7 +132,7 @@ void Exp::visit(int indent_level, SymbolTable *st) {
                   << this->args->type_list.size() << std::endl;
         break;
       }
-      for (int i = 0; i < param_types.size(); i++) {
+      for (unsigned int i = 0; i < param_types.size(); i++) {
         if (!compare_var_type(param_types.at(i), this->args->type_list.at(i))) {
 #ifdef DEBUG
           std::cout << "*** Argument type ["
@@ -155,7 +155,7 @@ void Exp::visit(int indent_level, SymbolTable *st) {
       this->is_funcall = true;
       this->is_rvalue = true;
       this->id = std::string(this->id_node->id_token);
-#if defined(PARSE_TREE) || defined(DEBUG)
+#if defined(TREE) || defined(DEBUG)
       this->print_indentation(indent_level + 1);
       std::cout << "ID: " << this->id << std::endl;
       this->print_indentation(indent_level + 1);
@@ -183,12 +183,12 @@ void Exp::visit(int indent_level, SymbolTable *st) {
                // array indexing
       this->var_type = new VarType();
       this->exp_1->visit(indent_level + 1, st);
-#if defined(PARSE_TREE) || defined(DEBUG)
+#if defined(TREE) || defined(DEBUG)
       this->print_indentation(indent_level + 1);
       std::cout << "LB\n";
 #endif
       this->exp_2->visit(indent_level + 1, st);
-#if defined(PARSE_TREE) || defined(DEBUG)
+#if defined(TREE) || defined(DEBUG)
       this->print_indentation(indent_level + 1);
       std::cout << "RB\n";
 #endif
@@ -223,7 +223,7 @@ void Exp::visit(int indent_level, SymbolTable *st) {
       this->var_type = new VarType();
       this->id = std::string(this->id_node->id_token);
       this->exp_1->visit(indent_level + 1, st);
-#if defined(PARSE_TREE) || defined(DEBUG)
+#if defined(TREE) || defined(DEBUG)
       this->print_indentation(indent_level + 1);
       std::cout << "DOT\n";
       this->print_indentation(indent_level + 1);
@@ -253,7 +253,7 @@ void Exp::visit(int indent_level, SymbolTable *st) {
     }
     case 7: {  // Exp := ID
       this->id = std::string(this->id_node->id_token);
-#if defined(PARSE_TREE) || defined(DEBUG)
+#if defined(TREE) || defined(DEBUG)
       this->print_indentation(indent_level + 1);
       std::cout << "ID: " << this->id << std::endl;
 #endif
@@ -270,7 +270,7 @@ void Exp::visit(int indent_level, SymbolTable *st) {
     case 8: {  // Exp := INT
       this->is_rvalue = true;
       this->integer = this->int_node->int_token;
-#if defined(PARSE_TREE) || defined(DEBUG)
+#if defined(TREE) || defined(DEBUG)
       this->print_indentation(indent_level + 1);
       std::cout << "INT: " << this->integer << std::endl;
 #endif
@@ -284,7 +284,7 @@ void Exp::visit(int indent_level, SymbolTable *st) {
     case 9: {  // Exp := FLOAT
       this->is_rvalue = true;
       this->floating_point = this->float_node->float_token;
-#if defined(PARSE_TREE) || defined(DEBUG)
+#if defined(TREE) || defined(DEBUG)
       this->print_indentation(indent_level + 1);
       std::cout << "FLOAT: " << this->floating_point << std::endl;
 #endif
@@ -298,7 +298,7 @@ void Exp::visit(int indent_level, SymbolTable *st) {
     case 10: {  // Exp := CHAR
       this->is_rvalue = true;
       this->character = this->char_node->char_token;
-#if defined(PARSE_TREE) || defined(DEBUG)
+#if defined(TREE) || defined(DEBUG)
       this->print_indentation(indent_level + 1);
       std::cout << "CHAR: " << this->character << std::endl;
 #endif

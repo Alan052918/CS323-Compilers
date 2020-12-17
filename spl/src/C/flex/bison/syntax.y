@@ -1,10 +1,11 @@
 %{
-  #include "include/ast_list.h"
-  #include "include/common.h"
-  #include "include/typedef.h"
+  #include "include/ast_list.hpp"
+  #include "include/common.hpp"
+  #include "include/enums.hpp"
+  #include "include/symtable.hpp"
+  #include "include/typedef.hpp"
 
   extern "C" FILE *yyin;
-
   bool syntax_error;
   Program *program_root;
 

@@ -1,8 +1,8 @@
-#include "../../include/ast/ext_def_list.h"
-#include "../../include/ast/ext_def.h"
+#include "../../include/ast/ext_def_list.hpp"
+#include "../../include/ast/ext_def.hpp"
 
-ExtDefList::ExtDefList(int rhsf, int fl, int ll, int fc, int lc)
-    : NonterminalNode(rhsf, fl, ll, fc, lc) {
+ExtDefList::ExtDefList(int fl, int ll, int fc, int lc, int rhsf)
+    : NonterminalNode(fl, ll, fc, lc, rhsf) {
 #ifdef DEBUG
   std::cout << "  bison: reduce ExtDefList[" << rhsf << "] l" << fl << "-" << ll
             << " c" << fc << "-" << lc << std::endl;
@@ -15,9 +15,9 @@ void ExtDefList::visit(int indent_level, SymbolTable *st) {
   }
   switch (this->rhs_form) {
     case 0: {  // ExtDefList := ExtDef ExtDefList
-      for (int i = 0; i < this->node_list.size(); i++) {
+      for (unsigned int i = 0; i < this->node_list.size(); i++) {
         ExtDef *ext_def = this->node_list.at(i);
-#if defined(PARSE_TREE) || defined(DEBUG)
+#if defined(TREE) || defined(DEBUG)
         this->print_indentation(indent_level + i);
         std::cout << "ExtDefList (" << ext_def->first_line << ")\n";
 #endif

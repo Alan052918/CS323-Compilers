@@ -1,10 +1,10 @@
 #ifndef AST_H
 #define AST_H
 
-#include "../common.h"
-#include "../enums.h"
-#include "../symtable.h"
-#include "../typedef.h"
+#include "../common.hpp"
+#include "../enums.hpp"
+#include "../symtable.hpp"
+#include "../typedef.hpp"
 
 class ASTNode {
  public:
@@ -39,7 +39,7 @@ class NonterminalNode : public ASTNode {
  public:
   int rhs_form;
 
-  NonterminalNode(int rhsf, int fl, int ll, int fc, int lc);
+  NonterminalNode(int fl, int ll, int fc, int lc, int rhsf);
 };
 
 #endif  // AST_H

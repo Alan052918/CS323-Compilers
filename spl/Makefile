@@ -1,176 +1,66 @@
+# main compiler
 CC=g++
 FLEX=flex
 BISON=bison
 
-.args: src/ast/args.cpp
-	@if ! test -d "./mid"; then \
-		mkdir mid; \
-	fi
-	$(CC) src/ast/args.cpp -c -o mid/args.o
-.ast: src/ast/ast.cpp
-	$(CC) src/ast/ast.cpp -c -o mid/ast.o
-.comp_st: src/ast/comp_st.cpp
-	$(CC) src/ast/comp_st.cpp -c -o mid/comp_st.o
-.dec_list: src/ast/dec_list.cpp
-	$(CC) src/ast/dec_list.cpp -c -o mid/dec_list.o
-.dec: src/ast/dec.cpp
-	$(CC) src/ast/dec.cpp -c -o mid/dec.o
-.def_list: src/ast/def_list.cpp
-	$(CC) src/ast/def_list.cpp -c -o mid/def_list.o
-.def: src/ast/def.cpp
-	$(CC) src/ast/def.cpp -c -o mid/def.o
-.exp: src/ast/exp.cpp
-	$(CC) src/ast/exp.cpp -c -o mid/exp.o
-.ext_dec_list: src/ast/ext_dec_list.cpp
-	$(CC) src/ast/ext_dec_list.cpp -c -o mid/ext_dec_list.o
-.ext_def_list: src/ast/ext_def_list.cpp
-	$(CC) src/ast/ext_def_list.cpp -c -o mid/ext_def_list.o
-.ext_def: src/ast/ext_def.cpp
-	$(CC) src/ast/ext_def.cpp -c -o mid/ext_def.o
-.fun_dec: src/ast/fun_dec.cpp
-	$(CC) src/ast/fun_dec.cpp -c -o mid/fun_dec.o
-.param_dec: src/ast/param_dec.cpp
-	$(CC) src/ast/param_dec.cpp -c -o mid/param_dec.o
-.program: src/ast/program.cpp
-	$(CC) src/ast/program.cpp -c -o mid/program.o
-.specifier: src/ast/specifier.cpp
-	$(CC) src/ast/specifier.cpp -c -o mid/specifier.o
-.stmt_list: src/ast/stmt_list.cpp
-	$(CC) src/ast/stmt_list.cpp -c -o mid/stmt_list.o
-.stmt: src/ast/stmt.cpp
-	$(CC) src/ast/stmt.cpp -c -o mid/stmt.o
-.struct_specifier: src/ast/struct_specifier.cpp
-	$(CC) src/ast/struct_specifier.cpp -c -o mid/struct_specifier.o
-.var_dec: src/ast/var_dec.cpp
-	$(CC) src/ast/var_dec.cpp -c -o mid/var_dec.o
-.var_list: src/ast/var_list.cpp
-	$(CC) src/ast/var_list.cpp -c -o mid/var_list.o
+CFLAGS=-g -Wall -Wextra -Wpedantic -std=c++17 -Wno-unused-variable -Wno-unused-parameter
 
-.args_d: src/ast/args.cpp
-	@if ! test -d "./mid"; then \
-		mkdir mid; \
-	fi
-	$(CC) src/ast/args.cpp -c -o mid/args.o -DDEBUG
-.ast_d: src/ast/ast.cpp
-	$(CC) src/ast/ast.cpp -c -o mid/ast.o -DDEBUG
-.comp_st_d: src/ast/comp_st.cpp
-	$(CC) src/ast/comp_st.cpp -c -o mid/comp_st.o -DDEBUG
-.dec_list_d: src/ast/dec_list.cpp
-	$(CC) src/ast/dec_list.cpp -c -o mid/dec_list.o -DDEBUG
-.dec_d: src/ast/dec.cpp
-	$(CC) src/ast/dec.cpp -c -o mid/dec.o -DDEBUG
-.def_list_d: src/ast/def_list.cpp
-	$(CC) src/ast/def_list.cpp -c -o mid/def_list.o -DDEBUG
-.def_d: src/ast/def.cpp
-	$(CC) src/ast/def.cpp -c -o mid/def.o -DDEBUG
-.exp_d: src/ast/exp.cpp
-	$(CC) src/ast/exp.cpp -c -o mid/exp.o -DDEBUG
-.ext_dec_list_d: src/ast/ext_dec_list.cpp
-	$(CC) src/ast/ext_dec_list.cpp -c -o mid/ext_dec_list.o -DDEBUG
-.ext_def_list_d: src/ast/ext_def_list.cpp
-	$(CC) src/ast/ext_def_list.cpp -c -o mid/ext_def_list.o -DDEBUG
-.ext_def_d: src/ast/ext_def.cpp
-	$(CC) src/ast/ext_def.cpp -c -o mid/ext_def.o -DDEBUG
-.fun_dec_d: src/ast/fun_dec.cpp
-	$(CC) src/ast/fun_dec.cpp -c -o mid/fun_dec.o -DDEBUG
-.param_dec_d: src/ast/param_dec.cpp
-	$(CC) src/ast/param_dec.cpp -c -o mid/param_dec.o -DDEBUG
-.program_d: src/ast/program.cpp
-	$(CC) src/ast/program.cpp -c -o mid/program.o -DDEBUG
-.specifier_d: src/ast/specifier.cpp
-	$(CC) src/ast/specifier.cpp -c -o mid/specifier.o -DDEBUG
-.stmt_list_d: src/ast/stmt_list.cpp
-	$(CC) src/ast/stmt_list.cpp -c -o mid/stmt_list.o -DDEBUG
-.stmt_d: src/ast/stmt.cpp
-	$(CC) src/ast/stmt.cpp -c -o mid/stmt.o -DDEBUG
-.struct_specifier_d: src/ast/struct_specifier.cpp
-	$(CC) src/ast/struct_specifier.cpp -c -o mid/struct_specifier.o -DDEBUG
-.var_dec_d: src/ast/var_dec.cpp
-	$(CC) src/ast/var_dec.cpp -c -o mid/var_dec.o -DDEBUG
-.var_list_d: src/ast/var_list.cpp
-	$(CC) src/ast/var_list.cpp -c -o mid/var_list.o -DDEBUG
+# target directory
+BIN=bin
 
-.args_p: src/ast/args.cpp
-	@if ! test -d "./mid"; then \
-		mkdir mid; \
-	fi
-	$(CC) src/ast/args.cpp -c -o mid/args.o -DPARSE_TREE
-.ast_p: src/ast/ast.cpp
-	$(CC) src/ast/ast.cpp -c -o mid/ast.o -DPARSE_TREE
-.comp_st_p: src/ast/comp_st.cpp
-	$(CC) src/ast/comp_st.cpp -c -o mid/comp_st.o -DPARSE_TREE
-.dec_list_p: src/ast/dec_list.cpp
-	$(CC) src/ast/dec_list.cpp -c -o mid/dec_list.o -DPARSE_TREE
-.dec_p: src/ast/dec.cpp
-	$(CC) src/ast/dec.cpp -c -o mid/dec.o -DPARSE_TREE
-.def_list_p: src/ast/def_list.cpp
-	$(CC) src/ast/def_list.cpp -c -o mid/def_list.o -DPARSE_TREE
-.def_p: src/ast/def.cpp
-	$(CC) src/ast/def.cpp -c -o mid/def.o -DPARSE_TREE
-.exp_p: src/ast/exp.cpp
-	$(CC) src/ast/exp.cpp -c -o mid/exp.o -DPARSE_TREE
-.ext_dec_list_p: src/ast/ext_dec_list.cpp
-	$(CC) src/ast/ext_dec_list.cpp -c -o mid/ext_dec_list.o -DPARSE_TREE
-.ext_def_list_p: src/ast/ext_def_list.cpp
-	$(CC) src/ast/ext_def_list.cpp -c -o mid/ext_def_list.o -DPARSE_TREE
-.ext_def_p: src/ast/ext_def.cpp
-	$(CC) src/ast/ext_def.cpp -c -o mid/ext_def.o -DPARSE_TREE
-.fun_dec_p: src/ast/fun_dec.cpp
-	$(CC) src/ast/fun_dec.cpp -c -o mid/fun_dec.o -DPARSE_TREE
-.param_dec_p: src/ast/param_dec.cpp
-	$(CC) src/ast/param_dec.cpp -c -o mid/param_dec.o -DPARSE_TREE
-.program_p: src/ast/program.cpp
-	$(CC) src/ast/program.cpp -c -o mid/program.o -DPARSE_TREE
-.specifier_p: src/ast/specifier.cpp
-	$(CC) src/ast/specifier.cpp -c -o mid/specifier.o -DPARSE_TREE
-.stmt_list_p: src/ast/stmt_list.cpp
-	$(CC) src/ast/stmt_list.cpp -c -o mid/stmt_list.o -DPARSE_TREE
-.stmt_p: src/ast/stmt.cpp
-	$(CC) src/ast/stmt.cpp -c -o mid/stmt.o -DPARSE_TREE
-.struct_specifier_p: src/ast/struct_specifier.cpp
-	$(CC) src/ast/struct_specifier.cpp -c -o mid/struct_specifier.o -DPARSE_TREE
-.var_dec_p: src/ast/var_dec.cpp
-	$(CC) src/ast/var_dec.cpp -c -o mid/var_dec.o -DPARSE_TREE
-.var_list_p: src/ast/var_list.cpp
-	$(CC) src/ast/var_list.cpp -c -o mid/var_list.o -DPARSE_TREE
+# parser generator source files directory
+PAR_GEN_DIR=src/C/flex/bison
 
-.symtable: src/symtable.cpp
-	$(CC) src/symtable.cpp -c -o mid/symtable.o
+# symbol table and type definition configuration
+DEF_SRC_DIR=src
+DEF_OBJ_DIR=build
+DEF_SRC_FILES:=$(wildcard $(DEF_SRC_DIR)/*.cpp)
+DEF_OBJ_FILES:=$(patsubst $(DEF_SRC_DIR)/%.cpp,$(DEF_OBJ_DIR)/%.o,$(DEF_SRC_FILES))
 
-.symtable_d: src/symtable.cpp
-	$(CC) src/symtable.cpp -c -o mid/symtable.o -DDEBUG
+# parse tree node configuration
+AST_SRC_DIR=src/ast
+AST_OBJ_DIR=obj
+AST_SRC_FILES:=$(wildcard $(AST_SRC_DIR)/*.cpp)
+AST_OBJ_FILES:=$(patsubst $(AST_SRC_DIR)/%.cpp,$(AST_OBJ_DIR)/%.o,$(AST_SRC_FILES))
 
-.symtable_p: src/symtable.cpp
-	$(CC) src/symtable.cpp -c -o mid/symtable.o -DPARSE_TREE
+all: $(BIN)/splc $(BIN)/debug $(BIN)/tree
 
-.typedef: src/typedef.cpp
-	$(CC) src/typedef.cpp -c -o mid/typedef.o
+$(BIN)/splc : $(AST_OBJ_FILES) $(DEF_OBJ_FILES) syntax.tab.o lex.yy.o
+	@echo "Linking SPLC..."
+	@echo "  mkdir -p $(BIN)"; mkdir -p $(BIN)
+	@echo "  $(CC) $(CFLAGS) -o $@ $^"; $(CC) $(CFLAGS) -o $@ $^
 
-.typedef_d: src/typedef.cpp
-	$(CC) src/typedef.cpp -c -o mid/typedef.o -DDEBUG
+$(AST_OBJ_DIR)/%.o : $(AST_SRC_DIR)/%.cpp
+	@echo "Compiling tree node sources to objects..."
+	@echo "  mkdir -p $(AST_OBJ_DIR)"; mkdir -p $(AST_OBJ_DIR)
+	@echo "  $(CC) $(CFLAGS) -c -o $@ $<"; $(CC) $(CFLAGS) -c -o $@ $<
 
-.typedef_p: src/typedef.cpp
-	$(CC) src/typedef.cpp -c -o mid/typedef.o -DPARSE_TREE
+$(DEF_OBJ_DIR)/%.o : $(DEF_SRC_DIR)/%.cpp
+	@echo "Compiling symbol table sources..."
+	@echo "  mkdir -p $(DEF_OBJ_DIR)"; mkdir -p $(DEF_OBJ_DIR)
+	@echo "  $(CC) $(CFLAGS) -c -o $@ $<"; $(CC) $(CFLAGS) -c -o $@ $<
 
-.syntax: src/C/flex/bison/syntax.y
-	$(BISON) -dtv src/C/flex/bison/syntax.y
-.lex: src/C/flex/bison/lex.l
-	$(FLEX) src/C/flex/bison/lex.l
-splc: .syntax .lex .args .ast .comp_st .dec_list .dec .def_list .def .exp .ext_dec_list .ext_def_list .ext_def .fun_dec .param_dec .program .specifier .stmt_list .stmt .struct_specifier .var_dec .var_list .symtable .typedef
-	@if ! test -d "./bin"; then \
-		mkdir bin; \
-	fi
-	$(CC) syntax.tab.c lex.yy.c mid/args.o mid/ast.o mid/comp_st.o mid/dec_list.o mid/dec.o mid/def_list.o mid/def.o mid/exp.o mid/ext_dec_list.o mid/ext_def_list.o mid/ext_def.o mid/fun_dec.o mid/param_dec.o mid/program.o mid/specifier.o mid/stmt_list.o mid/stmt.o mid/struct_specifier.o mid/var_dec.o mid/var_list.o mid/symtable.o mid/typedef.o -lfl -ly -o bin/splc
-debug: .syntax .lex .args_d .ast_d .comp_st_d .dec_list_d .dec_d .def_list_d .def_d .exp_d .ext_dec_list_d .ext_def_list_d .ext_def_d .fun_dec_d .param_dec_d .program_d .specifier_d .stmt_list_d .stmt_d .struct_specifier_d .var_dec_d .var_list_d .symtable_d .typedef_d
-	@if ! test -d "./bin"; then \
-		mkdir bin; \
-	fi
-	$(CC) syntax.tab.c lex.yy.c mid/args.o mid/ast.o mid/comp_st.o mid/dec_list.o mid/dec.o mid/def_list.o mid/def.o mid/exp.o mid/ext_dec_list.o mid/ext_def_list.o mid/ext_def.o mid/fun_dec.o mid/param_dec.o mid/program.o mid/specifier.o mid/stmt_list.o mid/stmt.o mid/struct_specifier.o mid/var_dec.o mid/var_list.o mid/symtable.o mid/typedef.o -lfl -ly -DDEBUG -o bin/debug
-parse_tree: .syntax .lex .args_p .ast_p .comp_st_p .dec_list_p .dec_p .def_list_p .def_p .exp_p .ext_dec_list_p .ext_def_list_p .ext_def_p .fun_dec_p .param_dec_p .program_p .specifier_p .stmt_list_p .stmt_p .struct_specifier_p .var_dec_p .var_list_p .symtable_p .typedef_p
-	@if ! test -d "./bin"; then \
-		mkdir bin; \
-	fi
-	$(CC) syntax.tab.c lex.yy.c mid/args.o mid/ast.o mid/comp_st.o mid/dec_list.o mid/dec.o mid/def_list.o mid/def.o mid/exp.o mid/ext_dec_list.o mid/ext_def_list.o mid/ext_def.o mid/fun_dec.o mid/param_dec.o mid/program.o mid/specifier.o mid/stmt_list.o mid/stmt.o mid/struct_specifier.o mid/var_dec.o mid/var_list.o mid/symtable.o mid/typedef.o -lfl -ly -DPARSE_TREE -o bin/parse_tree
-clean:
-	@rm -rf bin/ mid/
-	@rm lex.yy.c syntax.tab.* syntax.output
+%.tab.o : %.tab.cpp
+	@echo "Compiling Bison product..."
+	@echo "  $(CC) $(CFLAGS) -c -o $@ $<"; $(CC) $(CFLAGS) -c -o $@ $<
+
+%.yy.o : %.yy.cpp
+	@echo "Compiling Flex product..."
+	@echo "  $(CC) $(CFLAGS) -c -o $@ $<"; $(CC) $(CFLAGS) -c -o $@ $<
+
+syntax.tab.cpp syntax.tab.hpp : $(PAR_GEN_DIR)/syntax.y
+	@echo "Running Bison..."
+	@echo "  $(BISON) -vd -o $@ $<"; $(BISON) -vd -o $@ $<
+
+lex.yy.cpp : $(PAR_GEN_DIR)/lex.l
+	@echo "Running Flex..."
+	@echo "  $(FLEX) -o $@ $<"; $(FLEX) -o $@ $<
+
+.PHONY: clean
+clean :
+	@echo "Cleaning..."
+	rm -rf $(BIN)
+	rm -rf $(AST_OBJ_DIR)
+	rm -rf $(DEF_OBJ_DIR)
+	rm syntax.*
+	rm lex.*

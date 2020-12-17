@@ -1,11 +1,11 @@
 #ifndef SPECIFIER_H
 #define SPECIFIER_H
 
-#include "ast.h"
-#include "../common.h"
-#include "../enums.h"
-#include "../symtable.h"
-#include "../typedef.h"
+#include "ast.hpp"
+#include "../common.hpp"
+#include "../enums.hpp"
+#include "../symtable.hpp"
+#include "../typedef.hpp"
 
 class StructSpecifier;
 
@@ -22,7 +22,7 @@ class Specifier : public NonterminalNode {
   std::string primitive_type;
   VarType *var_type;
 
-  Specifier(int rhsf, int fl, int ll, int fc, int lc);
+  Specifier(int fl, int ll, int fc, int lc, int rhsf);
 
   void visit(int indent_level, SymbolTable *st) override;
 };

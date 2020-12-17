@@ -1,4 +1,4 @@
-#include "../include/symtable.h"
+#include "../include/symtable.hpp"
 
 SymbolTable::SymbolTable() {
   this->scope_depth = 1;
