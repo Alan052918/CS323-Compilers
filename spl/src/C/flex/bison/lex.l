@@ -1,7 +1,7 @@
 %{
-  #include "include/common.hpp"
-  #include "include/ast_list.hpp"
-  #include "syntax.tab.hpp"
+  #include "include/common.hh"
+  #include "include/ast_list.hh"
+  #include "syntax.tab.h"
 
   using namespace std;
 
@@ -17,9 +17,6 @@
   int yycoluno = 1;
 %}
 
-%option noinput
-%option nounput
-%option noyywrap
 %option yylineno
 
 SPC     [ \t\r\f\v]

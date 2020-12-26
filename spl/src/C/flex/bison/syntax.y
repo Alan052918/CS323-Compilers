@@ -1,11 +1,10 @@
 %{
-  #include "include/ast_list.hpp"
-  #include "include/common.hpp"
-  #include "include/enums.hpp"
-  #include "include/symtable.hpp"
-  #include "include/typedef.hpp"
+  #include "include/ast_list.hh"
+  #include "include/common.hh"
+  #include "include/typedef.hh"
 
   extern "C" FILE *yyin;
+
   bool syntax_error;
   Program *program_root;
 
@@ -135,11 +134,11 @@ ExtDef:
       $$->comp_st = $3;
     }
   | ExtDecList error {
-      std::cout << "Error type B at Line " << @$.first_line << ": Missing specifier\n";
+      printf("Error type B at Line %d: Missing specifier\n", @$.first_line);
       $$ = new ExtDef(-1, @1.first_line, @1.last_line, @1.first_column, @1.last_column);
     }
   | Specifier ExtDecList error {
-      std::cout << "Error type B at Line " << @$.first_line << ": Missing semicolon\n";
+      printf("Error type B at Line %d: Missing semicolon ';'\n", @$.first_line);
       $$ = new ExtDef(-1, @1.first_line, @2.last_line, @1.first_column, @2.last_column);
     }
   ;
