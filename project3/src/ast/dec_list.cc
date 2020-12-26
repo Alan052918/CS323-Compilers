@@ -10,7 +10,8 @@ DecList::DecList(int fl, int ll, int fc, int lc, int rhsf)
 }
 void DecList::visit(int indent_level, SymbolTable *st) {
   switch (this->rhs_form) {
-    case 0: {  // DecList := Dec | Dec COMMA DecList
+    case 0:    // DecList := Dec
+    case 1: {  // DecList := Dec COMMA DecList
                // PUSH VAR for each Dec
       for (unsigned int i = 0; i < this->node_list.size(); i++) {
         Dec *dec = this->node_list.at(i);

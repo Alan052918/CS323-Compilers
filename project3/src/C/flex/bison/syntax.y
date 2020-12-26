@@ -141,7 +141,7 @@ ExtDecList:
       $$->node_list.push_back($1);
     }
   | VarDec COMMA ExtDecList {
-      $$ = new ExtDecList(@1.first_line, @3.last_line, @1.first_column, @3.last_column, 0);
+      $$ = new ExtDecList(@1.first_line, @3.last_line, @1.first_column, @3.last_column, 1);
 
       $$->node_list.push_back($1);
       for (VarDec *var_dec : $3->node_list) {
@@ -204,9 +204,6 @@ VarDec:
       $$->int_node = new TerminalNode(Int, @3.first_line, @3.last_line, @3.first_column, @3.last_column);
       $$->int_node->int_token = $3;
     }
-  | UNKNOWN_LEXEME error {
-      $$ = new VarDec(@1.first_line, @1.last_line, @1.first_column, @1.last_column, -1);
-    }
   ;
 FunDec:
     ID LP VarList RP {
@@ -234,7 +231,7 @@ VarList:
       }
     }
   | ParamDec {
-      $$ = new VarList(@1.first_line, @1.last_line, @1.first_column, @1.last_column, 0);
+      $$ = new VarList(@1.first_line, @1.last_line, @1.first_column, @1.last_column, 1);
 
       $$->node_list.push_back($1);
     }
@@ -341,7 +338,7 @@ DecList:
       $$->node_list.push_back($1);
     }
   | Dec COMMA DecList {
-      $$ = new DecList(@1.first_line, @3.last_line, @1.first_column, @3.last_column, 0);
+      $$ = new DecList(@1.first_line, @3.last_line, @1.first_column, @3.last_column, 1);
 
       $$->node_list.push_back($1);
       for (Dec *dec : $3->node_list) {
@@ -379,7 +376,7 @@ Exp:
       $$->keyword_node->keyword_token = $2;
     }
   | Exp AND Exp {
-      $$ = new Exp(@1.first_line, @3.last_line, @1.first_column, @3.last_column, 0);
+      $$ = new Exp(@1.first_line, @3.last_line, @1.first_column, @3.last_column, 1);
 
       $$->exp_1 = $1;
       $$->exp_2 = $3;
@@ -388,7 +385,7 @@ Exp:
       $$->keyword_node->keyword_token = $2;
     }
   | Exp OR Exp {
-      $$ = new Exp(@1.first_line, @3.last_line, @1.first_column, @3.last_column, 0);
+      $$ = new Exp(@1.first_line, @3.last_line, @1.first_column, @3.last_column, 2);
 
       $$->exp_1 = $1;
       $$->exp_2 = $3;
@@ -397,7 +394,7 @@ Exp:
       $$->keyword_node->keyword_token = $2;
     }
   | Exp LT Exp {
-      $$ = new Exp(@1.first_line, @3.last_line, @1.first_column, @3.last_column, 0);
+      $$ = new Exp(@1.first_line, @3.last_line, @1.first_column, @3.last_column, 3);
 
       $$->exp_1 = $1;
       $$->exp_2 = $3;
@@ -406,7 +403,7 @@ Exp:
       $$->keyword_node->keyword_token = $2;
     }
   | Exp LE Exp {
-      $$ = new Exp(@1.first_line, @3.last_line, @1.first_column, @3.last_column, 0);
+      $$ = new Exp(@1.first_line, @3.last_line, @1.first_column, @3.last_column, 4);
 
       $$->exp_1 = $1;
       $$->exp_2 = $3;
@@ -415,7 +412,7 @@ Exp:
       $$->keyword_node->keyword_token = $2;
     }
   | Exp GT Exp {
-      $$ = new Exp(@1.first_line, @3.last_line, @1.first_column, @3.last_column, 0);
+      $$ = new Exp(@1.first_line, @3.last_line, @1.first_column, @3.last_column, 5);
 
       $$->exp_1 = $1;
       $$->exp_2 = $3;
@@ -424,7 +421,7 @@ Exp:
       $$->keyword_node->keyword_token = $2;
     }
   | Exp GE Exp {
-      $$ = new Exp(@1.first_line, @3.last_line, @1.first_column, @3.last_column, 0);
+      $$ = new Exp(@1.first_line, @3.last_line, @1.first_column, @3.last_column, 6);
 
       $$->exp_1 = $1;
       $$->exp_2 = $3;
@@ -433,7 +430,7 @@ Exp:
       $$->keyword_node->keyword_token = $2;
     }
   | Exp NE Exp {
-      $$ = new Exp(@1.first_line, @3.last_line, @1.first_column, @3.last_column, 0);
+      $$ = new Exp(@1.first_line, @3.last_line, @1.first_column, @3.last_column, 7);
 
       $$->exp_1 = $1;
       $$->exp_2 = $3;
@@ -442,7 +439,7 @@ Exp:
       $$->keyword_node->keyword_token = $2;
     }
   | Exp EQ Exp {
-      $$ = new Exp(@1.first_line, @3.last_line, @1.first_column, @3.last_column, 0);
+      $$ = new Exp(@1.first_line, @3.last_line, @1.first_column, @3.last_column, 8);
 
       $$->exp_1 = $1;
       $$->exp_2 = $3;
@@ -451,7 +448,7 @@ Exp:
       $$->keyword_node->keyword_token = $2;
     }
   | Exp PLUS Exp {
-      $$ = new Exp(@1.first_line, @3.last_line, @1.first_column, @3.last_column, 0);
+      $$ = new Exp(@1.first_line, @3.last_line, @1.first_column, @3.last_column, 9);
 
       $$->exp_1 = $1;
       $$->exp_2 = $3;
@@ -460,7 +457,7 @@ Exp:
       $$->keyword_node->keyword_token = $2;
     }
   | Exp MINUS Exp {
-      $$ = new Exp(@1.first_line, @3.last_line, @1.first_column, @3.last_column, 0);
+      $$ = new Exp(@1.first_line, @3.last_line, @1.first_column, @3.last_column, 10);
 
       $$->exp_1 = $1;
       $$->exp_2 = $3;
@@ -469,7 +466,7 @@ Exp:
       $$->keyword_node->keyword_token = $2;
     }
   | Exp MUL Exp {
-      $$ = new Exp(@1.first_line, @3.last_line, @1.first_column, @3.last_column, 0);
+      $$ = new Exp(@1.first_line, @3.last_line, @1.first_column, @3.last_column, 11);
 
       $$->exp_1 = $1;
       $$->exp_2 = $3;
@@ -478,7 +475,7 @@ Exp:
       $$->keyword_node->keyword_token = $2;
     }
   | Exp DIV Exp {
-      $$ = new Exp(@1.first_line, @3.last_line, @1.first_column, @3.last_column, 0);
+      $$ = new Exp(@1.first_line, @3.last_line, @1.first_column, @3.last_column, 12);
 
       $$->exp_1 = $1;
       $$->exp_2 = $3;
@@ -487,12 +484,12 @@ Exp:
       $$->keyword_node->keyword_token = $2;
     }
   | LP Exp RP {
-      $$ = new Exp(@1.first_line, @3.last_line, @1.first_column, @3.last_column, 1);
+      $$ = new Exp(@1.first_line, @3.last_line, @1.first_column, @3.last_column, 13);
 
       $$->exp_1 = $2;
     }
   | MINUS Exp {
-      $$ = new Exp(@1.first_line, @2.last_line, @1.first_column, @2.last_column, 2);
+      $$ = new Exp(@1.first_line, @2.last_line, @1.first_column, @2.last_column, 14);
 
       $$->keyword_node = new TerminalNode(Keyword, @1.first_line, @1.last_line, @1.first_column, @1.last_column);
       $$->keyword_node->keyword_token = $1;
@@ -500,7 +497,7 @@ Exp:
       $$->exp_1 = $2;
     }
   | NOT Exp {
-      $$ = new Exp(@1.first_line, @2.last_line, @1.first_column, @2.last_column, 2);
+      $$ = new Exp(@1.first_line, @2.last_line, @1.first_column, @2.last_column, 15);
 
       $$->keyword_node = new TerminalNode(Keyword, @1.first_line, @1.last_line, @1.first_column, @1.last_column);
       $$->keyword_node->keyword_token = $1;
@@ -508,7 +505,7 @@ Exp:
       $$->exp_1 = $2;
     }
   | ID LP Args RP {
-      $$ = new Exp(@1.first_line, @4.last_line, @1.first_column, @4.last_column, 3);
+      $$ = new Exp(@1.first_line, @4.last_line, @1.first_column, @4.last_column, 16);
 
       $$->id_node = new TerminalNode(Id, @1.first_line, @1.last_line, @1.first_column, @1.last_column);
       $$->id_node->id_token = $1;
@@ -516,19 +513,19 @@ Exp:
       $$->args = $3;
     }
   | ID LP RP {
-      $$ = new Exp(@1.first_line, @3.last_line, @1.first_column, @3.last_column, 4);
+      $$ = new Exp(@1.first_line, @3.last_line, @1.first_column, @3.last_column, 17);
 
       $$->id_node = new TerminalNode(Id, @1.first_line, @1.last_line, @1.first_column, @1.last_column);
       $$->id_node->id_token = $1;
     }
   | Exp LB Exp RB {
-      $$ = new Exp(@1.first_line, @4.last_line, @1.first_column, @4.last_column, 5);
+      $$ = new Exp(@1.first_line, @4.last_line, @1.first_column, @4.last_column, 18);
 
       $$->exp_1 = $1;
       $$->exp_2 = $3;
     }
   | Exp DOT ID {
-      $$ = new Exp(@1.first_line, @3.last_line, @1.first_column, @3.last_column, 6);
+      $$ = new Exp(@1.first_line, @3.last_line, @1.first_column, @3.last_column, 19);
 
       $$->exp_1 = $1;
 
@@ -536,25 +533,25 @@ Exp:
       $$->id_node->id_token = $3;
     }
   | ID {
-      $$ = new Exp(@1.first_line, @1.last_line, @1.first_column, @1.last_column, 7);
+      $$ = new Exp(@1.first_line, @1.last_line, @1.first_column, @1.last_column, 20);
 
       $$->id_node = new TerminalNode(Id, @1.first_line, @1.last_line, @1.first_column, @1.last_column);
       $$->id_node->id_token = $1;
     }
   | INT {
-      $$ = new Exp(@1.first_line, @1.last_line, @1.first_column, @1.last_column, 8);
+      $$ = new Exp(@1.first_line, @1.last_line, @1.first_column, @1.last_column, 21);
 
       $$->int_node = new TerminalNode(Int, @1.first_line, @1.last_line, @1.first_column, @1.last_column);
       $$->int_node->int_token = $1;
     }
   | FLOAT {
-      $$ = new Exp(@1.first_line, @1.last_line, @1.first_column, @1.last_column, 9);
+      $$ = new Exp(@1.first_line, @1.last_line, @1.first_column, @1.last_column, 22);
 
       $$->float_node = new TerminalNode(Float, @1.first_line, @1.last_line, @1.first_column, @1.last_column);
       $$->float_node->float_token = $1;
     }
   | CHAR {
-      $$ = new Exp(@1.first_line, @1.last_line, @1.first_column, @1.last_column, 10);
+      $$ = new Exp(@1.first_line, @1.last_line, @1.first_column, @1.last_column, 23);
 
       $$->char_node = new TerminalNode(Char, @1.first_line, @1.last_line, @1.first_column, @1.last_column);
       $$->char_node->char_token = $1;
@@ -570,7 +567,7 @@ Args:
       }
     }
   | Exp {
-      $$ = new Args(@1.first_line, @1.last_line, @1.first_column, @1.last_column, 0);
+      $$ = new Args(@1.first_line, @1.last_line, @1.first_column, @1.last_column, 1);
 
       $$->node_list.push_back($1);
     }

@@ -11,7 +11,8 @@ VarList::VarList(int fl, int ll, int fc, int lc, int rhsf)
 
 void VarList::visit(int indent_level, SymbolTable *st) {
   switch (this->rhs_form) {
-    case 0:  // VarList := ParamDec COMMA VarList | ParamDec
+    case 0:    // VarList := ParamDec COMMA VarList
+    case 1: {  // VarList := ParamDec
       for (unsigned int i = 0; i < this->node_list.size(); i++) {
         ParamDec *param_dec = this->node_list.at(i);
 #if defined(TREE) || defined(DEBUG)
@@ -29,13 +30,15 @@ void VarList::visit(int indent_level, SymbolTable *st) {
 #endif
       }
       break;
+    }
 
-    default:
+    default: {
       std::cout << "Fail to visit <VarList> Node: line " << this->first_line
                 << std::endl;
 #ifdef DEBUG
       std::cout << "ERROR right-hand side: " << this->rhs_form << std::endl;
 #endif
       break;
+    }
   }
 }

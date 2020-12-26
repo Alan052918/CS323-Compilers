@@ -11,7 +11,8 @@ Args::Args(int fl, int ll, int fc, int lc, int rhsf)
 
 void Args::visit(int indent_level, SymbolTable *st) {
   switch (this->rhs_form) {
-    case 0:  // Args := Exp COMMA Args | Exp
+    case 0:    // Args := Exp COMMA Args
+    case 1: {  // Args := Exp
       for (unsigned int i = 0; i < this->node_list.size(); i++) {
         Exp *exp = this->node_list.at(i);
 #if defined(TREE) || defined(DEBUG)
@@ -28,13 +29,15 @@ void Args::visit(int indent_level, SymbolTable *st) {
 #endif
       }
       break;
+    }
 
-    default:
+    default: {
       std::cout << "Fail to visit <Args> Node: line " << this->first_line
                 << std::endl;
 #ifdef DEBUG
       std::cout << "ERROR right-hand side: " << this->rhs_form << std::endl;
 #endif
       break;
+    }
   }
 }

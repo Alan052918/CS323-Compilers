@@ -21,10 +21,21 @@ void Exp::visit(int indent_level, SymbolTable *st) {
   std::cout << "Exp (" << this->first_line << ")\n";
 #endif
   switch (this->rhs_form) {
-    case 0: {  // Exp := Exp ASSIGN || AND || OR || LT || LE || GT || GE || NE
-               // || EQ || PLUS || MINUS || DIV Exp
-               // strict operand type checking: must be of the exact same
-               // variable types
+    case 0:     // Exp := Exp ASSIGN Exp
+    case 1:     // Exp := Exp AND Exp
+    case 2:     // Exp := Exp OR Exp
+    case 3:     // Exp := Exp LT Exp
+    case 4:     // Exp := Exp LE Exp
+    case 5:     // Exp := Exp GT Exp
+    case 6:     // Exp := Exp GE Exp
+    case 7:     // Exp := Exp NE Exp
+    case 8:     // Exp := Exp EQ Exp
+    case 9:     // Exp := Exp PLUS Exp
+    case 10:    // Exp := Exp MINUS Exp
+    case 11:    // Exp := Exp MUL Exp
+    case 12: {  // Exp := Exp DIV Exp
+      // strict operand type checking: must be of the exact same
+      // variable types
       this->var_type = new VarType();
       this->exp_1->visit(indent_level + 1, st);
       this->keyword = this->keyword_node->keyword_token;
@@ -39,7 +50,7 @@ void Exp::visit(int indent_level, SymbolTable *st) {
       this->var_type = vt_1;
       break;
     }
-    case 1: {  // Exp := LP Exp RP
+    case 13: {  // Exp := LP Exp RP
       this->var_type = new VarType();
 #if defined(TREE) || defined(DEBUG)
       this->print_indentation(indent_level + 1);
@@ -55,7 +66,8 @@ void Exp::visit(int indent_level, SymbolTable *st) {
       this->is_rvalue = this->exp_1->is_rvalue;
       break;
     }
-    case 2: {  // Exp := MINUS || NOT Exp
+    case 14:    // Exp := MINUS Exp
+    case 15: {  // Exp := NOT Exp
       this->var_type = new VarType();
       this->keyword = this->keyword_node->keyword_token;
 #if defined(TREE) || defined(DEBUG)
@@ -68,8 +80,8 @@ void Exp::visit(int indent_level, SymbolTable *st) {
       this->is_rvalue = this->exp_1->is_rvalue;
       break;
     }
-    case 3: {  // Exp := ID LP Args RP
-               // function call, this Exp node has no type
+    case 16: {  // Exp := ID LP Args RP
+                // function call, this Exp node has no type
       this->var_type = new VarType();
       this->is_funcall = true;
       this->is_rvalue = true;
@@ -108,8 +120,8 @@ void Exp::visit(int indent_level, SymbolTable *st) {
       this->var_type = ft->return_type;
       break;
     }
-    case 4: {  // Exp := ID LP RP
-               // function call, this Exp node has no type
+    case 17: {  // Exp := ID LP RP
+                // function call, this Exp node has no type
       this->var_type = new VarType();
       this->is_funcall = true;
       this->is_rvalue = true;
@@ -127,8 +139,8 @@ void Exp::visit(int indent_level, SymbolTable *st) {
       this->var_type = ft->return_type;
       break;
     }
-    case 5: {  // Exp := Exp LB Exp RB
-               // array indexing
+    case 18: {  // Exp := Exp LB Exp RB
+                // array indexing
       this->var_type = new VarType();
       this->exp_1->visit(indent_level + 1, st);
 #if defined(TREE) || defined(DEBUG)
@@ -145,8 +157,8 @@ void Exp::visit(int indent_level, SymbolTable *st) {
       this->var_type = vt_1;
       break;
     }
-    case 6: {  // Exp := Exp DOT ID
-               // access member variable of structure type variable
+    case 19: {  // Exp := Exp DOT ID
+                // access member variable of structure type variable
       this->var_type = new VarType();
       this->id = std::string(this->id_node->id_token);
       this->exp_1->visit(indent_level + 1, st);
@@ -168,7 +180,7 @@ void Exp::visit(int indent_level, SymbolTable *st) {
       }
       break;
     }
-    case 7: {  // Exp := ID
+    case 20: {  // Exp := ID
       this->id = std::string(this->id_node->id_token);
 #if defined(TREE) || defined(DEBUG)
       this->print_indentation(indent_level + 1);
@@ -178,7 +190,7 @@ void Exp::visit(int indent_level, SymbolTable *st) {
       this->var_type = vt;
       break;
     }
-    case 8: {  // Exp := INT
+    case 21: {  // Exp := INT
       this->is_rvalue = true;
       this->integer = this->int_node->int_token;
 #if defined(TREE) || defined(DEBUG)
@@ -192,7 +204,7 @@ void Exp::visit(int indent_level, SymbolTable *st) {
       this->var_type = vt;
       break;
     }
-    case 9: {  // Exp := FLOAT
+    case 22: {  // Exp := FLOAT
       this->is_rvalue = true;
       this->floating_point = this->float_node->float_token;
 #if defined(TREE) || defined(DEBUG)
@@ -206,7 +218,7 @@ void Exp::visit(int indent_level, SymbolTable *st) {
       this->var_type = vt;
       break;
     }
-    case 10: {  // Exp := CHAR
+    case 23: {  // Exp := CHAR
       this->is_rvalue = true;
       this->character = this->char_node->char_token;
 #if defined(TREE) || defined(DEBUG)
