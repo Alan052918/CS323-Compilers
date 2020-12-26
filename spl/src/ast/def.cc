@@ -31,6 +31,9 @@ void Def::visit(int indent_level, SymbolTable *st) {
     default:
       std::cout << "Fail to visit <Def> Node: line " << this->first_line
                 << std::endl;
+#ifdef DEBUG
+      std::cout << "ERROR right-hand side: " << this->rhs_form << std::endl;
+#endif
       break;
   }
 }

@@ -40,39 +40,38 @@ splc : $(AST_OBJ_FILES) $(DEF_OBJ_FILES) syntax.tab.c lex.yy.c
 $(AST_OBJ_DIR)/%.o : $(AST_SRC_DIR)/%.cc
 	@echo "Compiling parse tree node sources to objects..."
 	@echo "  mkdir -p $(AST_OBJ_DIR)"; mkdir -p $(AST_OBJ_DIR)
-	@echo "  $(CC) -c -o $@ $< $(CFLAGS)"; $(CC) -c -o $@ $< $(CFLAGS)
+	@echo "  $(CC) -c -o $@ $<"; $(CC) -c -o $@ $<
 
 $(DEF_OBJ_DIR)/%.o : $(DEF_SRC_DIR)/%.cc
 	@echo "Compiling symbol table and type sources..."
 	@echo "  mkdir -p $(DEF_OBJ_DIR)"; mkdir -p $(DEF_OBJ_DIR)
-	@echo "  $(CC) -c -o $@ $< $(CFLAGS)"; $(CC) -c -o $@ $< $(CFLAGS)
+	@echo "  $(CC) -c -o $@ $<"; $(CC) -c -o $@ $<
 
 # make debug
 
 debug : $(AST_DEBUG_OBJ_FILES) $(DEF_DEBUG_OBJ_FILES) syntax.tab.c lex.yy.c
 	@echo "Linking DEBUG..."
 	@echo "  mkdir -p $(BIN)"; mkdir -p $(BIN)
-	@echo "  $(CC) -lfl -ly -o $(BIN)/$@ $^"; $(CC) -lfl -ly -o $(BIN)/$@ $^
+	@echo "  $(CC) -DDEBUG -lfl -ly -o $(BIN)/$@ $^"; $(CC) -DDEBUG -lfl -ly -o $(BIN)/$@ $^
 	@echo "Success! removing middle product files..."
 	@echo "  rm -rf $(AST_OBJ_DIR) $(DEF_OBJ_DIR)"; rm -rf $(AST_OBJ_DIR) $(DEF_OBJ_DIR)
-	@echo "  rm syntax.* lex.*"; rm syntax.* lex*
 
 $(AST_OBJ_DIR)/%_d.o : $(AST_SRC_DIR)/%.cc
 	@echo "Compiling parse tree node sources to objects..."
 	@echo "  mkdir -p $(AST_OBJ_DIR)"; mkdir -p $(AST_OBJ_DIR)
-	@echo "  $(CC) -DDEBUG -c -o $@ $< $(CFLAGS)"; $(CC) -c -o $@ $< $(CFLAGS)
+	@echo "  $(CC) -DDEBUG -c -o $@ $<"; $(CC) -DDEBUG -c -o $@ $<
 
 $(DEF_OBJ_DIR)/%_d.o : $(DEF_SRC_DIR)/%.cc
 	@echo "Compiling symbol table and type sources..."
 	@echo "  mkdir -p $(DEF_OBJ_DIR)"; mkdir -p $(DEF_OBJ_DIR)
-	@echo "  $(CC) -DDEBUG -c -o $@ $< $(CFLAGS)"; $(CC) -c -o $@ $< $(CFLAGS)
+	@echo "  $(CC) -DDEBUG -c -o $@ $<"; $(CC) -DDEBUG -c -o $@ $<
 
 # make tree
 
 tree : $(AST_TREE_OBJ_FILES) $(DEF_TREE_OBJ_FILES) syntax.tab.c lex.yy.c
 	@echo "Linking TREE..."
 	@echo "  mkdir -p $(BIN)"; mkdir -p $(BIN)
-	@echo "  $(CC) -lfl -ly -o $(BIN)/$@ $^"; $(CC) -lfl -ly -o $(BIN)/$@ $^
+	@echo "  $(CC) -DTREE -lfl -ly -o $(BIN)/$@ $^"; $(CC) -DTREE -lfl -ly -o $(BIN)/$@ $^
 	@echo "Success! removing middle product files..."
 	@echo "  rm -rf $(AST_OBJ_DIR) $(DEF_OBJ_DIR)"; rm -rf $(AST_OBJ_DIR) $(DEF_OBJ_DIR)
 	@echo "  rm syntax.* lex.*"; rm syntax.* lex*
@@ -80,18 +79,18 @@ tree : $(AST_TREE_OBJ_FILES) $(DEF_TREE_OBJ_FILES) syntax.tab.c lex.yy.c
 $(AST_OBJ_DIR)/%_t.o : $(AST_SRC_DIR)/%.cc
 	@echo "Compiling parse tree node sources to objects..."
 	@echo "  mkdir -p $(AST_OBJ_DIR)"; mkdir -p $(AST_OBJ_DIR)
-	@echo "  $(CC) -DTREE -c -o $@ $< $(CFLAGS)"; $(CC) -c -o $@ $< $(CFLAGS)
+	@echo "  $(CC) -DTREE -c -o $@ $<"; $(CC) -DTREE -c -o $@ $<
 
 $(DEF_OBJ_DIR)/%_t.o : $(DEF_SRC_DIR)/%.cc
 	@echo "Compiling symbol table and type sources..."
 	@echo "  mkdir -p $(DEF_OBJ_DIR)"; mkdir -p $(DEF_OBJ_DIR)
-	@echo "  $(CC) -DTREE -c -o $@ $< $(CFLAGS)"; $(CC) -c -o $@ $< $(CFLAGS)
+	@echo "  $(CC) -DTREE -c -o $@ $<"; $(CC) -DTREE -c -o $@ $<
 
 # run flex & bison
 
 %.tab.c %.tab.h : $(PAR_GEN_DIR)/%.y
 	@echo "Running Bison..."
-	@echo "  $(BISON) -vd -o $@ $<"; $(BISON) -vd -o $@ $<
+	@echo "  $(BISON) -dtv -o $@ $<"; $(BISON) -dtv -o $@ $<
 
 %.yy.c : $(PAR_GEN_DIR)/%.l
 	@echo "Running Flex..."

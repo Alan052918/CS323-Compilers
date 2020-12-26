@@ -1,15 +1,15 @@
 #!/bin/bash
 echo "-----------------------------------------"
-echo "DEBUG running project [$1] test case [$2]"
+echo "TREE running project [$1] test case [$2]"
 echo "-----------------------------------------"
 
 if test $# -lt 2; then
-    echo "Too few arguments: debug <project index> <test case index>"
+    echo "Too few arguments: tree <project index> <test case index>"
     exit 1
 fi
 
 if test $# -gt 2; then
-    echo "Too many arguments: debug <project index> <test case index>"
+    echo "Too many arguments: tree <project index> <test case index>"
     exit 1
 fi
 
@@ -25,7 +25,7 @@ if test $1 -eq 2 && test $2 -gt 15; then
 fi
 
 if test $2 -lt 10; then
-    ./bin/debug ../project$1/ta_test/test_$1_r0$2.spl
+    ./bin/tree ../project$1/ta_test/test_$1_r0$2.spl
 else
-    ./bin/debug ../project$1/ta_test/test_$1_r$2.spl
+    ./bin/tree ../project$1/ta_test/test_$1_r$2.spl
 fi
