@@ -35,11 +35,6 @@ void FunDec::visit(int indent_level, SymbolTable *st) {
       ft->name = this->id;
       ft->return_type = this->var_type;
       ft->arg_types = this->type_list;
-      if (!st->push_fun(this->id, ft)) {
-        std::cout << "Error type 4 at Line " << this->first_line
-                  << ": redefine function: " << this->id << std::endl;
-        break;
-      }
       break;
     }
     case 1: {  // FunDec := ID LP RP
@@ -56,11 +51,6 @@ void FunDec::visit(int indent_level, SymbolTable *st) {
       ft->name = this->id;
       ft->return_type = this->var_type;
       ft->arg_types = std::vector<VarType *>();
-      if (!st->push_fun(this->id, ft)) {
-        std::cout << "Error type 4 at Line " << this->first_line
-                  << ": redefine function: " << this->id << std::endl;
-        break;
-      }
       break;
     }
 

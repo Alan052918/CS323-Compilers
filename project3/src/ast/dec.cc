@@ -41,24 +41,6 @@ void Dec::visit(int indent_level, SymbolTable *st) {
       std::cout << "ASSIGN\n";
 #endif
       this->exp->visit(indent_level + 1, st);
-
-      if (!this->var_dec->is_array) {
-        // 1. VarDec is non-array: Dec's type = Exp's type
-        if (!compare_var_type(this->var_type, this->exp->var_type)) {
-          std::cout << "Error type 17 at Line " << this->first_line
-                    << ": the variable’s assigned type mismatches the "
-                       "declared type\n";
-          break;
-        }
-      } else {
-        // 2. VarDec is array: error if Exp's type is not array
-        if (this->exp->var_type->category != ARRAY) {
-          std::cout << "Error type 17 at Line " << this->first_line
-                    << ": the variable’s assigned type mismatches the "
-                       "declared type\n";
-          break;
-        }
-      }
       st->push_var(this->var_dec->id, this->var_type);
       break;
     }

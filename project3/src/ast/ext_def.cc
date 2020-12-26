@@ -32,19 +32,9 @@ void ExtDef::visit(int indent_level, SymbolTable *st) {
            this->ext_dec_list->dec_list) {
         if (dec.second.empty() == true) {
           // non-array variable declaration
-          if (st->find_var(dec.first, DecfMode) != NULL) {
-            std::cout << "Error type 3 at Line " << this->first_line
-                      << ": variable is redefined in the same scope\n";
-            break;
-          }
           st->push_var(dec.first, this->var_type);
         } else {
           // array variable declaration
-          if (st->find_var(dec.first, DecfMode) != NULL) {
-            std::cout << "Error type 3 at Line " << this->first_line
-                      << ": variable is redefined in the same scope\n";
-            break;
-          }
           VarType *array_type = NULL;
           for (int dim : dec.second) {
             add_arr_dimension(array_type, dim);

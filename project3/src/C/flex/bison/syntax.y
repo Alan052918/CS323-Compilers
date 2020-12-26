@@ -133,14 +133,6 @@ ExtDef:
       $$->fun_dec = $2;
       $$->comp_st = $3;
     }
-  | ExtDecList error {
-      printf("Error type B at Line %d: Missing specifier\n", @$.first_line);
-      $$ = new ExtDef(@1.first_line, @1.last_line, @1.first_column, @1.last_column, -1);
-    }
-  | Specifier ExtDecList error {
-      printf("Error type B at Line %d: Missing semicolon ';'\n", @$.first_line);
-      $$ = new ExtDef(@1.first_line, @2.last_line, @1.first_column, @2.last_column, -1);
-    }
   ;
 ExtDecList:
     VarDec {
@@ -231,14 +223,6 @@ FunDec:
       $$->id_node = new TerminalNode(Id, @2.first_line, @2.last_line, @2.first_column, @2.last_column);
       $$->id_node->id_token = $1;
     }
-  | ID LP VarList error {
-      printf("Error type B at Line %d: Missing closing parenthesis ')'\n", @$.first_line);
-      $$ = new FunDec(@1.first_line, @3.last_line, @1.first_column, @3.last_column, -1);
-    }
-  | ID LP error {
-      printf("Error type B at Line %d: Missing closing parenthesis ')'\n", @$.first_line);
-      $$ = new FunDec(@1.first_line, @2.last_line, @1.first_column, @2.last_column, -1);
-    }
   ;
 VarList:
     ParamDec COMMA VarList {
@@ -262,10 +246,6 @@ ParamDec:
       $$->specifier = $1;
       $$->var_dec = $2;
     }
-  | VarDec error {
-      printf("Error type B at Line %d: Missing specifier\n", @$.first_line);
-      $$ = new ParamDec(@1.first_line, @1.last_line, @1.first_column, @1.last_column, -1);
-    }
   ;
 
 /**
@@ -281,10 +261,6 @@ CompSt:
       $$->def_list = $2;
       $$->stmt_list = $3;
     }
-  | LC DefList StmtList error {
-      printf("Error type B at Line %d: Missing closing curly bracket '}'\n", @$.last_line);
-      $$ = new CompSt(@1.first_line, @3.last_line, @1.first_column, @3.last_column, -1);
-    }
   ;
 StmtList:
     Stmt StmtList {
@@ -297,10 +273,6 @@ StmtList:
     }
   | %empty {
       $$ = new StmtList(0, 0, 0, 0, 1);
-    }
-  | Stmt Def StmtList error {
-      printf("Error type B at Line %d: Missing specifier\n", @$.first_line);
-      $$ = new StmtList(@1.first_line, @3.last_line, @1.first_column, @3.last_column, -1);
     }
   ;
 Stmt:
@@ -338,21 +310,6 @@ Stmt:
       $$->exp = $3;
       $$->stmt_1 = $5;
     }
-  | Exp error {
-      printf("Error type B at Line %d: Missing semicolon ';'\n", @$.first_line);
-      $$ = new Stmt(@1.first_line, @1.last_line, @1.first_column, @1.last_column, -1);
-    }
-  | RETURN Exp error {
-      printf("Error type B at Line %d: Missing semicolon ';'\n", @$.first_line);
-      $$ = new Stmt(@1.first_line, @2.last_line, @1.first_column, @2.last_column, -1);
-    }
-  | RETURN UNKNOWN_LEXEME error {
-      printf("Error type B at Line %d: Missing semicolon ';'\n", @$.first_line);
-      $$ = new Stmt(@1.first_line, @2.last_line, @1.first_column, @2.last_column, -1);
-    }
-  | RETURN UNKNOWN_LEXEME SEMI error {
-      $$ = new Stmt(@1.first_line, @3.last_line, @1.first_column, @3.last_column, -1);
-    }
   ;
 
 /* Local definition: declaration and assignment of local variables */
@@ -376,10 +333,6 @@ Def:
       $$->specifier = $1;
       $$->dec_list = $2;
     }
-  | Specifier DecList error {
-      printf("Error type B at Line %d: Missing semicolon ';'\n", @$.first_line);
-      $$ = new Def(@1.first_line, @2.last_line, @1.first_column, @2.last_column, -1);
-    }
   ;
 DecList:
     Dec {
@@ -395,10 +348,6 @@ DecList:
         $$->node_list.push_back(dec);
       }
     }
-  | Dec COMMA error {
-      printf("Error type B at Line %d: Redundant comma ','\n", @$.first_line);
-      $$ = new DecList(@1.first_line, @2.last_line, @1.first_column, @2.last_column, -1);
-    }
   ;
 Dec:
     VarDec {
@@ -411,13 +360,6 @@ Dec:
 
       $$->var_dec = $1;
       $$->exp = $3;
-    }
-  | VarDec ASSIGN UNKNOWN_LEXEME error {
-      $$ = new Dec(@1.first_line, @3.last_line, @1.first_column, @3.last_column, -1);
-    }
-  | VarDec ASSIGN error {
-      printf("Error type B at Line %d: Missing expression at the end of declaration\n", @$.first_line);
-      $$ = new Dec(@1.first_line, @2.last_line, @1.first_column, @2.last_column, -1);
     }
   ;
 
@@ -617,19 +559,6 @@ Exp:
       $$->char_node = new TerminalNode(Char, @1.first_line, @1.last_line, @1.first_column, @1.last_column);
       $$->char_node->char_token = $1;
     }
-  | Exp UNKNOWN_LEXEME Exp error {}
-  | ID LP Args error {
-      printf("Error type B at Line %d: Missing closing parenthesis ')'\n", @$.first_line);
-      $$ = new Exp(@1.first_line, @3.last_line, @1.first_column, @3.last_column, -1);
-    }
-  | ID LP error {
-      printf("Error type B at Line %d: Missing closing parenthesis ')'\n", @$.first_line);
-      $$ = new Exp(@1.first_line, @2.last_line, @1.first_column, @2.last_column, -1);
-    }
-  | Exp LB Exp error {
-      printf("Error type B at Line %d Missing closing bracket ']'\n", @$.first_line);
-      $$ = new Exp(@1.first_line, @3.last_line, @1.first_column, @3.last_column, -1);
-    }
   ;
 Args:
     Exp COMMA Args {
@@ -644,10 +573,6 @@ Args:
       $$ = new Args(@1.first_line, @1.last_line, @1.first_column, @1.last_column, 0);
 
       $$->node_list.push_back($1);
-    }
-  | Exp COMMA error {
-      printf("Error type B at Line %d Redundant comma ','\n", @$.first_line);
-      $$ = new Args(@1.first_line, @2.last_line, @1.first_column, @2.last_column, -1);
     }
   ;
 
