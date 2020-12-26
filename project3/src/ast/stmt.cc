@@ -43,6 +43,10 @@ void Stmt::visit(int indent_level, SymbolTable *st) {
                 << this->exp->var_type->name
                 << ", inherited type: " << this->var_type->name << std::endl;
 #endif
+      if (!compare_var_type(this->var_type, this->exp->var_type)) {
+        std::cout << "Error type 8 at Line " << this->first_line
+                  << ": incompatiable return type\n";
+      }
 #if defined(TREE) || defined(DEBUG)
       this->print_indentation(indent_level + 1);
       std::cout << "SEMI\n";
