@@ -1,0 +1,148 @@
+FUNCTION main :
+READ t0
+v1 := t0
+READ t1
+v0 := t1
+t2 := v1
+t7 := v1
+t8 := #100
+t5 := t7 / t8
+t6 := #100
+t4 := t5 * t6
+IF t2 EQ t3 GOTO label0
+GOTO label1
+LABEL label0
+t9 := v1
+t14 := v1
+t15 := #400
+t12 := t14 / t15
+t13 := #400
+t11 := t12 * t13
+IF t9 EQ t10 GOTO label3
+GOTO label4
+LABEL label3
+t16 := v0
+t17 := #2
+IF t16 EQ t17 GOTO label6
+GOTO label7
+LABEL label6
+t18 := #29
+WRITE t18
+GOTO label8
+LABEL label7
+t19 := v0
+t24 := v0
+t25 := #2
+t22 := t24 / t25
+t23 := #2
+t21 := t22 * t23
+IF t19 EQ t20 GOTO label9
+GOTO label10
+LABEL label9
+t26 := #30
+WRITE t26
+GOTO label11
+LABEL label10
+t27 := #31
+WRITE t27
+LABEL label11
+LABEL label8
+GOTO label5
+LABEL label4
+t28 := v0
+t29 := #2
+IF t28 EQ t29 GOTO label12
+GOTO label13
+LABEL label12
+t30 := #28
+WRITE t30
+GOTO label14
+LABEL label13
+t31 := v0
+t36 := v0
+t37 := #2
+t34 := t36 / t37
+t35 := #2
+t33 := t34 * t35
+IF t31 EQ t32 GOTO label15
+GOTO label16
+LABEL label15
+t38 := #30
+WRITE t38
+GOTO label17
+LABEL label16
+t39 := #31
+WRITE t39
+LABEL label17
+LABEL label14
+LABEL label5
+GOTO label2
+LABEL label1
+t40 := v1
+t45 := v1
+t46 := #4
+t43 := t45 / t46
+t44 := #4
+t42 := t43 * t44
+IF t40 EQ t41 GOTO label18
+GOTO label19
+LABEL label18
+t47 := v0
+t48 := #2
+IF t47 EQ t48 GOTO label21
+GOTO label22
+LABEL label21
+t49 := #29
+WRITE t49
+GOTO label23
+LABEL label22
+t50 := v0
+t55 := v0
+t56 := #2
+t53 := t55 / t56
+t54 := #2
+t52 := t53 * t54
+IF t50 EQ t51 GOTO label24
+GOTO label25
+LABEL label24
+t57 := #30
+WRITE t57
+GOTO label26
+LABEL label25
+t58 := #31
+WRITE t58
+LABEL label26
+LABEL label23
+GOTO label20
+LABEL label19
+t59 := v0
+t60 := #2
+IF t59 EQ t60 GOTO label27
+GOTO label28
+LABEL label27
+t61 := #28
+WRITE t61
+GOTO label29
+LABEL label28
+t62 := v0
+t67 := v0
+t68 := #2
+t65 := t67 / t68
+t66 := #2
+t64 := t65 * t66
+IF t62 EQ t63 GOTO label30
+GOTO label31
+LABEL label30
+t69 := #30
+WRITE t69
+GOTO label32
+LABEL label31
+t70 := #31
+WRITE t70
+LABEL label32
+LABEL label29
+LABEL label20
+LABEL label2
+t71 := #0
+RETURN t71
+

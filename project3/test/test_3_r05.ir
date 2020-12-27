@@ -1,0 +1,71 @@
+FUNCTION main :
+t0 := #1
+v5 := t0
+t1 := #2
+v6 := t1
+t2 := #3
+v7 := t2
+t3 := #1
+v1 := t3
+t4 := #1
+v2 := t4
+READ t5
+v4 := t5
+t6 := v4
+t7 := #1
+IF t6 LT t7 GOTO label0
+GOTO label1
+LABEL label0
+t8 := #0
+WRITE t8
+GOTO label2
+LABEL label1
+t9 := v4
+t10 := #1
+IF t9 EQ t10 GOTO label3
+GOTO label6
+LABEL label6
+t11 := v4
+t12 := #2
+IF t11 EQ t12 GOTO label3
+GOTO label4
+LABEL label3
+t13 := #1
+WRITE t13
+GOTO label5
+LABEL label4
+t14 := v4
+t15 := #2
+IF t14 GT t15 GOTO label7
+GOTO label8
+LABEL label7
+t16 := #3
+v0 := t16
+LABEL label9
+t17 := v0
+t18 := v4
+IF t17 LE t18 GOTO label9
+GOTO label10
+LABEL label10
+t20 := v1
+t21 := v2
+t19 := t20 + t21
+v3 := t19
+t22 := v2
+v1 := t22
+t23 := v3
+v2 := t23
+t25 := v0
+t26 := #1
+t24 := t25 + t26
+v0 := t24
+GOTO label9
+LABEL label11
+t27 := v3
+WRITE t27
+LABEL label8
+LABEL label5
+LABEL label2
+t28 := #0
+RETURN t28
+

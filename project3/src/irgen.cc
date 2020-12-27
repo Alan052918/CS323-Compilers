@@ -421,6 +421,8 @@ TAC *translate_ExtDef(ExtDef *ext_def, SymbolTable *st) {
                 << "-" << ext_def->last_line << " c" << ext_def->first_column
                 << "-" << ext_def->last_column << std::endl;
 #endif
+      FunRecord *fr = new FunRecord(std::vector<std::string>());
+      st->push_fun(std::string(ext_def->fun_dec->id_node->id_token), fr);
       st->push_map();
       TAC *tac0 = translate_FunDec(ext_def->fun_dec, st);
       TAC *tac1 = translate_CompSt(ext_def->comp_st, st);
@@ -441,6 +443,7 @@ TAC *translate_FunDec(FunDec *fun_dec, SymbolTable *st) {
 #ifdef DEBUG
   std::cout << "irgen: translating FunDec";
 #endif
+  std::string fid = std::string(fun_dec->id_node->id_token);
   switch (fun_dec->rhs_form) {
     case 0: {  // FunDec := ID LP VarList RP
 #ifdef DEBUG
@@ -448,8 +451,7 @@ TAC *translate_FunDec(FunDec *fun_dec, SymbolTable *st) {
                 << "-" << fun_dec->last_line << " c" << fun_dec->first_column
                 << "-" << fun_dec->last_column << std::endl;
 #endif
-      TAC *tac0 = new TAC("FUNCTION " +
-                          std::string(fun_dec->id_node->id_token) + " \n");
+      TAC *tac0 = new TAC("FUNCTION " + fid + " \n");
       std::vector<std::string> var_vec;
       TAC *tac1 = translate_VarList(fun_dec->var_list, st, var_vec);
       return new TAC(tac0->value + tac1->value);
@@ -460,8 +462,7 @@ TAC *translate_FunDec(FunDec *fun_dec, SymbolTable *st) {
                 << "-" << fun_dec->last_line << " c" << fun_dec->first_column
                 << "-" << fun_dec->last_column << std::endl;
 #endif
-      return new TAC("FUNCTION " + std::string(fun_dec->id_node->id_token) +
-                     " :\n");
+      return new TAC("FUNCTION " + fid + " :\n");
     }
 
     default: {

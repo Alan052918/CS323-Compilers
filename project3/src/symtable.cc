@@ -101,7 +101,7 @@ VarRecord *SymbolTable::find_var(std::string id, SearchMode mode) {
   }
 #ifdef DEBUG
   std::cout << "  symtable: " << this->get_search_mode(mode) << " [" << id
-            << "] NOT found\n";
+            << "] NOT found, scope depth " << this->scope_depth << std::endl;
 #endif
   return nullptr;
 }
@@ -140,7 +140,7 @@ FunRecord *SymbolTable::find_fun(std::string id, SearchMode mode) {
   }
 #ifdef DEBUG
   std::cout << "  symtable: " << this->get_search_mode(mode) << " [" << id
-            << "] NOT found\n";
+            << "] NOT found, scope depth " << this->scope_depth << std::endl;
 #endif
   return nullptr;
 }

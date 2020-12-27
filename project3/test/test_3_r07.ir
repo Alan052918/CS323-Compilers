@@ -1,0 +1,121 @@
+FUNCTION gcd1 
+PARAM v0
+PARAM v1
+t1 := v0
+t5 := v0
+t6 := v1
+t3 := t5 / t6
+t4 := v1
+t2 := t3 * t4
+t0 := t1 - t2
+v3 := t0
+LABEL label0
+t7 := v3
+t8 := #0
+IF t7 NE t8 GOTO label0
+GOTO label1
+LABEL label1
+t9 := v1
+v0 := t9
+t10 := v3
+v1 := t10
+t12 := v0
+t16 := v0
+t17 := v1
+t14 := t16 / t17
+t15 := v1
+t13 := t14 * t15
+t11 := t12 - t13
+v3 := t11
+GOTO label0
+LABEL label2
+t18 := v1
+v2 := t18
+t19 := v2
+RETURN t19
+
+FUNCTION gcd2 
+PARAM v4
+PARAM v5
+t20 := #0
+v6 := t20
+t21 := v4
+t22 := v5
+IF t21 GT t22 GOTO label3
+GOTO label4
+LABEL label3
+t24 := v4
+t28 := v4
+t29 := v5
+t26 := t28 / t29
+t27 := v5
+t25 := t26 * t27
+t23 := t24 - t25
+v6 := t23
+t30 := v6
+t31 := #0
+IF t30 EQ t31 GOTO label6
+GOTO label7
+LABEL label6
+t32 := v5
+RETURN t32
+
+GOTO label8
+LABEL label7
+t35 := v6
+t34 := v5
+ARG t35
+ARG t34
+t33 := CALL gcd2
+RETURN t33
+
+LABEL label8
+GOTO label5
+LABEL label4
+t37 := v5
+t41 := v5
+t42 := v4
+t39 := t41 / t42
+t40 := v4
+t38 := t39 * t40
+t36 := t37 - t38
+v6 := t36
+t43 := v6
+t44 := #0
+IF t43 EQ t44 GOTO label9
+GOTO label10
+LABEL label9
+t45 := v4
+RETURN t45
+
+GOTO label11
+LABEL label10
+t48 := v6
+t47 := v4
+ARG t48
+ARG t47
+t46 := CALL gcd2
+RETURN t46
+
+LABEL label11
+LABEL label5
+FUNCTION main :
+READ t49
+v7 := t49
+READ t50
+v8 := t50
+t53 := v8
+t52 := v7
+ARG t53
+ARG t52
+t51 := CALL gcd1
+WRITE t51
+t56 := v8
+t55 := v7
+ARG t56
+ARG t55
+t54 := CALL gcd2
+WRITE t54
+t57 := #0
+RETURN t57
+
