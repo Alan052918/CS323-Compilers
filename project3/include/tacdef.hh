@@ -20,8 +20,9 @@ class ArgPassCode : public TAC {  // ARG argv
  public:
   std::string argv;
 
-  ArgPassCode(std::string arg_name)
-      : TAC("ARG " + this->argv + "\n"), argv(arg_name) {}
+  ArgPassCode(std::string arg_name) : TAC(""), argv(arg_name) {
+    this->value += "ARG " + this->argv + "\n";
+  }
 };
 
 class FunCallCode : public TAC {  // ret_var := CALL fun_id
@@ -30,32 +31,36 @@ class FunCallCode : public TAC {  // ret_var := CALL fun_id
   std::string fun_id;
 
   FunCallCode(std::string rv, std::string fid)
-      : TAC(this->ret_var + " := CALL " + this->fun_id + "\n"),
-        ret_var(rv),
-        fun_id(fid) {}
+      : TAC(""), ret_var(rv), fun_id(fid) {
+    this->value += this->ret_var + " := CALL " + this->fun_id + "\n";
+  }
 };
 
 class FunDefCode : public TAC {  // FUNCTION fun_id
  public:
   std::string fun_id;
 
-  FunDefCode(std::string fid)
-      : TAC("FUNCTION " + this->fun_id + "\n"), fun_id(fid) {}
+  FunDefCode(std::string fid) : TAC(""), fun_id(fid) {
+    this->value += "FUNCTION " + this->fun_id + "\n";
+  }
 };
 
 class FunRetCode : public TAC {  // RETURN ret_val
  public:
   std::string ret_val;
 
-  FunRetCode(std::string rv)
-      : TAC("RETURN " + this->ret_val + "\n"), ret_val(rv) {}
+  FunRetCode(std::string rv) : TAC(""), ret_val(rv) {
+    this->value += "RETURN " + this->ret_val + "\n\n";
+  }
 };
 
 class ParamDecCode : public TAC {  // PARAM param
  public:
   std::string param;
 
-  ParamDecCode(std::string p) : TAC("PARAM " + this->param + "\n"), param(p) {}
+  ParamDecCode(std::string p) : TAC(""), param(p) {
+    this->value += "PARAM " + this->param + "\n";
+  }
 };
 
 /* Assignments */
@@ -65,7 +70,9 @@ class AddrAssignVarCode : public TAC {  // t_var := &f_var
   std::string f_var;
 
   AddrAssignVarCode(std::string tv, std::string fv)
-      : TAC(this->t_var + " := &" + this->f_var + "\n"), t_var(tv), f_var(fv) {}
+      : TAC(""), t_var(tv), f_var(fv) {
+    this->value += this->t_var + " := &" + this->f_var + "\n";
+  }
 };
 
 class RefAssignVarCode : public TAC {  // t_var := *f_addr
@@ -74,9 +81,9 @@ class RefAssignVarCode : public TAC {  // t_var := *f_addr
   std::string f_addr;
 
   RefAssignVarCode(std::string tv, std::string fa)
-      : TAC(this->t_var + " := *" + this->f_addr + "\n"),
-        t_var(tv),
-        f_addr(fa) {}
+      : TAC(""), t_var(tv), f_addr(fa) {
+    this->value += this->t_var + " := *" + this->f_addr + "\n";
+  }
 };
 
 class ValAssignVarCode : public TAC {  // t_var := f_val
@@ -85,7 +92,9 @@ class ValAssignVarCode : public TAC {  // t_var := f_val
   std::string f_val;
 
   ValAssignVarCode(std::string tv, std::string fv)
-      : TAC(this->t_var + " := " + this->f_val + "\n"), t_var(tv), f_val(fv) {}
+      : TAC(""), t_var(tv), f_val(fv) {
+    this->value += this->t_var + " := " + this->f_val + "\n";
+  }
 };
 
 class ValAssignRefCode : public TAC {  // *t_addr := f_val
@@ -94,9 +103,9 @@ class ValAssignRefCode : public TAC {  // *t_addr := f_val
   std::string f_val;
 
   ValAssignRefCode(std::string ta, std::string fv)
-      : TAC("*" + this->t_addr + " := " + this->f_val + "\n"),
-        t_addr(ta),
-        f_val(fv) {}
+      : TAC(""), t_addr(ta), f_val(fv) {
+    this->value += "*" + this->t_addr + " := " + this->f_val + "\n";
+  }
 };
 
 /* Arithmetic operations */
@@ -107,11 +116,10 @@ class AriAddCode : public TAC {  // sum_var := aug_var + add_var
   std::string add_var;
 
   AriAddCode(std::string sv, std::string agv, std::string adv)
-      : TAC(this->sum_var + " := " + this->aug_var + " + " + this->add_var +
-            "\n"),
-        sum_var(sv),
-        aug_var(agv),
-        add_var(adv) {}
+      : TAC(""), sum_var(sv), aug_var(agv), add_var(adv) {
+    this->value +=
+        this->sum_var + " := " + this->aug_var + " + " + this->add_var + "\n";
+  }
 };
 
 class AriDivCode : public TAC {  // quo_var := dvd_var / dvs_var
@@ -121,11 +129,10 @@ class AriDivCode : public TAC {  // quo_var := dvd_var / dvs_var
   std::string dvs_var;
 
   AriDivCode(std::string qv, std::string ddv, std::string dsv)
-      : TAC(this->quo_var + " := " + this->dvd_var + " / " + this->dvs_var +
-            "\n"),
-        quo_var(qv),
-        dvd_var(ddv),
-        dvs_var(dsv) {}
+      : TAC(""), quo_var(qv), dvd_var(ddv), dvs_var(dsv) {
+    this->value +=
+        this->quo_var + " := " + this->dvd_var + " / " + this->dvs_var + "\n";
+  }
 };
 
 class AriMulCode : public TAC {  // pdt_var := mpd_var * mpr_var
@@ -135,11 +142,10 @@ class AriMulCode : public TAC {  // pdt_var := mpd_var * mpr_var
   std::string mpr_var;
 
   AriMulCode(std::string pv, std::string mdv, std::string mrv)
-      : TAC(this->pdt_var + " := " + this->mpd_var + " * " + this->mpr_var +
-            "\n"),
-        pdt_var(pv),
-        mpd_var(mdv),
-        mpr_var(mrv) {}
+      : TAC(""), pdt_var(pv), mpd_var(mdv), mpr_var(mrv) {
+    this->value +=
+        this->pdt_var + " := " + this->mpd_var + " * " + this->mpr_var + "\n";
+  }
 };
 
 class AriSubCode : public TAC {  // dif_var := min_var - sub_var
@@ -149,11 +155,10 @@ class AriSubCode : public TAC {  // dif_var := min_var - sub_var
   std::string sub_var;
 
   AriSubCode(std::string dv, std::string mv, std::string sv)
-      : TAC(this->dif_var + " := " + this->min_var + " - " + this->sub_var +
-            "\n"),
-        dif_var(dv),
-        min_var(mv),
-        sub_var(sv) {}
+      : TAC(""), dif_var(dv), min_var(mv), sub_var(sv) {
+    this->value +=
+        this->dif_var + " := " + this->min_var + " - " + this->sub_var + "\n";
+  }
 };
 
 /* Jump expressions */
@@ -161,14 +166,18 @@ class LabelDefCode : public TAC {  // LABEL lb
  public:
   std::string lb;
 
-  LabelDefCode(std::string l) : TAC("LABEL " + this->lb + "\n"), lb(l) {}
+  LabelDefCode(std::string l) : TAC(""), lb(l) {
+    this->value += "LABEL " + this->lb + "\n";
+  }
 };
 
 class UncondJumpCode : public TAC {  // GOTO t_lb
  public:
   std::string t_lb;
 
-  UncondJumpCode(std::string tl) : TAC("GOTO " + this->t_lb + "\n"), t_lb(tl) {}
+  UncondJumpCode(std::string tl) : TAC(""), t_lb(tl) {
+    this->value += "GOTO " + this->t_lb + "\n";
+  }
 };
 
 class IfCondJumpCode : public TAC {  // IF l_var relop r_var GOTO t_lb
@@ -179,12 +188,10 @@ class IfCondJumpCode : public TAC {  // IF l_var relop r_var GOTO t_lb
   std::string t_lb;
 
   IfCondJumpCode(std::string lv, std::string rv, std::string ro, std::string tl)
-      : TAC("IF " + this->l_var + " " + this->relop + " " + this->r_var +
-            " GOTO " + this->t_lb + "\n"),
-        l_var(lv),
-        r_var(rv),
-        relop(ro),
-        t_lb(tl) {}
+      : TAC(""), l_var(lv), r_var(rv), relop(ro), t_lb(tl) {
+    this->value += "IF " + this->l_var + " " + this->relop + " " + this->r_var +
+                   " GOTO " + this->t_lb + "\n";
+  }
 };
 
 /* Utilities */
@@ -193,25 +200,28 @@ class MemAllocCode : public TAC {  // DEC addr size
   std::string addr;
   int size;
 
-  MemAllocCode(std::string ad, int sz)
-      : TAC(this->value =
-                "DEC " + this->addr + " " + std::to_string(this->size) + "\n"),
-        addr(ad),
-        size(sz) {}
+  MemAllocCode(std::string ad, int sz) : TAC(""), addr(ad), size(sz) {
+    this->value +=
+        "DEC " + this->addr + " " + std::to_string(this->size) + "\n";
+  }
 };
 
-class PrintValCode : public TAC {  // WRITE var
+class WriteValCode : public TAC {  // WRITE var
  public:
   std::string var;
 
-  PrintValCode(std::string v) : TAC("WRITE " + this->var + "\n"), var(v) {}
+  WriteValCode(std::string v) : TAC(""), var(v) {
+    this->value += "WRITE " + this->var + "\n";
+  }
 };
 
 class ReadValCode : public TAC {  // READ var
  public:
   std::string var;
 
-  ReadValCode(std::string v) : TAC("READ " + this->var + "\n"), var(v) {}
+  ReadValCode(std::string v) : TAC(""), var(v) {
+    this->value += "READ " + this->var + "\n";
+  }
 };
 
 #endif  // TACDEF_HH

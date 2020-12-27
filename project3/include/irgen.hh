@@ -44,7 +44,7 @@ TAC *translate_ParamDec(ParamDec *param_dec, SymbolTable *st);
 
 // node lists nodes
 TAC *translate_Args(Args *args, SymbolTable *st,
-                    std::vector<std::string> arg_vec);
+                    std::vector<std::string> *arg_vec);
 TAC *translate_DecList(DecList *dec_list, SymbolTable *st,
                        std::vector<std::string> dec_vec);
 TAC *translate_DefList(DefList *def_list, SymbolTable *st,

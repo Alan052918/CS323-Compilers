@@ -251,8 +251,6 @@ SINGLE_LINE_COMMENT "//".*
 #ifdef DEBUG
             printf("flex: found invalid INT %s, line %d\n", yytext, yylineno);
 #endif
-            printf("Error type A at Line %d: unknown lexeme %s\n", yylineno, yytext);
-            return UNKNOWN_LEXEME;
           }
           yylval.int_value = i;
         } else {
@@ -273,8 +271,6 @@ SINGLE_LINE_COMMENT "//".*
 #ifdef DEBUG
               printf("flex: found invalid CHAR %d[%s], line %d\n", c, yytext, yylineno);
 #endif
-              printf("Error type A at Line %d: unknown lexeme %s\n", yylineno, yytext);
-              return UNKNOWN_LEXEME;
             }
           }
           yylval.char_value = strdup(yytext);
@@ -303,15 +299,11 @@ SINGLE_LINE_COMMENT "//".*
 #ifdef DEBUG
             printf("flex: found invalid id %s, line %d\n", yytext, yylineno);
 #endif
-            printf("Error type A at Line %d: unknown lexeme %s\n", yylineno, yytext);
-            return UNKNOWN_LEXEME;
           }
 {ERR_CHAR}  {
 #ifdef DEBUG
               printf("flex: found invalid hex char %s, line %d\n", yytext, yylineno);
 #endif
-              printf("Error type A at Line %d: unknown lexeme %s\n", yylineno, yytext);
-              return UNKNOWN_LEXEME;
             }
 
 {SINGLE_LINE_COMMENT} {
@@ -324,8 +316,6 @@ SINGLE_LINE_COMMENT "//".*
 #ifdef DEBUG
     printf("flex: found invalid character %s, line %d\n", yytext, yylineno);
 #endif
-    printf("Error type A at Line %d: unknown lexeme %s\n", yylineno, yytext);
-    return UNKNOWN_LEXEME;
   }
 
 %%

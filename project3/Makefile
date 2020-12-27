@@ -17,7 +17,6 @@ OBJ_DIR=obj
 SRC_FILES:=$(wildcard $(SRC_DIR)/*.cc)
 OBJ_FILES:=$(patsubst $(SRC_DIR)/%.cc,$(OBJ_DIR)/%.o,$(SRC_FILES))
 DEBUG_OBJ_FILES:=$(patsubst $(SRC_DIR)/%.cc,$(OBJ_DIR)/%_d.o,$(SRC_FILES))
-TREE_OBJ_FILES:=$(patsubst $(SRC_DIR)/%.cc,$(OBJ_DIR)/%_t.o,$(SRC_FILES))
 
 # make splc
 
@@ -32,7 +31,7 @@ splc : $(OBJ_FILES) syntax.tab.c lex.yy.c
 $(OBJ_DIR)/%.o : $(SRC_DIR)/%.cc
 	@echo "Compiling ir sources..."
 	@echo "  mkdir -p $(OBJ_DIR)"; mkdir -p $(OBJ_DIR)
-	@echo "  $(CC) -c -o $@ $<"; $(CC) -c -o $@ $<
+	@echo "  $(CC) $(CFLAGS) -c -o $@ $<"; $(CC) $(CFLAGS) -c -o $@ $<
 
 # make debug
 
@@ -47,22 +46,7 @@ debug : $(DEBUG_OBJ_FILES) syntax.tab.c lex.yy.c
 $(OBJ_DIR)/%_d.o : $(SRC_DIR)/%.cc
 	@echo "Compiling ir sources..."
 	@echo "  mkdir -p $(OBJ_DIR)"; mkdir -p $(OBJ_DIR)
-	@echo "  $(CC) -DDEBUG -c -o $@ $<"; $(CC) -DDEBUG -c -o $@ $<
-
-# make tree
-
-tree : $(TREE_OBJ_FILES) syntax.tab.c lex.yy.c
-	@echo "Linking TREE..."
-	@echo "  mkdir -p $(BIN)"; mkdir -p $(BIN)
-	@echo "  $(CC) -DTREE -lfl -ly -o $(BIN)/$@ $^"; $(CC) -DTREE -lfl -ly -o $(BIN)/$@ $^
-	@echo "Success! removing middle product files..."
-	@echo "  rm -rf $(OBJ_DIR)"; rm -rf $(OBJ_DIR)
-	@echo "  rm syntax.* lex.*"; rm syntax.* lex*
-
-$(OBJ_DIR)/%_t.o : $(SRC_DIR)/%.cc
-	@echo "Compiling ir sources..."
-	@echo "  mkdir -p $(OBJ_DIR)"; mkdir -p $(OBJ_DIR)
-	@echo "  $(CC) -DTREE -c -o $@ $<"; $(CC) -DTREE -c -o $@ $<
+	@echo "  $(CC) -DDEBUG $(CFLAGS) -c -o $@ $<"; $(CC) -DDEBUG $(CFLAGS) -c -o $@ $<
 
 # run flex & bison
 

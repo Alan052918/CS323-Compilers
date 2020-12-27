@@ -78,7 +78,6 @@
 %nonassoc LOWER_ELSE
 %nonassoc <keyword_value> ELSE
 
-%nonassoc UNKNOWN_LEXEME
 %right <keyword_value> ASSIGN
 %left <keyword_value> OR
 %left <keyword_value> AND
@@ -601,6 +600,9 @@ int main(int argc, char **argv) {
 #endif
       SymbolTable *st = new SymbolTable();
       TAC *tac = translate_Program(program_root, st);
+#ifdef DEBUG
+      printf("\n*********************\n");
+#endif
       std::cout << tac->value;
     } else if (result == 1) {
 #ifdef DEBUG
