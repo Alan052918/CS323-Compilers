@@ -11,6 +11,7 @@ class ExtDef;
 
 class ExtDefList : public NonterminalNode {
  public:
+  // nonterminal member variables
   std::vector<ExtDef *> node_list;
 
   ExtDefList(int fl, int ll, int fc, int lc, int rhsf);

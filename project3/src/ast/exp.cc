@@ -22,18 +22,18 @@ void Exp::visit(int indent_level, SymbolTable *st) {
 #endif
   switch (this->rhs_form) {
     case 0:     // Exp := Exp ASSIGN Exp
-    case 1:     // Exp := Exp AND Exp
-    case 2:     // Exp := Exp OR Exp
-    case 3:     // Exp := Exp LT Exp
-    case 4:     // Exp := Exp LE Exp
-    case 5:     // Exp := Exp GT Exp
-    case 6:     // Exp := Exp GE Exp
-    case 7:     // Exp := Exp NE Exp
-    case 8:     // Exp := Exp EQ Exp
-    case 9:     // Exp := Exp PLUS Exp
-    case 10:    // Exp := Exp MINUS Exp
-    case 11:    // Exp := Exp MUL Exp
-    case 12: {  // Exp := Exp DIV Exp
+    case 1:     // Exp := Exp AND Exp (conditional expression)
+    case 2:     // Exp := Exp OR Exp (conditional expression)
+    case 3:     // Exp := Exp LT Exp (conditional expression)
+    case 4:     // Exp := Exp LE Exp (conditional expression)
+    case 5:     // Exp := Exp GT Exp (conditional expression)
+    case 6:     // Exp := Exp GE Exp (conditional expression)
+    case 7:     // Exp := Exp NE Exp (conditional expression)
+    case 8:     // Exp := Exp EQ Exp (conditional expression)
+    case 9:     // Exp := Exp PLUS Exp (arithmetic expression)
+    case 10:    // Exp := Exp MINUS Exp (arithmetic expression)
+    case 11:    // Exp := Exp MUL Exp (arithmetic expression)
+    case 12: {  // Exp := Exp DIV Exp (arithmetic expression)
       // strict operand type checking: must be of the exact same
       // variable types
       this->var_type = new VarType();
@@ -66,8 +66,8 @@ void Exp::visit(int indent_level, SymbolTable *st) {
       this->is_rvalue = this->exp_1->is_rvalue;
       break;
     }
-    case 14:    // Exp := MINUS Exp
-    case 15: {  // Exp := NOT Exp
+    case 14:    // Exp := MINUS Exp (arithmetic expression)
+    case 15: {  // Exp := NOT Exp (conditional expression)
       this->var_type = new VarType();
       this->keyword = this->keyword_node->keyword_token;
 #if defined(TREE) || defined(DEBUG)
@@ -80,7 +80,7 @@ void Exp::visit(int indent_level, SymbolTable *st) {
       this->is_rvalue = this->exp_1->is_rvalue;
       break;
     }
-    case 16: {  // Exp := ID LP Args RP
+    case 16: {  // Exp := ID LP Args RP (function call expression)
                 // function call, this Exp node has no type
       this->var_type = new VarType();
       this->is_funcall = true;
@@ -120,7 +120,7 @@ void Exp::visit(int indent_level, SymbolTable *st) {
       this->var_type = ft->return_type;
       break;
     }
-    case 17: {  // Exp := ID LP RP
+    case 17: {  // Exp := ID LP RP (function call expression)
                 // function call, this Exp node has no type
       this->var_type = new VarType();
       this->is_funcall = true;

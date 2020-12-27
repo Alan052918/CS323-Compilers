@@ -5,12 +5,46 @@
 #include "../include/tacdef.hh"
 #include "../include/typedef.hh"
 
-TAC *translate_Args(Args *args, SymbolTable *st,
-                    std::vector<std::string> arg_list) {}
+TAC *translate_cond_Exp(Exp *exp, SymbolTable *st, Label *lb_t, Label *lb_f) {
+  switch (exp->rhs_form) {
+    case 1: {  // Exp := Exp AND Exp
+      Label *lb0 = new Label();
+      TAC *tac0 = translate_cond_Exp(exp->exp_1, st, lb0, lb_f);
+      TAC *tac1 = translate_cond_Exp(exp->exp_2, st, lb_t, lb_f);
+      return new TAC(tac0->value + "LABEL " + lb0->name + "\n" + tac1->value);
+    }
+    case 2: {  // Exp := Exp OR Exp
+      Label *lb0 = new Label();
+      TAC *tac0 = translate_cond_Exp(exp->exp_1, st, lb_t, lb0);
+      TAC *tac1 = translate_cond_Exp(exp->exp_2, st, lb_t, lb_f);
+      return new TAC(tac0->value + "LABEL " + lb0->name + "\n" + tac1->value);
+    }
+    case 3:    // Exp := Exp LT Exp
+    case 4:    // Exp := Exp LE Exp
+    case 5:    // Exp := Exp GT Exp
+    case 6:    // Exp := Exp GE Exp
+    case 7:    // Exp := Exp NE Exp
+    case 8: {  // Exp := Exp EQ Exp
+      TempPlace *t0 = new TempPlace();
+      TempPlace *t1 = new TempPlace();
+      TAC *tac0 = translate_Exp(exp->exp_1, st, t0);
+      TAC *tac1 = translate_Exp(exp->exp_2, st, t1);
+      std::string op = exp->keyword;
+      TAC *tac2 = new TAC("IF " + t0->name + " " + op + " " + t1->name +
+                          " GOTO " + lb_t->name + "\n");
+      return new TAC(tac0->value + tac1->value + tac2->value + "GOTO " +
+                     lb_f->name + "\n");
+    }
+    case 15: {  // Exp := NOT Exp
+      return translate_cond_Exp(exp->exp_1, st, lb_f, lb_t);
+    }
 
-TAC *translate_CompSt(CompSt *comp_st, SymbolTable *st) {}
-
-TAC *translate_cond_Exp(Exp *exp, SymbolTable *st, Label *lb_t, Label *lb_f) {}
+    default: {
+      std::cout << "rhs form: " << exp->rhs_form << std::endl;
+      break;
+    }
+  }
+}
 
 TAC *translate_Exp(Exp *exp, SymbolTable *st, Place *p) {
   switch (exp->rhs_form) {
@@ -22,15 +56,15 @@ TAC *translate_Exp(Exp *exp, SymbolTable *st, Place *p) {
       ValAssignVarCode *tac2 = new ValAssignVarCode(p->name, vt->name);
       return new TAC(tac0->value + tac1->value + tac2->value);
     }
-    case 1:     // Exp := Exp AND Exp
-    case 2:     // Exp := Exp OR Exp
-    case 3:     // Exp := Exp LT Exp
-    case 4:     // Exp := Exp LE Exp
-    case 5:     // Exp := Exp GT Exp
-    case 6:     // Exp := Exp GE Exp
-    case 7:     // Exp := Exp NE Exp
-    case 8:     // Exp := Exp EQ Exp
-    case 15: {  // Exp := NOT Exp
+    case 1:     // Exp := Exp AND Exp (conditional expression)
+    case 2:     // Exp := Exp OR Exp (conditional expression)
+    case 3:     // Exp := Exp LT Exp (conditional expression)
+    case 4:     // Exp := Exp LE Exp (conditional expression)
+    case 5:     // Exp := Exp GT Exp (conditional expression)
+    case 6:     // Exp := Exp GE Exp (conditional expression)
+    case 7:     // Exp := Exp NE Exp (conditional expression)
+    case 8:     // Exp := Exp EQ Exp (conditional expression)
+    case 15: {  // Exp := NOT Exp (conditional expression)
       Label *lb0 = new Label();
       Label *lb1 = new Label();
       ValAssignVarCode *tac0 = new ValAssignVarCode(p->name, "#0");
@@ -39,19 +73,60 @@ TAC *translate_Exp(Exp *exp, SymbolTable *st, Place *p) {
       return new TAC(tac0->value + tac1->value + tac2->value + "LABEL " +
                      lb1->name + "\n");
     }
-    case 9: {  // Exp := Exp PLUS Exp
+    case 9:     // Exp := Exp PLUS Exp (arithmetic expression)
+    case 10:    // Exp := Exp MINUS Exp (arithmetic expression)
+    case 11:    // Exp := Exp MUL Exp (arithmetic expression)
+    case 12: {  // Exp := Exp DIV Exp (arithmetic expression)
       TempPlace *t1 = new TempPlace();
       TempPlace *t2 = new TempPlace();
       TAC *tac0 = translate_Exp(exp->exp_1, st, t1);
       TAC *tac1 = translate_Exp(exp->exp_2, st, t2);
-      AriAddCode *tac2 = new AriAddCode(p->name, t1->name, t2->name);
-      return new TAC(tac0->value + tac1->value + tac2->value);
+      if (exp->keyword == "PLUS") {
+        AriAddCode *tac2 = new AriAddCode(p->name, t1->name, t2->name);
+        return new TAC(tac0->value + tac1->value + tac2->value);
+      } else if (exp->keyword == "MINUS") {
+        AriSubCode *tac2 = new AriSubCode(p->name, t1->name, t2->name);
+        return new TAC(tac0->value + tac1->value + tac2->value);
+      } else if (exp->keyword == "MUL") {
+        AriMulCode *tac2 = new AriMulCode(p->name, t1->name, t2->name);
+        return new TAC(tac0->value + tac1->value + tac2->value);
+      } else if (exp->keyword == "DIV") {
+        AriDivCode *tac2 = new AriDivCode(p->name, t1->name, t2->name);
+        return new TAC(tac0->value + tac1->value + tac2->value);
+      }
     }
-    case 14: {  // Exp := MINUS Exp
+    case 13: {  // Exp := LP Exp RP
+      TempPlace *tp = new TempPlace();
+      return translate_Exp(exp->exp_1, st, tp);
+    }
+    case 14: {  // Exp := MINUS Exp (arithmetic expression)
       TempPlace *tp = new TempPlace();
       TAC *tac0 = translate_Exp(exp->exp_1, st, tp);
       AriSubCode *tac1 = new AriSubCode(p->name, "#0", tp->name);
       return new TAC(tac0->value + tac1->value);
+    }
+    case 16: {  // Exp := ID LP Args RP (function call expression)
+                // method call with arguments
+      FunType *ft = st->find_fun(exp->id, UseMode);
+      std::vector<std::string> arg_vec;
+      TAC *tac0 = translate_Args(exp->args, st, arg_vec);
+      TAC *tac1 = new TAC("");
+      if (ft->name == "write") {
+        return new TAC(tac0->value + "WRITE " + arg_vec.front() + "\n");
+      }
+      for (int i = 0; i < arg_vec.size(); i++) {
+        tac1->value += "ARG " + arg_vec.at(i) + "\n";
+      }
+      return new TAC(tac0->value + tac1->value + p->name + " := CALL " +
+                     ft->name + "\n");
+    }
+    case 17: {  // Exp := ID LP RP (function call expression)
+                // method call with no arguments
+      FunType *ft = st->find_fun(exp->id, UseMode);
+      if (ft->name == "read") {
+        return new TAC("READ " + p->name + "\n");
+      }
+      return new TAC(p->name + " := CALL " + ft->name + "\n");
     }
     case 20: {  // Exp := ID
       VarType *vt = st->find_var(exp->id, UseMode);
@@ -65,12 +140,11 @@ TAC *translate_Exp(Exp *exp, SymbolTable *st, Place *p) {
     }
 
     default: {
+      std::cout << "rhs form: " << exp->rhs_form << std::endl;
       break;
     }
   }
 }
-
-TAC *translate_Program(Program *program_root) {}
 
 TAC *translate_Stmt(Stmt *stmt, SymbolTable *st) {
   switch (stmt->rhs_form) {
@@ -117,7 +191,49 @@ TAC *translate_Stmt(Stmt *stmt, SymbolTable *st) {
     }
 
     default: {
+      std::cout << "rhs form: " << stmt->rhs_form << std::endl;
       break;
     }
   }
 }
+
+TAC *translate_Dec(Dec *dec, SymbolTable *st) {}
+
+TAC *translate_Def(Def *def, SymbolTable *st) {}
+
+TAC *translate_FunDec(FunDec *fun_dec, SymbolTable *st) {}
+
+TAC *translate_ParamDec(ParamDec *param_dec, SymbolTable *st) {}
+
+TAC *translate_Args(Args *args, SymbolTable *st,
+                    std::vector<std::string> arg_vec) {
+  for (Exp *exp : args->node_list) {
+    TempPlace *tp = new TempPlace();
+    TAC *tac = translate_Exp(exp, st, tp);
+
+    // insert to front, add arguments in reverse order
+    arg_vec.insert(arg_vec.begin(), tac->value);
+  }
+}
+
+TAC *translate_DecList(DecList *dec_list, SymbolTable *st,
+                       std::vector<std::string> dec_vec) {}
+
+TAC *translate_DefList(DefList *def_list, SymbolTable *st,
+                       std::vector<std::string> def_vec) {}
+
+TAC *translate_ExtDecList(ExtDecList *ext_dec_list, SymbolTable *st,
+                          std::vector<std::string> edec_vec) {}
+
+TAC *translate_ExtDefList(ExtDefList *ext_def_list, SymbolTable *st,
+                          std::vector<std::string> edef_vec) {}
+
+TAC *translate_StmtList(StmtList *stmt_list, SymbolTable *st,
+                        std::vector<std::string> stmt_vec) {}
+
+TAC *translate_VarList(VarList *var_list, SymbolTable *st,
+                       std::vector<std::string> var_vec) {}
+
+TAC *translate_CompSt(CompSt *comp_st, SymbolTable *st) {}
+
+TAC *translate_Program(Program *program_root) {}
