@@ -213,8 +213,11 @@ TAC *translate_Exp(Exp *exp, SymbolTable *st, Place *p) {
         for (unsigned int i = 0; i < arg_vec.size(); i++) {
           tac1->value += "ARG " + arg_vec.at(i) + "\n";
         }
-        return new TAC(tac0->value + tac1->value + p->name + " := CALL " + fid +
-                       "\n");
+        if (p != nullptr) {
+          FunCallCode *tac2 = new FunCallCode(p->name, fid);
+          return new TAC(tac0->value + tac1->value + tac2->value);
+        }
+        return new TAC(tac0->value + tac1->value);
       }
       std::cout << "Unidentified function\n";
       return nullptr;
