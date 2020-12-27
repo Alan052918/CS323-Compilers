@@ -29,7 +29,7 @@ TAC *translate_cond_Exp(Exp *exp, SymbolTable *st, Label *lb_t, Label *lb_f) {
       TempPlace *t1 = new TempPlace();
       TAC *tac0 = translate_Exp(exp->exp_1, st, t0);
       TAC *tac1 = translate_Exp(exp->exp_2, st, t1);
-      std::string op = exp->keyword;
+      std::string op = exp->keyword_node->keyword_token;
       TAC *tac2 = new TAC("IF " + t0->name + " " + op + " " + t1->name +
                           " GOTO " + lb_t->name + "\n");
       return new TAC(tac0->value + tac1->value + tac2->value + "GOTO " +
@@ -41,7 +41,7 @@ TAC *translate_cond_Exp(Exp *exp, SymbolTable *st, Label *lb_t, Label *lb_f) {
 
     default: {
       std::cout << "rhs form: " << exp->rhs_form << std::endl;
-      break;
+      return nullptr;
     }
   }
 }
@@ -81,16 +81,16 @@ TAC *translate_Exp(Exp *exp, SymbolTable *st, Place *p) {
       TempPlace *t2 = new TempPlace();
       TAC *tac0 = translate_Exp(exp->exp_1, st, t1);
       TAC *tac1 = translate_Exp(exp->exp_2, st, t2);
-      if (exp->keyword == "PLUS") {
+      if (exp->keyword_node->keyword_token == "PLUS") {
         AriAddCode *tac2 = new AriAddCode(p->name, t1->name, t2->name);
         return new TAC(tac0->value + tac1->value + tac2->value);
-      } else if (exp->keyword == "MINUS") {
+      } else if (exp->keyword_node->keyword_token == "MINUS") {
         AriSubCode *tac2 = new AriSubCode(p->name, t1->name, t2->name);
         return new TAC(tac0->value + tac1->value + tac2->value);
-      } else if (exp->keyword == "MUL") {
+      } else if (exp->keyword_node->keyword_token == "MUL") {
         AriMulCode *tac2 = new AriMulCode(p->name, t1->name, t2->name);
         return new TAC(tac0->value + tac1->value + tac2->value);
-      } else if (exp->keyword == "DIV") {
+      } else if (exp->keyword_node->keyword_token == "DIV") {
         AriDivCode *tac2 = new AriDivCode(p->name, t1->name, t2->name);
         return new TAC(tac0->value + tac1->value + tac2->value);
       }
@@ -127,19 +127,19 @@ TAC *translate_Exp(Exp *exp, SymbolTable *st, Place *p) {
       return new TAC(p->name + " := CALL " + ft->name + "\n");
     }
     case 20: {  // Exp := ID
-      VarType *vt = st->find_var(exp->id, UseMode);
+      VarType *vt = st->find_var(std::string(exp->id_node->id_token), UseMode);
       ValAssignVarCode *vavc = new ValAssignVarCode(p->name, vt->name);
       return vavc;
     }
     case 21: {  // Exp := INT
-      ValAssignVarCode *vavc =
-          new ValAssignVarCode(p->name, "#" + std::to_string(exp->integer));
+      ValAssignVarCode *vavc = new ValAssignVarCode(
+          p->name, "#" + std::to_string(exp->int_node->int_token));
       return vavc;
     }
 
     default: {
       std::cout << "rhs form: " << exp->rhs_form << std::endl;
-      break;
+      return nullptr;
     }
   }
 }
@@ -190,22 +190,42 @@ TAC *translate_Stmt(Stmt *stmt, SymbolTable *st) {
 
     default: {
       std::cout << "rhs form: " << stmt->rhs_form << std::endl;
-      break;
+      return nullptr;
     }
   }
 }
 
-TAC *translate_VarDec(VarDec *var_dec, SymbolTable *st) {}
+TAC *translate_Dec(Dec *dec, SymbolTable *st) {
+  VarPlace *vp = visit_VarDec(dec->var_dec, st);
 
-TAC *translate_Dec(Dec *dec, SymbolTable *st) {}
+  switch (dec->rhs_form) {
+    case 0: {  // Dec := VarDec
+      return nullptr;
+    }
+    case 1: {  // Dec := VarDec ASSIGN Exp
+      TempPlace *tp = new TempPlace();
+      TAC *tac0 = translate_Exp(dec->exp, st, tp);
+      ValAssignVarCode *tac1 = new ValAssignVarCode(vp->name, tp->name);
+      return new TAC(tac0->value + tac1->value);
+    }
 
-TAC *translate_Def(Def *def, SymbolTable *st) {}
+    default: {
+      return nullptr;
+    }
+  }
+}
+
+TAC *translate_Def(Def *def, SymbolTable *st) {
+  // Def := Specifier DecList SEMI
+  std::vector<std::string> dec_vec;
+  return translate_DecList(def->dec_list, st, dec_vec);
+}
 
 TAC *translate_ExtDef(ExtDef *ext_def, SymbolTable *st) {
   switch (ext_def->rhs_form) {
     case 0: {  // ExtDef := Specifier ExtDecList SEMI
-    }
-    case 1: {  // ExtDef := Specifier SEMI
+      visit_ExtDecList(ext_def->ext_dec_list, st);
+      return nullptr;
     }
     case 2: {  // ExtDef := Specifier FunDec CompSt (function definition)
       st->push_maps();
@@ -216,7 +236,8 @@ TAC *translate_ExtDef(ExtDef *ext_def, SymbolTable *st) {
     }
 
     default: {
-      break;
+      std::cout << "rhs form: " << ext_def->rhs_form << std::endl;
+      return nullptr;
     }
   }
 }
@@ -224,25 +245,27 @@ TAC *translate_ExtDef(ExtDef *ext_def, SymbolTable *st) {
 TAC *translate_FunDec(FunDec *fun_dec, SymbolTable *st) {
   switch (fun_dec->rhs_form) {
     case 0: {  // FunDec := ID LP VarList RP
-      TAC *tac0 = new TAC("FUNCTION " + fun_dec->id + " :\n");
+      TAC *tac0 = new TAC("FUNCTION " +
+                          std::string(fun_dec->id_node->id_token) + " \n");
       std::vector<std::string> var_vec;
       TAC *tac1 = translate_VarList(fun_dec->var_list, st, var_vec);
       return new TAC(tac0->value + tac1->value);
     }
     case 1: {  // FunDec := ID LP RP
-      return new TAC("FUNCTION " + fun_dec->id + " :\n");
+      return new TAC("FUNCTION " + std::string(fun_dec->id_node->id_token) +
+                     " :\n");
     }
 
     default: {
       std::cout << "rhs form: " << fun_dec->rhs_form << std::endl;
-      break;
+      return nullptr;
     }
   }
 }
 
 TAC *translate_ParamDec(ParamDec *param_dec, SymbolTable *st) {
-  st->push_var(param_dec->id, param_dec->var_type);  // push to table
-  VarPlace *vp = new VarPlace();
+  // ParamDec := Specifier VarDec
+  VarPlace *vp = visit_VarDec(param_dec->var_dec, st);
   return new TAC("PARAM " + vp->name + "\n");
 }
 
@@ -253,14 +276,16 @@ TAC *translate_Args(Args *args, SymbolTable *st,
     TAC *tac = translate_Exp(exp, st, tp);
     arg_vec.insert(arg_vec.begin(), tac->value);  // reverse combine
   }
+  return new TAC(vec_to_string(arg_vec));
 }
 
 TAC *translate_DecList(DecList *dec_list, SymbolTable *st,
-                       std::vector<std::string> dec_vec) {
+                       std::vector<std::string> dec_vec, std::string sp) {
   for (Dec *dec : dec_list->node_list) {
     TAC *tac = translate_Dec(dec, st);
     dec_vec.push_back(tac->value);
   }
+  return new TAC(vec_to_string(dec_vec));
 }
 
 TAC *translate_DefList(DefList *def_list, SymbolTable *st,
@@ -269,20 +294,16 @@ TAC *translate_DefList(DefList *def_list, SymbolTable *st,
     TAC *tac = translate_Def(def, st);
     def_vec.push_back(tac->value);
   }
-}
-
-TAC *translate_ExtDecList(ExtDecList *ext_dec_list, SymbolTable *st,
-                          std::vector<std::string> edec_vec) {
-  for (VarDec *var_dec : ext_dec_list->node_list) {
-    TempPlace *tp = new TempPlace();
-  }
+  return new TAC(vec_to_string(def_vec));
 }
 
 TAC *translate_ExtDefList(ExtDefList *ext_def_list, SymbolTable *st,
                           std::vector<std::string> edef_vec) {
   for (ExtDef *ext_def : ext_def_list->node_list) {
-    TempPlace *tp = new TempPlace();
+    TAC *tac = translate_ExtDef(ext_def, st);
+    edef_vec.push_back(tac->value);
   }
+  return new TAC(vec_to_string(edef_vec));
 }
 
 TAC *translate_StmtList(StmtList *stmt_list, SymbolTable *st,
@@ -291,6 +312,7 @@ TAC *translate_StmtList(StmtList *stmt_list, SymbolTable *st,
     TAC *tac = translate_Stmt(stmt, st);
     stmt_vec.push_back(tac->value);
   }
+  return new TAC(vec_to_string(stmt_vec));
 }
 
 TAC *translate_VarList(VarList *var_list, SymbolTable *st,
@@ -299,6 +321,7 @@ TAC *translate_VarList(VarList *var_list, SymbolTable *st,
     TAC *tac = translate_ParamDec(param_dec, st);
     var_vec.push_back(tac->value);
   }
+  return new TAC(vec_to_string(var_vec));
 }
 
 TAC *translate_CompSt(CompSt *comp_st, SymbolTable *st) {
@@ -312,4 +335,37 @@ TAC *translate_CompSt(CompSt *comp_st, SymbolTable *st) {
 TAC *translate_Program(Program *program_root, SymbolTable *st) {
   std::vector<std::string> edef_vec;
   return translate_ExtDefList(program_root->ext_def_list, st, edef_vec);
+}
+
+void visit_ExtDecList(ExtDecList *ext_dec_list, SymbolTable *st) {
+  for (VarDec *var_dec : ext_dec_list->node_list) {
+    VarPlace *vp = visit_VarDec(var_dec, st);
+  }
+}
+
+VarPlace *visit_VarDec(VarDec *var_dec, SymbolTable *st) {
+  switch (var_dec->rhs_form) {
+    case 0: {  // VarDec := ID
+      VarPlace *vp = new VarPlace();
+      VarType *v_type = new VarType(vp->name);
+      v_type->category = PRIMITIVE;
+      v_type->primitive = INTEGER;
+      std::string v_id = std::string(var_dec->id_node->id_token);
+      st->push_var(v_id, v_type);  // push to table
+      return vp;
+    }
+
+    default: {
+      std::cout << "rhs form: " << var_dec->rhs_form << std::endl;
+      return nullptr;
+    }
+  }
+}
+
+std::string vec_to_string(std::vector<std::string> vec) {
+  std::string ss;
+  for (std::string s : vec) {
+    ss += s;
+  }
+  return ss;
 }

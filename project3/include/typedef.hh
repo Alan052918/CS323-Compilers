@@ -14,10 +14,7 @@ typedef struct VarType {
     struct FieldList *structure;
   };
 
-  VarType() {
-    this->name = std::string("Nil");
-    this->category = UNDEFINED;
-  }
+  VarType(std::string name) : name(name) {}
 
   bool operator==(const VarType &other) const { return (name == other.name); }
   bool operator!=(const VarType &other) const { return (name != other.name); }
@@ -27,8 +24,8 @@ typedef struct Array {
   struct VarType *base;
   int size;
 
-  Array() {
-    this->base = new VarType();
+  Array(std::string name) {
+    this->base = new VarType(name);
     this->size = -1;
   }
 } Array;
@@ -49,8 +46,8 @@ typedef struct FunType {
   bool operator!=(const FunType &other) const { return (name != other.name); }
 } FunType;
 
-void add_arr_dimension(VarType *at, int dim);
-void add_arr_basetype(VarType *at, VarType *bt);
+// void add_arr_dimension(VarType *at, int dim);
+// void add_arr_basetype(VarType *at, VarType *bt);
 
 // return true if two types are equivalent, false if not equivalent
 bool compare_var_type(VarType *vt1, VarType *vt2);

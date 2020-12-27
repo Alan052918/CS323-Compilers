@@ -17,9 +17,6 @@ class Dec : public NonterminalNode {
   VarDec *var_dec;
 
   // data member variables
-  // std::string id;
-  // bool is_array;
-  // bool is_assign;
   VarType *var_type;
 
   Dec(int fl, int ll, int fc, int lc, int rhsf);

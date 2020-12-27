@@ -48,8 +48,6 @@ TAC *translate_Exp(Exp *exp, SymbolTable *st, Place *place);
 // statement nodes
 TAC *translate_Stmt(Stmt *stmt, SymbolTable *st);
 
-TAC *translate_VarDec(VarDec *var_dec, SymbolTable *st);
-
 // declaration / definition nodes
 TAC *translate_Dec(Dec *dec, SymbolTable *st);
 TAC *translate_Def(Def *def, SymbolTable *st);
@@ -64,8 +62,6 @@ TAC *translate_DecList(DecList *dec_list, SymbolTable *st,
                        std::vector<std::string> dec_vec);
 TAC *translate_DefList(DefList *def_list, SymbolTable *st,
                        std::vector<std::string> def_vec);
-TAC *translate_ExtDecList(ExtDecList *ext_dec_list, SymbolTable *st,
-                          std::vector<std::string> edec_vec);
 TAC *translate_ExtDefList(ExtDefList *ext_def_list, SymbolTable *st,
                           std::vector<std::string> edef_vec);
 TAC *translate_StmtList(StmtList *stmt_list, SymbolTable *st,
@@ -77,7 +73,13 @@ TAC *translate_VarList(VarList *var_list, SymbolTable *st,
 TAC *translate_CompSt(CompSt *comp_st, SymbolTable *st);
 TAC *translate_Program(Program *program_root);
 
-// no translation scheme for Specifier
+// visitors
+void visit_ExtDecList(ExtDecList *ext_dec_list, SymbolTable *st);
+std::string visit_VarDec(VarDec *var_dec);
+
+// utilities
+std::string vec_to_string(std::vector<std::string> vec);
+
 // no translation scheme for StructSpecifier
 
 #endif  // IRGEN_HH

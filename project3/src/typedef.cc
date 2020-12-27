@@ -1,31 +1,31 @@
 #include "../include/enums.hh"
 #include "../include/typedef.hh"
 
-void add_arr_dimension(VarType *at, int dim) {
-  if (at->category != ARRAY) {
-    std::cout << "Error! Add array dimension to non-array type!\n";
-  }
-  VarType *ptr = at;
-  while (ptr->array->size != -1) {
-    ptr = ptr->array->base;
-  }
-  ptr = ptr->array->base;
-  ptr->name = std::string("array");
-  ptr->category = ARRAY;
-  ptr->array = new Array();
-  ptr->array->size = dim;
-}
+// void add_arr_dimension(VarType *at, int dim) {
+//   if (at->category != ARRAY) {
+//     std::cout << "Error! Add array dimension to non-array type!\n";
+//   }
+//   VarType *ptr = at;
+//   while (ptr->array->size != -1) {
+//     ptr = ptr->array->base;
+//   }
+//   ptr = ptr->array->base;
+//   ptr->name = std::string("array");
+//   ptr->category = ARRAY;
+//   ptr->array = new Array();
+//   ptr->array->size = dim;
+// }
 
-void add_arr_basetype(VarType *at, VarType *bt) {
-  if (at->category != ARRAY) {
-    std::cout << "Error! Add array base type to non-array type!\n";
-  }
-  VarType *ptr = at;
-  while (ptr->array->size != -1) {
-    ptr = ptr->array->base;
-  }
-  ptr = bt;
-}
+// void add_arr_basetype(VarType *at, VarType *bt) {
+//   if (at->category != ARRAY) {
+//     std::cout << "Error! Add array base type to non-array type!\n";
+//   }
+//   VarType *ptr = at;
+//   while (ptr->array->size != -1) {
+//     ptr = ptr->array->base;
+//   }
+//   ptr = bt;
+// }
 
 bool compare_var_type(VarType *vt1, VarType *vt2) {
   if (vt1->category == UNDEFINED || vt2->category == UNDEFINED) {
