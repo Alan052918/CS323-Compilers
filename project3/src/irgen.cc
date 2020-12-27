@@ -203,8 +203,6 @@ TAC *translate_Exp(Exp *exp, SymbolTable *st, Place *p) {
 #endif
       std::vector<std::string> arg_vec;
       TAC *tac0 = translate_Args(exp->args, st, &arg_vec);
-      std::cout << "Args place:\n" << arg_vec.front() << std::endl;
-      std::cout << "Args code:\n" << tac0->value;
       std::string fid = std::string(exp->id_node->id_token);
       if (fid == "write") {
         TAC *tac1 = new WriteValCode(arg_vec.front());

@@ -582,48 +582,58 @@ void yyerror(const char *s) {
 }
 
 int main(int argc, char **argv) {
-  char *file_name;
+  char *src_file_name;
   if (argc < 2) {
-    fprintf(stderr, "Usage: %s <file_name>\n", argv[0]);
+    std::cout << "Usage: " << argv[0] << " <src_file_name>\n";
     return EXIT_FAILURE;
   } else if (argc == 2) {
-    file_name = argv[1];
-    if (!(yyin = fopen(file_name, "r"))) {
+    src_file_name = argv[1];
+    if (!(yyin = fopen(src_file_name, "r"))) {
       perror(argv[1]);
       return EXIT_FAILURE;
     }
     syntax_error = false;
+#ifdef DEBUG
+    std::cout << "SPLC Compiling " << std::string(src_file_name) << std::endl;
+      std::cout << "\n***************************************\n";
+#endif
     int result = yyparse();
     if (result == 0 && syntax_error == false) {
 #ifdef DEBUG
-      printf("\n*********************\n");
+      std::cout << "\n***************************************\n";
 #endif
       SymbolTable *st = new SymbolTable();
       TAC *tac = translate_Program(program_root, st);
 #ifdef DEBUG
-      printf("\n*********************\n");
-#endif
+      std::cout << "\n***************************************\n";
       std::cout << tac->value;
+#endif
+      std::string sfn = std::string(src_file_name);
+      std::string ifn = sfn.substr(0, sfn.size() - 3) + "ir";
+      std::ofstream ir_file;
+      ir_file.open(ifn);
+      ir_file << tac->value;
+      ir_file.close();
     } else if (result == 1) {
 #ifdef DEBUG
-      fprintf(stderr, "Abort\n");
+      std::cout << "Abort\n";
 #endif
     } else if (result > 1) {
 #ifdef DEBUG
-      fprintf(stderr, "Exhausted\n");
+      std::cout << "Exhausted\n";
 #endif
     } else if (syntax_error == true) {
 #ifdef DEBUG
-      fprintf(stderr, "Syntax error\n");
+      std::cout << "Syntax error\n";
 #endif
     } else {
 #ifdef DEBUG
-      fprintf(stderr, "Unknown error\n");
+      std::cout << "Unknown error\n";
 #endif
     }
     return EXIT_SUCCESS;
   } else {
-    fprintf(stderr, "Too many arguments!\n");
+    std::cout << "Too many arguments\n";
     return EXIT_FAILURE;
   }
 }

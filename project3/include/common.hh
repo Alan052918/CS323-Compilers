@@ -6,9 +6,10 @@
 #include <cstring>
 #include <functional>
 #include <iostream>
+#include <fstream>
 #include <map>
 #include <string>
-#include <utility>        // pair
-#include <vector>         // vector
+#include <utility>  // pair
+#include <vector>   // vector
 
 #endif  // COMMON_H
