@@ -20,8 +20,8 @@
 %option yylineno
 
 SPC     [ \t\r\f\v]
-FLOAT   -?[0-9]*\.[0-9]+
-INT     0|-?[1-9][0-9]{0,9}|-?0[xX][1-9a-fA-F][0-9a-fA-F]*
+FLOAT   [0-9]*\.[0-9]+
+INT     0|[1-9][0-9]{0,9}|0[xX][1-9a-fA-F][0-9a-fA-F]*
 CHAR    \'[a-zA-Z]\'|\'\\x[1-9a-fA-F][0-9a-fA-F]*\'
 TYPE    "int"|"char"|"float"
 ID      [a-zA-Z_][0-9a-zA-Z_]*
