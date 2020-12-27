@@ -48,9 +48,12 @@ TAC *translate_Exp(Exp *exp, SymbolTable *st, Place *place);
 // statement nodes
 TAC *translate_Stmt(Stmt *stmt, SymbolTable *st);
 
+TAC *translate_VarDec(VarDec *var_dec, SymbolTable *st);
+
 // declaration / definition nodes
 TAC *translate_Dec(Dec *dec, SymbolTable *st);
 TAC *translate_Def(Def *def, SymbolTable *st);
+TAC *translate_ExtDef(ExtDef *ext_def, SymbolTable *st);
 TAC *translate_FunDec(FunDec *fun_dec, SymbolTable *st);
 TAC *translate_ParamDec(ParamDec *param_dec, SymbolTable *st);
 
@@ -76,6 +79,5 @@ TAC *translate_Program(Program *program_root);
 
 // no translation scheme for Specifier
 // no translation scheme for StructSpecifier
-// no translation scheme for VarDec
 
 #endif  // IRGEN_HH

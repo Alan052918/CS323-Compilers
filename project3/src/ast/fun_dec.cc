@@ -35,6 +35,7 @@ void FunDec::visit(int indent_level, SymbolTable *st) {
       ft->name = this->id;
       ft->return_type = this->var_type;
       ft->arg_types = this->type_list;
+      st->push_fun(this->id, ft);
       break;
     }
     case 1: {  // FunDec := ID LP RP
@@ -51,6 +52,7 @@ void FunDec::visit(int indent_level, SymbolTable *st) {
       ft->name = this->id;
       ft->return_type = this->var_type;
       ft->arg_types = std::vector<VarType *>();
+      st->push_fun(this->id, ft);
       break;
     }
 

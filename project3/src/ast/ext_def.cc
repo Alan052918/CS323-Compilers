@@ -58,8 +58,7 @@ void ExtDef::visit(int indent_level, SymbolTable *st) {
 #endif
       break;
     }
-    case 2: {  // ExtDef := Specifier FunDec CompSt
-               // function DEFINITION, PUSH FUN
+    case 2: {  // ExtDef := Specifier FunDec CompSt (function definition)
       this->specifier->visit(indent_level + 1, st);
       this->var_type = this->specifier->var_type;
       this->fun_dec->var_type = this->var_type;

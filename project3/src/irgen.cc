@@ -106,7 +106,6 @@ TAC *translate_Exp(Exp *exp, SymbolTable *st, Place *p) {
       return new TAC(tac0->value + tac1->value);
     }
     case 16: {  // Exp := ID LP Args RP (function call expression)
-                // method call with arguments
       FunType *ft = st->find_fun(exp->id, UseMode);
       std::vector<std::string> arg_vec;
       TAC *tac0 = translate_Args(exp->args, st, arg_vec);
@@ -121,7 +120,6 @@ TAC *translate_Exp(Exp *exp, SymbolTable *st, Place *p) {
                      ft->name + "\n");
     }
     case 17: {  // Exp := ID LP RP (function call expression)
-                // method call with no arguments
       FunType *ft = st->find_fun(exp->id, UseMode);
       if (ft->name == "read") {
         return new TAC("READ " + p->name + "\n");
@@ -197,43 +195,121 @@ TAC *translate_Stmt(Stmt *stmt, SymbolTable *st) {
   }
 }
 
+TAC *translate_VarDec(VarDec *var_dec, SymbolTable *st) {}
+
 TAC *translate_Dec(Dec *dec, SymbolTable *st) {}
 
 TAC *translate_Def(Def *def, SymbolTable *st) {}
 
-TAC *translate_FunDec(FunDec *fun_dec, SymbolTable *st) {}
+TAC *translate_ExtDef(ExtDef *ext_def, SymbolTable *st) {
+  switch (ext_def->rhs_form) {
+    case 0: {  // ExtDef := Specifier ExtDecList SEMI
+    }
+    case 1: {  // ExtDef := Specifier SEMI
+    }
+    case 2: {  // ExtDef := Specifier FunDec CompSt (function definition)
+      st->push_maps();
+      TAC *tac0 = translate_FunDec(ext_def->fun_dec, st);
+      TAC *tac1 = translate_CompSt(ext_def->comp_st, st);
+      st->pop_maps();
+      return new TAC(tac0->value + tac1->value);
+    }
 
-TAC *translate_ParamDec(ParamDec *param_dec, SymbolTable *st) {}
+    default: {
+      break;
+    }
+  }
+}
+
+TAC *translate_FunDec(FunDec *fun_dec, SymbolTable *st) {
+  switch (fun_dec->rhs_form) {
+    case 0: {  // FunDec := ID LP VarList RP
+      TAC *tac0 = new TAC("FUNCTION " + fun_dec->id + " :\n");
+      std::vector<std::string> var_vec;
+      TAC *tac1 = translate_VarList(fun_dec->var_list, st, var_vec);
+      return new TAC(tac0->value + tac1->value);
+    }
+    case 1: {  // FunDec := ID LP RP
+      return new TAC("FUNCTION " + fun_dec->id + " :\n");
+    }
+
+    default: {
+      std::cout << "rhs form: " << fun_dec->rhs_form << std::endl;
+      break;
+    }
+  }
+}
+
+TAC *translate_ParamDec(ParamDec *param_dec, SymbolTable *st) {
+  st->push_var(param_dec->id, param_dec->var_type);  // push to table
+  VarPlace *vp = new VarPlace();
+  return new TAC("PARAM " + vp->name + "\n");
+}
 
 TAC *translate_Args(Args *args, SymbolTable *st,
                     std::vector<std::string> arg_vec) {
   for (Exp *exp : args->node_list) {
     TempPlace *tp = new TempPlace();
     TAC *tac = translate_Exp(exp, st, tp);
-
-    // insert to front, add arguments in reverse order
-    arg_vec.insert(arg_vec.begin(), tac->value);
+    arg_vec.insert(arg_vec.begin(), tac->value);  // reverse combine
   }
 }
 
 TAC *translate_DecList(DecList *dec_list, SymbolTable *st,
-                       std::vector<std::string> dec_vec) {}
+                       std::vector<std::string> dec_vec) {
+  for (Dec *dec : dec_list->node_list) {
+    TAC *tac = translate_Dec(dec, st);
+    dec_vec.push_back(tac->value);
+  }
+}
 
 TAC *translate_DefList(DefList *def_list, SymbolTable *st,
-                       std::vector<std::string> def_vec) {}
+                       std::vector<std::string> def_vec) {
+  for (Def *def : def_list->node_list) {
+    TAC *tac = translate_Def(def, st);
+    def_vec.push_back(tac->value);
+  }
+}
 
 TAC *translate_ExtDecList(ExtDecList *ext_dec_list, SymbolTable *st,
-                          std::vector<std::string> edec_vec) {}
+                          std::vector<std::string> edec_vec) {
+  for (VarDec *var_dec : ext_dec_list->node_list) {
+    TempPlace *tp = new TempPlace();
+  }
+}
 
 TAC *translate_ExtDefList(ExtDefList *ext_def_list, SymbolTable *st,
-                          std::vector<std::string> edef_vec) {}
+                          std::vector<std::string> edef_vec) {
+  for (ExtDef *ext_def : ext_def_list->node_list) {
+    TempPlace *tp = new TempPlace();
+  }
+}
 
 TAC *translate_StmtList(StmtList *stmt_list, SymbolTable *st,
-                        std::vector<std::string> stmt_vec) {}
+                        std::vector<std::string> stmt_vec) {
+  for (Stmt *stmt : stmt_list->node_list) {
+    TAC *tac = translate_Stmt(stmt, st);
+    stmt_vec.push_back(tac->value);
+  }
+}
 
 TAC *translate_VarList(VarList *var_list, SymbolTable *st,
-                       std::vector<std::string> var_vec) {}
+                       std::vector<std::string> var_vec) {
+  for (ParamDec *param_dec : var_list->node_list) {
+    TAC *tac = translate_ParamDec(param_dec, st);
+    var_vec.push_back(tac->value);
+  }
+}
 
-TAC *translate_CompSt(CompSt *comp_st, SymbolTable *st) {}
+TAC *translate_CompSt(CompSt *comp_st, SymbolTable *st) {
+  std::vector<std::string> def_vec;
+  std::vector<std::string> stmt_vec;
+  TAC *tac0 = translate_DefList(comp_st->def_list, st, def_vec);
+  TAC *tac1 = translate_StmtList(comp_st->stmt_list, st, stmt_vec);
+  return new TAC(tac0->value + tac1->value);
+}
 
-TAC *translate_Program(Program *program_root) {}
+TAC *translate_Program(Program *program_root, SymbolTable *st) {
+  std::vector<std::string> edef_vec;
+  return translate_ExtDefList(program_root->ext_def_list, st, edef_vec);
+}
