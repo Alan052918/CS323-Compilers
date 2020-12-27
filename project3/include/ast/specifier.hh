@@ -17,14 +17,13 @@ class Specifier : public NonterminalNode {
   // nonterminal member variables
   StructSpecifier *struct_specifier;
 
-  // data member variables
-  bool is_struct;
-  std::string primitive_type;
-  VarType *var_type;
-
-  Specifier(int fl, int ll, int fc, int lc, int rhsf);
-
-  void visit(int indent_level, SymbolTable *st) override;
+  Specifier(int fl, int ll, int fc, int lc, int rhsf)
+      : NonterminalNode(fl, ll, fc, lc, rhsf) {
+#ifdef DEBUG
+    std::cout << "  bison: reduce Specifier[" << rhsf << "] l" << fl << "-"
+              << ll << " c" << fc << "-" << lc << std::endl;
+#endif
+  }
 };
 
 #endif  // SPECIFIER_H

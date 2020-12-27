@@ -14,14 +14,13 @@ class VarList : public NonterminalNode {
   // nonterminal member variables
   std::vector<ParamDec *> node_list;
 
-  // data member variables
-  std::vector<std::string> id_list;
-  std::vector<VarType *> type_list;
-  VarType *var_type;
-
-  VarList(int fl, int ll, int fc, int lc, int rhsf);
-
-  void visit(int indent_level, SymbolTable *st) override;
+  VarList(int fl, int ll, int fc, int lc, int rhsf)
+      : NonterminalNode(fl, ll, fc, lc, rhsf) {
+#ifdef DEBUG
+    std::cout << "  bison: reduce VarList[" << rhsf << "] l" << fl << "-" << ll
+              << " c" << fc << "-" << lc << std::endl;
+#endif
+  }
 };
 
 #endif  // VAR_LIST_H

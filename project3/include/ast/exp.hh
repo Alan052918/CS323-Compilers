@@ -19,19 +19,13 @@ class Exp : public NonterminalNode {
   Args *args;
   Exp *exp_1, *exp_2;
 
-  // data member variables
-  std::string character;
-  float floating_point;
-  std::string id;
-  long integer;
-  std::string keyword;
-  bool is_funcall;
-  bool is_rvalue;
-  VarType *var_type;
-
-  Exp(int fl, int ll, int fc, int lc, int rhsf);
-
-  void visit(int indent_level, SymbolTable *st) override;
+  Exp(int fl, int ll, int fc, int lc, int rhsf)
+      : NonterminalNode(fl, ll, fc, lc, rhsf) {
+#ifdef DEBUG
+    std::cout << "  bison: reduce Exp[" << rhsf << "] l" << fl << "-" << ll
+              << " c" << fc << "-" << lc << std::endl;
+#endif
+  }
 };
 
 #endif  // EXP_H

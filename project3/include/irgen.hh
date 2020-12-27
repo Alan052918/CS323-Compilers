@@ -4,41 +4,28 @@
 #include "ast_list.hh"
 #include "tacdef.hh"
 
-int label_count = 0;
-int temp_place_count = 0;
-int var_place_count = 0;
-
 class Label {
  public:
   std::string name;
 
-  Label() {
-    this->name = "label" + std::to_string(label_count);
-    label_count++;
-  }
+  Label();
 };
 
 class Place {
  public:
   std::string name;
 
-  Place() {}
+  Place();
 };
 
 class TempPlace : public Place {
  public:
-  TempPlace() {
-    this->name = "t" + std::to_string(temp_place_count);
-    temp_place_count++;
-  }
+  TempPlace();
 };
 
 class VarPlace : public Place {
  public:
-  VarPlace() {
-    this->name = "v" + std::to_string(var_place_count);
-    var_place_count++;
-  }
+  VarPlace();
 };
 
 // expression nodes
@@ -71,11 +58,11 @@ TAC *translate_VarList(VarList *var_list, SymbolTable *st,
 
 // combinatorial nodes
 TAC *translate_CompSt(CompSt *comp_st, SymbolTable *st);
-TAC *translate_Program(Program *program_root);
+TAC *translate_Program(Program *program_root, SymbolTable *st);
 
 // visitors
 void visit_ExtDecList(ExtDecList *ext_dec_list, SymbolTable *st);
-std::string visit_VarDec(VarDec *var_dec);
+VarPlace *visit_VarDec(VarDec *var_dec, SymbolTable *st);
 
 // utilities
 std::string vec_to_string(std::vector<std::string> vec);

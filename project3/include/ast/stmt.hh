@@ -17,12 +17,13 @@ class Stmt : public NonterminalNode {
   Exp *exp;
   Stmt *stmt_1, *stmt_2;
 
-  // data member variables
-  VarType *var_type;
-
-  Stmt(int fl, int ll, int fc, int lc, int rhsf);
-
-  void visit(int indent_level, SymbolTable *st) override;
+  Stmt(int fl, int ll, int fc, int lc, int rhsf)
+      : NonterminalNode(fl, ll, fc, lc, rhsf) {
+#ifdef DEBUG
+    std::cout << "  bison: reduce Stmt[" << rhsf << "] l" << fl << "-" << ll
+              << " c" << fc << "-" << lc << std::endl;
+#endif
+  }
 };
 
 #endif  // STMT_H

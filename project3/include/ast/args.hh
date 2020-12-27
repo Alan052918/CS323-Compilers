@@ -14,14 +14,13 @@ class Args : public NonterminalNode {
   // nonterminal member variables
   std::vector<Exp *> node_list;
 
-  // data member variables
-  std::vector<VarType *> type_list;
-
-  Args(int fl, int ll, int fc, int lc, int rhsf);
-
-  void visit(int indent_level, SymbolTable *st) override;
-
-  VarType *exp_var_type();
+  Args(int fl, int ll, int fc, int lc, int rhsf)
+      : NonterminalNode(fl, ll, fc, lc, rhsf) {
+#ifdef DEBUG
+    std::cout << "  bison: reduce Args[" << rhsf << "] l" << fl << "-" << ll
+              << " c" << fc << "-" << lc << std::endl;
+#endif
+  }
 };
 
 #endif  // ARGS_H

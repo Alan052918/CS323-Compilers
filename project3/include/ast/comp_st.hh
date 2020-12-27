@@ -18,15 +18,13 @@ class CompSt : public NonterminalNode {
   DefList *def_list;
   StmtList *stmt_list;
 
-  FunDec *fun_dec;
-
-  // data member variables
-  bool is_fun;
-  VarType *return_type;
-
-  CompSt(int fl, int ll, int fc, int lc, int rhsf);
-
-  void visit(int indent_level, SymbolTable *st) override;
+  CompSt(int fl, int ll, int fc, int lc, int rhsf)
+      : NonterminalNode(fl, ll, fc, lc, rhsf) {
+#ifdef DEBUG
+    std::cout << "  bison: reduce CompSt[" << rhsf << "] l" << fl << "-" << ll
+              << " c" << fc << "-" << lc << std::endl;
+#endif
+  }
 };
 
 #endif  // COMP_ST_H

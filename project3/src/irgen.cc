@@ -1,9 +1,28 @@
-#include "../include/ast_list.hh"
 #include "../include/enums.hh"
 #include "../include/irgen.hh"
 #include "../include/symtable.hh"
-#include "../include/tacdef.hh"
 #include "../include/typedef.hh"
+
+int label_count = 0;
+int temp_place_count = 0;
+int var_place_count = 0;
+
+Label::Label() {
+  this->name = "label" + std::to_string(label_count);
+  label_count++;
+}
+
+Place::Place() {}
+
+TempPlace::TempPlace() {
+  this->name = "t" + std::to_string(temp_place_count);
+  temp_place_count++;
+}
+
+VarPlace::VarPlace() {
+  this->name = "v" + std::to_string(var_place_count);
+  var_place_count++;
+}
 
 TAC *translate_cond_Exp(Exp *exp, SymbolTable *st, Label *lb_t, Label *lb_f) {
   switch (exp->rhs_form) {
@@ -49,7 +68,7 @@ TAC *translate_cond_Exp(Exp *exp, SymbolTable *st, Label *lb_t, Label *lb_f) {
 TAC *translate_Exp(Exp *exp, SymbolTable *st, Place *p) {
   switch (exp->rhs_form) {
     case 0: {  // Exp := Exp ASSIGN Exp
-      VarType *vt = st->find_var(exp->id, UseMode);
+      VarType *vt = st->find_var(std::string(exp->id_node->id_token), UseMode);
       TempPlace *tp = new TempPlace();
       TAC *tac0 = translate_Exp(exp->exp_2, st, tp);
       ValAssignVarCode *tac1 = new ValAssignVarCode(vt->name, tp->name);
@@ -106,7 +125,7 @@ TAC *translate_Exp(Exp *exp, SymbolTable *st, Place *p) {
       return new TAC(tac0->value + tac1->value);
     }
     case 16: {  // Exp := ID LP Args RP (function call expression)
-      FunType *ft = st->find_fun(exp->id, UseMode);
+      FunType *ft = st->find_fun(std::string(exp->id_node->id_token), UseMode);
       std::vector<std::string> arg_vec;
       TAC *tac0 = translate_Args(exp->args, st, arg_vec);
       TAC *tac1 = new TAC("");
@@ -120,7 +139,7 @@ TAC *translate_Exp(Exp *exp, SymbolTable *st, Place *p) {
                      ft->name + "\n");
     }
     case 17: {  // Exp := ID LP RP (function call expression)
-      FunType *ft = st->find_fun(exp->id, UseMode);
+      FunType *ft = st->find_fun(std::string(exp->id_node->id_token), UseMode);
       if (ft->name == "read") {
         return new TAC("READ " + p->name + "\n");
       }
@@ -280,7 +299,7 @@ TAC *translate_Args(Args *args, SymbolTable *st,
 }
 
 TAC *translate_DecList(DecList *dec_list, SymbolTable *st,
-                       std::vector<std::string> dec_vec, std::string sp) {
+                       std::vector<std::string> dec_vec) {
   for (Dec *dec : dec_list->node_list) {
     TAC *tac = translate_Dec(dec, st);
     dec_vec.push_back(tac->value);

@@ -14,12 +14,13 @@ class DefList : public NonterminalNode {
   // nonterminal member variables
   std::vector<Def *> node_list;
 
-  // data member variables
-  std::vector<std::pair<char *, VarType *> > var_list;
-
-  DefList(int fl, int ll, int fc, int lc, int rhsf);
-
-  void visit(int indent_level, SymbolTable *st) override;
+  DefList(int fl, int ll, int fc, int lc, int rhsf)
+      : NonterminalNode(fl, ll, fc, lc, rhsf) {
+#ifdef DEBUG
+    std::cout << "  bison: reduce DefList[" << rhsf << "] l" << fl << "-" << ll
+              << " c" << fc << "-" << lc << std::endl;
+#endif
+  }
 };
 
 #endif  // DEF_LIST_H

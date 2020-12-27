@@ -15,12 +15,13 @@ class ParamDec : public NonterminalNode {
   Specifier *specifier;
   VarDec *var_dec;
 
-  std::string id;
-  VarType *var_type;
-
-  ParamDec(int fl, int ll, int fc, int lc, int rhsf);
-
-  void visit(int indent_level, SymbolTable *st) override;
+  ParamDec(int fl, int ll, int fc, int lc, int rhsf)
+      : NonterminalNode(fl, ll, fc, lc, rhsf) {
+#ifdef DEBUG
+    std::cout << "  bison: reduce ParamDec[" << rhsf << "] l" << fl << "-" << ll
+              << " c" << fc << "-" << lc << std::endl;
+#endif
+  }
 };
 
 #endif  // PARAM_DEC_H

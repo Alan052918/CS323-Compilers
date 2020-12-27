@@ -14,9 +14,13 @@ class ExtDefList : public NonterminalNode {
   // nonterminal member variables
   std::vector<ExtDef *> node_list;
 
-  ExtDefList(int fl, int ll, int fc, int lc, int rhsf);
-
-  void visit(int indent_level, SymbolTable *st) override;
+  ExtDefList(int fl, int ll, int fc, int lc, int rhsf)
+      : NonterminalNode(fl, ll, fc, lc, rhsf) {
+#ifdef DEBUG
+    std::cout << "  bison: reduce ExtDefList[" << rhsf << "] l" << fl << "-"
+              << ll << " c" << fc << "-" << lc << std::endl;
+#endif
+  }
 };
 
 #endif  // EXT_DEF_LIST_H

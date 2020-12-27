@@ -14,12 +14,13 @@ class StmtList : public NonterminalNode {
   // nonterminal member variables
   std::vector<Stmt *> node_list;
 
-  // data member variables
-  VarType *return_type;
-
-  StmtList(int fl, int ll, int fc, int lc, int rhsf);
-
-  void visit(int indent_level, SymbolTable *st) override;
+  StmtList(int fl, int ll, int fc, int lc, int rhsf)
+      : NonterminalNode(fl, ll, fc, lc, rhsf) {
+#ifdef DEBUG
+    std::cout << "  bison: reduce StmtList[" << rhsf << "] l" << fl << "-" << ll
+              << " c" << fc << "-" << lc << std::endl;
+#endif
+  }
 };
 
 #endif  // STMT_LIST_H

@@ -13,12 +13,20 @@ class ASTNode {
   int last_line;
   int first_column;
   int last_column;
-  SymbolTable *symbol_table;
 
-  ASTNode(NodeType nt, int fl, int ll, int fc, int lc);
+  ASTNode(NodeType nt, int fl, int ll, int fc, int lc) {
+    this->node_type = nt;
+    this->first_line = fl;
+    this->last_line = ll;
+    this->first_column = fc;
+    this->last_column = lc;
+  }
 
-  virtual void visit(int indent_level, SymbolTable *st);
-  void print_indentation(int indent_level);
+  void print_indentation(int indent_level) {
+    for (int i = 0; i < indent_level; i++) {
+      std::cout << "  ";  // indent with 2 spaces
+    }
+  }
 };
 
 class TerminalNode : public ASTNode {
@@ -32,14 +40,16 @@ class TerminalNode : public ASTNode {
     char *keyword_token;
   };
 
-  TerminalNode(NodeType nt, int fl, int ll, int fc, int lc);
+  TerminalNode(NodeType nt, int fl, int ll, int fc, int lc)
+      : ASTNode(nt, fl, ll, fc, lc) {}
 };
 
 class NonterminalNode : public ASTNode {
  public:
   int rhs_form;
 
-  NonterminalNode(int fl, int ll, int fc, int lc, int rhsf);
+  NonterminalNode(int fl, int ll, int fc, int lc, int rhsf)
+      : ASTNode(Nonterminal, fl, ll, fc, lc), rhs_form(rhsf) {}
 };
 
 #endif  // AST_H

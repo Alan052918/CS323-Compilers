@@ -14,13 +14,13 @@ class DecList : public NonterminalNode {
   // nonterminal member variables
   std::vector<Dec *> node_list;
 
-  // data member variables
-  // This variable type is inherited from parent (Def) node
-  VarType *var_type;
-
-  DecList(int fl, int ll, int fc, int lc, int rhsf);
-
-  void visit(int indent_level, SymbolTable *st) override;
+  DecList(int fl, int ll, int fc, int lc, int rhsf)
+      : NonterminalNode(fl, ll, fc, lc, rhsf) {
+#ifdef DEBUG
+    std::cout << "  bison: reduce DecList[" << rhsf << "] l" << fl << "-" << ll
+              << " c" << fc << "-" << lc << std::endl;
+#endif
+  }
 };
 
 #endif  // DEC_LIST_H

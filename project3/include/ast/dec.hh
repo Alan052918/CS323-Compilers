@@ -16,12 +16,13 @@ class Dec : public NonterminalNode {
   Exp *exp;
   VarDec *var_dec;
 
-  // data member variables
-  VarType *var_type;
-
-  Dec(int fl, int ll, int fc, int lc, int rhsf);
-
-  void visit(int indent_level, SymbolTable *st) override;
+  Dec(int fl, int ll, int fc, int lc, int rhsf)
+      : NonterminalNode(fl, ll, fc, lc, rhsf) {
+#ifdef DEBUG
+    std::cout << "  bison: reduce Dec[" << rhsf << "] l" << fl << "-" << ll
+              << " c" << fc << "-" << lc << std::endl;
+#endif
+  }
 };
 
 #endif  // DEC_H

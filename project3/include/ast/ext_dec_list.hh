@@ -14,13 +14,13 @@ class ExtDecList : public NonterminalNode {
   // nonterminal member variables
   std::vector<VarDec *> node_list;
 
-  // data member variables
-  std::vector<std::pair<std::string, std::vector<int> > > dec_list;
-  VarType *var_type;
-
-  ExtDecList(int fl, int ll, int fc, int lc, int rhsf);
-
-  void visit(int indent_level, SymbolTable *st) override;
+  ExtDecList(int fl, int ll, int fc, int lc, int rhsf)
+      : NonterminalNode(fl, ll, fc, lc, rhsf) {
+#ifdef DEBUG
+    std::cout << "  bison: reduce ExtDecList[" << rhsf << "] l" << fl << "-"
+              << ll << " c" << fc << "-" << lc << std::endl;
+#endif
+  }
 };
 
 #endif  // EXT_DEC_LIST_H

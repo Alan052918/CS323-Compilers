@@ -1,6 +1,9 @@
 %{
   #include "include/ast_list.hh"
   #include "include/common.hh"
+  #include "include/enums.hh"
+  #include "include/irgen.hh"
+  #include "include/symtable.hh"
   #include "include/typedef.hh"
 
   extern "C" FILE *yyin;
@@ -597,7 +600,8 @@ int main(int argc, char **argv) {
       printf("\n*********************\n");
 #endif
       SymbolTable *st = new SymbolTable();
-      program_root->visit(0, st);
+      TAC *tac = translate_Program(program_root, st);
+      std::cout << tac->value;
     } else if (result == 1) {
 #ifdef DEBUG
       fprintf(stderr, "Abort\n");

@@ -17,15 +17,13 @@ class FunDec : public NonterminalNode {
   // nonterminal member variables
   VarList *var_list;
 
-  // data member variables
-  std::string id;
-  VarType *var_type;
-  std::vector<std::string> id_list;
-  std::vector<VarType *> type_list;
-
-  FunDec(int fl, int ll, int fc, int lc, int rhsf);
-
-  void visit(int indent_level, SymbolTable *st) override;
+  FunDec(int fl, int ll, int fc, int lc, int rhsf)
+      : NonterminalNode(fl, ll, fc, lc, rhsf) {
+#ifdef DEBUG
+    std::cout << "  bison: reduce FunDec[" << rhsf << "] l" << fl << "-" << ll
+              << " c" << fc << "-" << lc << std::endl;
+#endif
+  }
 };
 
 #endif  // FUN_DEC_H
