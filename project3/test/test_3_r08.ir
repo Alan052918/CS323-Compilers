@@ -42,15 +42,16 @@ t21 := #0
 IF t20 LT t21 GOTO label2
 GOTO label3
 LABEL label2
-t22 := #-1
+t23 := #1
+t22 := #0 - t23
 WRITE t22
 GOTO label4
 LABEL label3
-t24 := v3
-ARG t24
-t23 := CALL DigitSum
-WRITE t23
+t25 := v3
+ARG t25
+t24 := CALL DigitSum
+WRITE t24
 LABEL label4
-t25 := #0
-RETURN t25
+t26 := #0
+RETURN t26
 

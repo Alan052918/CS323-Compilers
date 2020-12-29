@@ -15,14 +15,15 @@ t5 := #0
 IF t4 LT t5 GOTO label3
 GOTO label4
 LABEL label3
-t6 := #-1
+t7 := #1
+t6 := #0 - t7
 WRITE t6
 GOTO label5
 LABEL label4
-t7 := #0
-WRITE t7
+t8 := #0
+WRITE t8
 LABEL label5
 LABEL label2
-t8 := #0
-RETURN t8
+t9 := #0
+RETURN t9
 

@@ -7,25 +7,26 @@ SymbolTable::SymbolTable() {
 }
 
 void SymbolTable::push_map() {
+#ifdef DEBUG
+  std::cout << "  symtable: pushing map, scope_depth " << this->scope_depth
+            << "->" << this->scope_depth + 1 << std::endl;
+#endif
   this->scope_depth++;
   this->vm_vec.push_back(std::map<std::string, VarRecord *>());
   this->fm_vec.push_back(std::map<std::string, FunRecord *>());
-#ifdef DEBUG
-  std::cout << "symtable: pushing map, scope_depth " << this->scope_depth
-            << "\n";
-#endif
 }
 
 void SymbolTable::pop_map() {
   if (this->scope_depth == 1) {
 #ifdef DEBUG
-    std::cout << "  symtable: cannot pop global scope map ERROR\n";
+    std::cout
+        << "  symtable: scope depth 1, cannot pop global scope map ERROR\n";
 #endif
     return;
   }
 #ifdef DEBUG
   std::cout << "  symtable: poping map, scope_depth " << this->scope_depth
-            << "\n";
+            << "->" << this->scope_depth - 1 << std::endl;
 #endif
   this->scope_depth--;
   this->vm_vec.pop_back();
@@ -39,12 +40,12 @@ bool SymbolTable::push_var(std::string id, VarRecord *vr) {
 #endif
   if (this->find_var(id, DecfMode)) {
 #ifdef DEBUG
-    std::cout << "      push FAILURE!!!\n";
+    std::cout << "  symtable: push FAILURE!!!\n";
 #endif
     return false;
   }
 #ifdef DEBUG
-  std::cout << "      push SUCCESS\n";
+  std::cout << "  symtable: push SUCCESS\n";
 #endif
   this->vm_vec.back().insert(std::make_pair(id, vr));
   return true;
@@ -56,12 +57,12 @@ bool SymbolTable::push_fun(std::string id, FunRecord *ftype) {
 #endif
   if (this->find_fun(id, DecfMode)) {
 #ifdef DEBUG
-    std::cout << "      push FAILURE\n";
+    std::cout << "  symtable: push FAILURE\n";
 #endif
     return false;
   }
 #ifdef DEBUG
-  std::cout << "      push SUCCESS\n";
+  std::cout << "  symtable: push SUCCESS\n";
 #endif
   this->fm_vec.back().insert(std::make_pair(id, ftype));
   return true;

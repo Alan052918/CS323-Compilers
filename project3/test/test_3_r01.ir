@@ -1,4 +1,4 @@
-FUNCTION main :
+FUNCTION main
 t0 := #0
 v3 := t0
 t1 := #5

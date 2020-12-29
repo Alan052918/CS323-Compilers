@@ -45,10 +45,11 @@ TAC *translate_cond_Exp(Exp *exp, SymbolTable *st, Label *lb_t, Label *lb_f) {
                 << exp->last_line << " c" << exp->first_column << "-"
                 << exp->last_column << std::endl;
 #endif
-      Label *lb0 = new Label();
-      TAC *tac0 = translate_cond_Exp(exp->exp_1, st, lb0, lb_f);
-      TAC *tac1 = translate_cond_Exp(exp->exp_2, st, lb_t, lb_f);
-      return new TAC(tac0->value + "LABEL " + lb0->name + "\n" + tac1->value);
+      Label *lb = new Label();
+      LabelDefCode *tac0 = new LabelDefCode(lb->name);
+      TAC *tac1 = translate_cond_Exp(exp->exp_1, st, lb, lb_f);
+      TAC *tac2 = translate_cond_Exp(exp->exp_2, st, lb_t, lb_f);
+      return new TAC(tac1->value + tac0->value + tac2->value);
     }
     case 2: {  // Exp := Exp OR Exp
 #ifdef DEBUG
@@ -56,10 +57,11 @@ TAC *translate_cond_Exp(Exp *exp, SymbolTable *st, Label *lb_t, Label *lb_f) {
                 << exp->last_line << " c" << exp->first_column << "-"
                 << exp->last_column << std::endl;
 #endif
-      Label *lb0 = new Label();
-      TAC *tac0 = translate_cond_Exp(exp->exp_1, st, lb_t, lb0);
-      TAC *tac1 = translate_cond_Exp(exp->exp_2, st, lb_t, lb_f);
-      return new TAC(tac0->value + "LABEL " + lb0->name + "\n" + tac1->value);
+      Label *lb = new Label();
+      LabelDefCode *tac0 = new LabelDefCode(lb->name);
+      TAC *tac1 = translate_cond_Exp(exp->exp_1, st, lb_t, lb);
+      TAC *tac2 = translate_cond_Exp(exp->exp_2, st, lb_t, lb_f);
+      return new TAC(tac1->value + tac0->value + tac2->value);
     }
     case 3:    // Exp := Exp LT Exp
     case 4:    // Exp := Exp LE Exp
@@ -136,11 +138,13 @@ TAC *translate_Exp(Exp *exp, SymbolTable *st, Place *p) {
 #endif
       Label *lb0 = new Label();
       Label *lb1 = new Label();
-      ValAssignVarCode *tac0 = new ValAssignVarCode(p->name, "#0");
-      TAC *tac1 = translate_cond_Exp(exp, st, lb0, lb1);
-      TAC *tac2 = new TAC("LABEL " + lb0->name + "\n" + p->name + " := #1\n");
-      return new TAC(tac0->value + tac1->value + tac2->value + "LABEL " +
-                     lb1->name + "\n");
+      LabelDefCode *tac0 = new LabelDefCode(lb0->name);
+      LabelDefCode *tac1 = new LabelDefCode(lb1->name);
+      ValAssignVarCode *tac2 = new ValAssignVarCode(p->name, "#0");
+      ValAssignVarCode *tac3 = new ValAssignVarCode(p->name, "#1");
+      TAC *tac4 = translate_cond_Exp(exp, st, lb0, lb1);
+      TAC *tac5 = new TAC(tac0->value + tac3->value);
+      return new TAC(tac2->value + tac4->value + tac5->value + tac1->value);
     }
     case 9:     // Exp := Exp PLUS Exp (arithmetic expression)
     case 10:    // Exp := Exp MINUS Exp (arithmetic expression)
@@ -211,7 +215,7 @@ TAC *translate_Exp(Exp *exp, SymbolTable *st, Place *p) {
       if (st->find_fun(fid, UseMode) != nullptr) {
         TAC *tac1 = new TAC("");
         for (unsigned int i = 0; i < arg_vec.size(); i++) {
-          tac1->value += "ARG " + arg_vec.at(i) + "\n";
+          tac1->value += ArgPassCode(arg_vec.at(i)).value;
         }
         if (p != nullptr) {
           FunCallCode *tac2 = new FunCallCode(p->name, fid);
@@ -233,7 +237,7 @@ TAC *translate_Exp(Exp *exp, SymbolTable *st, Place *p) {
         return new ReadValCode(p->name);
       }
       if (st->find_fun(fid, UseMode) != nullptr) {
-        return new TAC(p->name + " := CALL " + fid + "\n");
+        return new FunCallCode(p->name, fid);
       }
       std::cout << "Unidentified function\n";
       return nullptr;
@@ -310,10 +314,11 @@ TAC *translate_Stmt(Stmt *stmt, SymbolTable *st) {
 #endif
       Label *lb0 = new Label();
       Label *lb1 = new Label();
-      TAC *tac0 = translate_cond_Exp(stmt->exp, st, lb0, lb1);
-      TAC *tac1 = translate_Stmt(stmt->stmt_1, st);
-      return new TAC(tac0->value + "LABEL " + lb0->name + "\n" + tac1->value +
-                     "LABEL " + lb1->name + "\n");
+      LabelDefCode *tac0 = new LabelDefCode(lb0->name);
+      LabelDefCode *tac1 = new LabelDefCode(lb1->name);
+      TAC *tac2 = translate_cond_Exp(stmt->exp, st, lb0, lb1);
+      TAC *tac3 = translate_Stmt(stmt->stmt_1, st);
+      return new TAC(tac2->value + tac0->value + tac3->value + tac1->value);
     }
     case 4: {  // Stmt := IF LP Exp RP Stmt ELSE Stmt
 #ifdef DEBUG
@@ -324,12 +329,15 @@ TAC *translate_Stmt(Stmt *stmt, SymbolTable *st) {
       Label *lb0 = new Label();
       Label *lb1 = new Label();
       Label *lb2 = new Label();
-      TAC *tac0 = translate_cond_Exp(stmt->exp, st, lb0, lb1);
-      TAC *tac1 = translate_Stmt(stmt->stmt_1, st);
-      TAC *tac2 = translate_Stmt(stmt->stmt_2, st);
-      return new TAC(tac0->value + "LABEL " + lb0->name + "\n" + tac1->value +
-                     "GOTO " + lb2->name + "\nLABEL " + lb1->name + "\n" +
-                     tac2->value + "LABEL " + lb2->name + "\n");
+      LabelDefCode *tac0 = new LabelDefCode(lb0->name);
+      LabelDefCode *tac1 = new LabelDefCode(lb1->name);
+      LabelDefCode *tac2 = new LabelDefCode(lb2->name);
+      UncondJumpCode *tac3 = new UncondJumpCode(lb2->name);
+      TAC *tac4 = translate_cond_Exp(stmt->exp, st, lb0, lb1);
+      TAC *tac5 = translate_Stmt(stmt->stmt_1, st);
+      TAC *tac6 = translate_Stmt(stmt->stmt_2, st);
+      return new TAC(tac4->value + tac0->value + tac5->value + tac3->value +
+                     tac1->value + tac6->value + tac2->value);
     }
     case 5: {  // Stmt := WHILE LP Exp RP Stmt
 #ifdef DEBUG
@@ -340,11 +348,14 @@ TAC *translate_Stmt(Stmt *stmt, SymbolTable *st) {
       Label *lb0 = new Label();
       Label *lb1 = new Label();
       Label *lb2 = new Label();
-      TAC *tac0 = translate_cond_Exp(stmt->exp, st, lb0, lb1);
-      TAC *tac1 = translate_Stmt(stmt->stmt_1, st);
-      return new TAC("LABEL " + lb0->name + "\n" + tac0->value + "LABEL " +
-                     lb1->name + "\n" + tac1->value + "GOTO " + lb0->name +
-                     "\nLABEL " + lb2->name + "\n");
+      LabelDefCode *tac0 = new LabelDefCode(lb0->name);
+      LabelDefCode *tac1 = new LabelDefCode(lb1->name);
+      LabelDefCode *tac2 = new LabelDefCode(lb2->name);
+      UncondJumpCode *tac3 = new UncondJumpCode(lb0->name);
+      TAC *tac4 = translate_cond_Exp(stmt->exp, st, lb0, lb1);
+      TAC *tac5 = translate_Stmt(stmt->stmt_1, st);
+      return new TAC(tac0->value + tac4->value + tac1->value + tac5->value +
+                     tac3->value + tac2->value);
     }
 
     default: {
@@ -454,7 +465,7 @@ TAC *translate_FunDec(FunDec *fun_dec, SymbolTable *st) {
                 << "-" << fun_dec->last_line << " c" << fun_dec->first_column
                 << "-" << fun_dec->last_column << std::endl;
 #endif
-      TAC *tac0 = new TAC("FUNCTION " + fid + " \n");
+      FunDefCode *tac0 = new FunDefCode(fid);
       std::vector<std::string> var_vec;
       TAC *tac1 = translate_VarList(fun_dec->var_list, st, var_vec);
       return new TAC(tac0->value + tac1->value);
@@ -465,7 +476,7 @@ TAC *translate_FunDec(FunDec *fun_dec, SymbolTable *st) {
                 << "-" << fun_dec->last_line << " c" << fun_dec->first_column
                 << "-" << fun_dec->last_column << std::endl;
 #endif
-      return new TAC("FUNCTION " + fid + " :\n");
+      return new FunDefCode(fid);
     }
 
     default: {
@@ -485,7 +496,7 @@ TAC *translate_ParamDec(ParamDec *param_dec, SymbolTable *st) {
 #endif
   // ParamDec := Specifier VarDec
   VarPlace *vp = visit_VarDec(param_dec->var_dec, st);
-  return new TAC("PARAM " + vp->name + "\n");
+  return new ParamDecCode(vp->name);
 }
 
 // node lists nodes

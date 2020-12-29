@@ -595,17 +595,17 @@ int main(int argc, char **argv) {
     syntax_error = false;
 #ifdef DEBUG
     std::cout << "SPLC Compiling " << std::string(src_file_name) << std::endl;
-      std::cout << "\n***************************************\n";
+      std::cout << "\n********************PARSE********************\n";
 #endif
     int result = yyparse();
     if (result == 0 && syntax_error == false) {
 #ifdef DEBUG
-      std::cout << "\n***************************************\n";
+      std::cout << "\n******************TRANSLATE******************\n";
 #endif
       SymbolTable *st = new SymbolTable();
       TAC *tac = translate_Program(program_root, st);
 #ifdef DEBUG
-      std::cout << "\n***************************************\n";
+      std::cout << "\n********************PRINT********************\n";
       std::cout << tac->value;
 #endif
       std::string sfn = std::string(src_file_name);
@@ -614,6 +614,7 @@ int main(int argc, char **argv) {
       ir_file.open(ifn);
       ir_file << tac->value;
       ir_file.close();
+      std::cout << "written to " << ifn << std::endl;
     } else if (result == 1) {
 #ifdef DEBUG
       std::cout << "Abort\n";

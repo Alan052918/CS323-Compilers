@@ -69,126 +69,127 @@ t44 := #0
 IF t43 LT t44 GOTO label3
 GOTO label4
 LABEL label3
-t45 := #-1
+t46 := #1
+t45 := #0 - t46
 RETURN t45
 
 LABEL label4
 LABEL label5
-t46 := v7
-t47 := #0
-IF t46 GT t47 GOTO label5
+t47 := v7
+t48 := #0
+IF t47 GT t48 GOTO label5
 GOTO label6
 LABEL label6
-t49 := v7
-t50 := #10
-t48 := t49 / t50
-v7 := t48
-t52 := v8
-t53 := #2
-t51 := t52 + t53
-v8 := t51
-t55 := v8
-t56 := #2
-t54 := t55 + t56
-v8 := t54
-t58 := v8
-t59 := #3
-t57 := t58 - t59
-v8 := t57
+t50 := v7
+t51 := #10
+t49 := t50 / t51
+v7 := t49
+t53 := v8
+t54 := #2
+t52 := t53 + t54
+v8 := t52
+t56 := v8
+t57 := #2
+t55 := t56 + t57
+v8 := t55
+t59 := v8
+t60 := #3
+t58 := t59 - t60
+v8 := t58
 GOTO label5
 LABEL label7
-t60 := v8
-RETURN t60
+t61 := v8
+RETURN t61
 
 FUNCTION isNarcissistic 
 PARAM v9
+t66 := #1
+t67 := v9
+t64 := t66 + t67
 t65 := #1
-t66 := v9
-t63 := t65 + t66
-t64 := #1
-t62 := t63 - t64
-ARG t62
-t61 := CALL getNumDigits
-v10 := t61
-t67 := #0
-v11 := t67
-t68 := v9
-v12 := t68
+t63 := t64 - t65
+ARG t63
+t62 := CALL getNumDigits
+v10 := t62
+t68 := #0
+v11 := t68
+t69 := v9
+v12 := t69
 LABEL label8
-t69 := v12
-t70 := #0
-IF t69 GT t70 GOTO label8
+t70 := v12
+t71 := #0
+IF t70 GT t71 GOTO label8
 GOTO label9
 LABEL label9
-t73 := #10
-t72 := v12
+t74 := #10
+t73 := v12
+ARG t74
 ARG t73
-ARG t72
-t71 := CALL mod
-v13 := t71
-t78 := v12
-t79 := v13
-t77 := t78 - t79
-t76 := #10
-t74 := t75 / t76
-v12 := t74
-t81 := v11
-t84 := v10
-t83 := v13
+t72 := CALL mod
+v13 := t72
+t79 := v12
+t80 := v13
+t78 := t79 - t80
+t77 := #10
+t75 := t76 / t77
+v12 := t75
+t82 := v11
+t85 := v10
+t84 := v13
+ARG t85
 ARG t84
-ARG t83
-t82 := CALL power
-t80 := t81 + t82
-v11 := t80
+t83 := CALL power
+t81 := t82 + t83
+v11 := t81
 GOTO label8
 LABEL label10
-t85 := v11
-t86 := v9
-IF t85 EQ t86 GOTO label11
+t86 := v11
+t87 := v9
+IF t86 EQ t87 GOTO label11
 GOTO label12
 LABEL label11
-t87 := #1
-RETURN t87
+t88 := #1
+RETURN t88
 
 GOTO label13
 LABEL label12
-t88 := #0
-RETURN t88
+t89 := #0
+RETURN t89
 
 LABEL label13
 FUNCTION main :
-t89 := #0
-v14 := t89
-t90 := #300
-v15 := t90
+t90 := #0
+v14 := t90
+t91 := #300
+v15 := t91
 LABEL label14
-t91 := v15
-t92 := #500
-IF t91 LT t92 GOTO label14
+t92 := v15
+t93 := #500
+IF t92 LT t93 GOTO label14
 GOTO label15
 LABEL label15
-t95 := v15
-ARG t95
-t93 := CALL isNarcissistic
-t94 := #1
-IF t93 EQ t94 GOTO label17
+t96 := v15
+ARG t96
+t94 := CALL isNarcissistic
+t95 := #1
+IF t94 EQ t95 GOTO label17
 GOTO label18
 LABEL label17
-t96 := v15
-WRITE t96
-t98 := v14
-t99 := #1
-t97 := t98 + t99
-v14 := t97
+t97 := v15
+WRITE t97
+t99 := v14
+t100 := #1
+t98 := t99 + t100
+v14 := t98
 LABEL label18
-t101 := v15
-t102 := #1
-t100 := t101 + t102
-v15 := t100
+t102 := v15
+t103 := #1
+t101 := t102 + t103
+v15 := t101
 GOTO label14
 LABEL label16
-t103 := v14
-WRITE t103
 t104 := v14
-RETURN t104
+WRITE t104
+t105 := v14
+RETURN t105
 
