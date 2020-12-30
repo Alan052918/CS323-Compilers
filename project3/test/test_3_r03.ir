@@ -32,12 +32,10 @@ GOTO label9
 LABEL label8 :
 WRITE v3
 LABEL label9 :
-t8 := #1
-v2 := t8
-t9 := #0
-v1 := t9
-t10 := v3 + #1
-v3 := t10
+v2 := #1
+v1 := #0
+t8 := v3 + #1
+v3 := t8
 GOTO label0
 LABEL label2 :
 RETURN #0

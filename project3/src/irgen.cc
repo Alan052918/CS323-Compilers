@@ -177,9 +177,26 @@ TAC *translate_Exp(Exp *exp, SymbolTable *st, Place *p) {
 #endif
       VarRecord *vr =
           st->find_var(std::string(exp->exp_1->id_node->id_token), UseMode);
-      TempPlace *tp = new TempPlace();
-      TAC *tac0 = translate_Exp(exp->exp_2, st, tp);
-      ValAssignVarCode *tac1 = new ValAssignVarCode(vr->place_name, tp->name);
+
+      std::string rval;
+      TAC *tac0;
+      Exp *exp_2 = exp->exp_2;
+
+      if (exp_2->rhs_form == 20) {  // left variable is id
+        VarRecord *vr =
+            st->find_var(std::string(exp_2->id_node->id_token), UseMode);
+        rval = vr->place_name;
+        tac0 = new TAC("");
+      } else if (exp_2->rhs_form == 21) {  // left variable is int
+        rval = "#" + std::to_string(exp_2->int_node->int_token);
+        tac0 = new TAC("");
+      } else {
+        TempPlace *tp = new TempPlace();
+        tac0 = translate_Exp(exp_2, st, tp);
+        rval = tp->name;
+      }
+
+      ValAssignVarCode *tac1 = new ValAssignVarCode(vr->place_name, rval);
       if (p != nullptr) {
         ValAssignVarCode *tac2 = new ValAssignVarCode(p->name, vr->place_name);
         return new TAC(tac0->value + tac1->value + tac2->value);

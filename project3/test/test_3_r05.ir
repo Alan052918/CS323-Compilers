@@ -1,16 +1,11 @@
 FUNCTION main :
-t0 := #1
-v5 := t0
-t1 := #2
-v6 := t1
-t2 := #3
-v7 := t2
-t3 := #1
-v1 := t3
-t4 := #1
-v2 := t4
-READ t5
-v4 := t5
+v5 := #1
+v6 := #2
+v7 := #3
+v1 := #1
+v2 := #1
+READ t0
+v4 := t0
 IF v4 < #1 GOTO label0
 GOTO label1
 LABEL label0 :
@@ -29,20 +24,17 @@ LABEL label4 :
 IF v4 > #2 GOTO label7
 GOTO label8
 LABEL label7 :
-t6 := #3
-v0 := t6
+v0 := #3
 LABEL label9 :
 IF v0 <= v4 GOTO label10
 GOTO label11
 LABEL label10 :
-t7 := v1 + v2
-v3 := t7
-t8 := v2
-v1 := t8
-t9 := v3
-v2 := t9
-t10 := v0 + #1
-v0 := t10
+t1 := v1 + v2
+v3 := t1
+v1 := v2
+v2 := v3
+t2 := v0 + #1
+v0 := t2
 GOTO label9
 LABEL label11 :
 WRITE v3

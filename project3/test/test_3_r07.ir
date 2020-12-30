@@ -9,32 +9,29 @@ LABEL label0 :
 IF v3 != #0 GOTO label1
 GOTO label2
 LABEL label1 :
-t3 := v1
-v0 := t3
-t4 := v3
-v1 := t4
-t7 := v0 / v1
-t6 := t7 * v1
-t5 := v0 - t6
-v3 := t5
+v0 := v1
+v1 := v3
+t5 := v0 / v1
+t4 := t5 * v1
+t3 := v0 - t4
+v3 := t3
 GOTO label0
 LABEL label2 :
-t8 := v1
-v2 := t8
+v2 := v1
 RETURN v2
 
 FUNCTION gcd2 :
 PARAM v4
 PARAM v5
-t9 := #0
-v6 := t9
+t6 := #0
+v6 := t6
 IF v4 > v5 GOTO label3
 GOTO label4
 LABEL label3 :
-t12 := v4 / v5
-t11 := t12 * v5
-t10 := v4 - t11
-v6 := t10
+t9 := v4 / v5
+t8 := t9 * v5
+t7 := v4 - t8
+v6 := t7
 IF v6 == #0 GOTO label6
 GOTO label7
 LABEL label6 :
@@ -43,15 +40,15 @@ GOTO label8
 LABEL label7 :
 ARG v6
 ARG v5
-t13 := CALL gcd2
-RETURN t13
+t10 := CALL gcd2
+RETURN t10
 LABEL label8 :
 GOTO label5
 LABEL label4 :
-t16 := v5 / v4
-t15 := t16 * v4
-t14 := v5 - t15
-v6 := t14
+t13 := v5 / v4
+t12 := t13 * v4
+t11 := v5 - t12
+v6 := t11
 IF v6 == #0 GOTO label9
 GOTO label10
 LABEL label9 :
@@ -60,23 +57,23 @@ GOTO label11
 LABEL label10 :
 ARG v6
 ARG v4
-t17 := CALL gcd2
-RETURN t17
+t14 := CALL gcd2
+RETURN t14
 LABEL label11 :
 LABEL label5 :
 
 FUNCTION main :
-READ t18
-v7 := t18
-READ t19
-v8 := t19
+READ t15
+v7 := t15
+READ t16
+v8 := t16
 ARG v8
 ARG v7
-t20 := CALL gcd1
-WRITE t20
+t17 := CALL gcd1
+WRITE t17
 ARG v8
 ARG v7
-t21 := CALL gcd2
-WRITE t21
+t18 := CALL gcd2
+WRITE t18
 RETURN #0
 
