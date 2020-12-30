@@ -157,8 +157,15 @@ TAC *translate_Exp(Exp *exp, SymbolTable *st, Place *p) {
 #endif
       TempPlace *t1 = new TempPlace();
       TempPlace *t2 = new TempPlace();
+      std::cout << "=================================================start "
+                << t1->name << std::endl;
       TAC *tac0 = translate_Exp(exp->exp_1, st, t1);
+      std::cout << "end " << t1->name
+                << "=================================================start "
+                << t2->name << std::endl;
       TAC *tac1 = translate_Exp(exp->exp_2, st, t2);
+      std::cout << "=================================================end "
+                << t2->name << std::endl;
       std::string op = std::string(exp->keyword_node->keyword_token);
       if (op == "PLUS") {
         AriAddCode *tac2 = new AriAddCode(p->name, t1->name, t2->name);
@@ -185,8 +192,7 @@ TAC *translate_Exp(Exp *exp, SymbolTable *st, Place *p) {
                 << exp->last_line << " c" << exp->first_column << "-"
                 << exp->last_column << std::endl;
 #endif
-      TempPlace *tp = new TempPlace();
-      return translate_Exp(exp->exp_1, st, tp);
+      return translate_Exp(exp->exp_1, st, p);
     }
     case 14: {  // Exp := MINUS Exp (arithmetic expression)
 #ifdef DEBUG
