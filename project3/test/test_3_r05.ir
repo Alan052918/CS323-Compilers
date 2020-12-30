@@ -44,8 +44,8 @@ v0 := t16
 LABEL label9
 t17 := v0
 t18 := v4
-IF t17 LE t18 GOTO label9
-GOTO label10
+IF t17 LE t18 GOTO label10
+GOTO label11
 LABEL label10
 t20 := v1
 t21 := v2

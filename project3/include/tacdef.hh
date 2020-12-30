@@ -63,7 +63,7 @@ class FunRetCode : public TAC {  // RETURN ret_val
   std::string ret_val;
 
   FunRetCode(std::string rv) : TAC(""), ret_val(rv) {
-    this->value += "RETURN " + this->ret_val + "\n\n";
+    this->value += "RETURN " + this->ret_val + "\n";
 #ifdef DEBUG
     std::cout << "[FunRetCode] " << this->value;
 #endif

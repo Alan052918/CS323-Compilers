@@ -1,4 +1,4 @@
-FUNCTION hanoi 
+FUNCTION hanoi :
 PARAM v0
 PARAM v1
 PARAM v2

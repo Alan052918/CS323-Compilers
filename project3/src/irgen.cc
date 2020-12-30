@@ -79,10 +79,10 @@ TAC *translate_cond_Exp(Exp *exp, SymbolTable *st, Label *lb_t, Label *lb_f) {
       TAC *tac0 = translate_Exp(exp->exp_1, st, t0);
       TAC *tac1 = translate_Exp(exp->exp_2, st, t1);
       std::string op = exp->keyword_node->keyword_token;
-      TAC *tac2 = new TAC("IF " + t0->name + " " + op + " " + t1->name +
-                          " GOTO " + lb_t->name + "\n");
-      return new TAC(tac0->value + tac1->value + tac2->value + "GOTO " +
-                     lb_f->name + "\n");
+      IfCondJumpCode *tac2 =
+          new IfCondJumpCode(t0->name, t1->name, op, lb_t->name);
+      UncondJumpCode *tac3 = new UncondJumpCode(lb_f->name);
+      return new TAC(tac0->value + tac1->value + tac2->value + tac3->value);
     }
     case 15: {  // Exp := NOT Exp
 #ifdef DEBUG
@@ -94,8 +94,12 @@ TAC *translate_cond_Exp(Exp *exp, SymbolTable *st, Label *lb_t, Label *lb_f) {
     }
 
     default: {
-      std::cout << "[" << exp->rhs_form << "] ERROR\n";
-      return nullptr;
+      TempPlace *tp = new TempPlace();
+      TAC *tac0 = translate_Exp(exp, st, tp);
+      IfCondJumpCode *tac1 =
+          new IfCondJumpCode(tp->name, "#0", "!=", lb_t->name);
+      UncondJumpCode *tac2 = new UncondJumpCode(lb_f->name);
+      return new TAC(tac0->value + tac1->value + tac2->value);
     }
   }
 }
@@ -332,11 +336,13 @@ TAC *translate_Stmt(Stmt *stmt, SymbolTable *st) {
       LabelDefCode *tac1 = new LabelDefCode(lb1->name);
       LabelDefCode *tac2 = new LabelDefCode(lb2->name);
       UncondJumpCode *tac3 = new UncondJumpCode(lb2->name);
-      TAC *tac4 = translate_cond_Exp(stmt->exp, st, lb0, lb1);
-      TAC *tac5 = translate_Stmt(stmt->stmt_1, st);
-      TAC *tac6 = translate_Stmt(stmt->stmt_2, st);
-      return new TAC(tac4->value + tac0->value + tac5->value + tac3->value +
-                     tac1->value + tac6->value + tac2->value);
+      TAC *tac4 = new TAC(translate_cond_Exp(stmt->exp, st, lb0, lb1)->value +
+                          tac0->value);
+      TAC *tac5 = new TAC(translate_Stmt(stmt->stmt_1, st)->value +
+                          tac3->value + tac1->value);
+      TAC *tac6 =
+          new TAC(translate_Stmt(stmt->stmt_2, st)->value + tac2->value);
+      return new TAC(tac4->value + tac5->value + tac6->value);
     }
     case 5: {  // Stmt := WHILE LP Exp RP Stmt
 #ifdef DEBUG
@@ -440,7 +446,7 @@ TAC *translate_ExtDef(ExtDef *ext_def, SymbolTable *st) {
       TAC *tac0 = translate_FunDec(ext_def->fun_dec, st);
       TAC *tac1 = translate_CompSt(ext_def->comp_st, st);
       st->pop_map();
-      return new TAC(tac0->value + tac1->value);
+      return new TAC(tac0->value + tac1->value + "\n");
     }
 
     default: {

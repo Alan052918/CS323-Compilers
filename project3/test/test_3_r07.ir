@@ -1,4 +1,4 @@
-FUNCTION gcd1 
+FUNCTION gcd1 :
 PARAM v0
 PARAM v1
 t1 := v0
@@ -12,8 +12,8 @@ v3 := t0
 LABEL label0
 t7 := v3
 t8 := #0
-IF t7 NE t8 GOTO label0
-GOTO label1
+IF t7 NE t8 GOTO label1
+GOTO label2
 LABEL label1
 t9 := v1
 v0 := t9
@@ -34,7 +34,7 @@ v2 := t18
 t19 := v2
 RETURN t19
 
-FUNCTION gcd2 
+FUNCTION gcd2 :
 PARAM v4
 PARAM v5
 t20 := #0
@@ -59,7 +59,6 @@ GOTO label7
 LABEL label6
 t32 := v5
 RETURN t32
-
 GOTO label8
 LABEL label7
 t35 := v6
@@ -68,7 +67,6 @@ ARG t35
 ARG t34
 t33 := CALL gcd2
 RETURN t33
-
 LABEL label8
 GOTO label5
 LABEL label4
@@ -87,7 +85,6 @@ GOTO label10
 LABEL label9
 t45 := v4
 RETURN t45
-
 GOTO label11
 LABEL label10
 t48 := v6
@@ -96,9 +93,9 @@ ARG t48
 ARG t47
 t46 := CALL gcd2
 RETURN t46
-
 LABEL label11
 LABEL label5
+
 FUNCTION main :
 READ t49
 v7 := t49
