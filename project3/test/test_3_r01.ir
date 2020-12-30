@@ -37,6 +37,5 @@ t16 := t17 + t18
 v3 := t16
 t29 := v3
 WRITE t29
-t30 := #0
-RETURN t30
+RETURN #0
 

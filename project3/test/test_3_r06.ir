@@ -43,21 +43,19 @@ ARG t20
 ARG t17
 t23 := CALL hanoi
 LABEL label2 :
-t24 := #0
-RETURN t24
+RETURN #0
 
 FUNCTION main :
-t25 := #3
-v4 := t25
-t29 := #3
-t28 := #2
-t27 := #1
-t26 := v4
-ARG t29
+t24 := #3
+v4 := t24
+t28 := #3
+t27 := #2
+t26 := #1
+t25 := v4
 ARG t28
 ARG t27
 ARG t26
-t30 := CALL hanoi
-t31 := #0
-RETURN t31
+ARG t25
+t29 := CALL hanoi
+RETURN #0
 

@@ -128,6 +128,5 @@ LABEL label32 :
 LABEL label29 :
 LABEL label20 :
 LABEL label2 :
-t49 := #0
-RETURN t49
+RETURN #0
 

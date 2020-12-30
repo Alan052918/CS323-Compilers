@@ -81,12 +81,12 @@ TAC *translate_cond_Exp(Exp *exp, SymbolTable *st, Label *lb_t, Label *lb_f) {
       Exp *exp_1 = exp->exp_1;
       Exp *exp_2 = exp->exp_2;
 
-      if (exp_1->rhs_form == 20) {
+      if (exp_1->rhs_form == 20) {  // left variable is id
         VarRecord *vr =
             st->find_var(std::string(exp_1->id_node->id_token), UseMode);
         lv_name = vr->place_name;
         tac0 = new TAC("");
-      } else if (exp_1->rhs_form == 21) {
+      } else if (exp_1->rhs_form == 21) {  // left variable is int
         lv_name = "#" + std::to_string(exp_1->int_node->int_token);
         tac0 = new TAC("");
       } else {
@@ -95,12 +95,12 @@ TAC *translate_cond_Exp(Exp *exp, SymbolTable *st, Label *lb_t, Label *lb_f) {
         lv_name = tp->name;
       }
 
-      if (exp_2->rhs_form == 20) {
+      if (exp_2->rhs_form == 20) {  // right variable is id
         VarRecord *vr =
             st->find_var(std::string(exp_2->id_node->id_token), UseMode);
         rv_name = vr->place_name;
         tac1 = new TAC("");
-      } else if (exp_2->rhs_form == 21) {
+      } else if (exp_2->rhs_form == 21) {  // right variable is int
         rv_name = "#" + std::to_string(exp_2->int_node->int_token);
         tac1 = new TAC("");
       } else {
@@ -362,9 +362,25 @@ TAC *translate_Stmt(Stmt *stmt, SymbolTable *st) {
                 << stmt->last_line << " c" << stmt->first_column << "-"
                 << stmt->last_column << std::endl;
 #endif
-      TempPlace *tp = new TempPlace();
-      TAC *tac0 = translate_Exp(stmt->exp, st, tp);
-      FunRetCode *tac1 = new FunRetCode(tp->name);
+      std::string ret_val;
+      TAC *tac0;
+      Exp *exp = stmt->exp;
+
+      if (exp->rhs_form == 20) {  // return id
+        VarRecord *vr =
+            st->find_var(std::string(exp->id_node->id_token), UseMode);
+        ret_val = vr->place_name;
+        tac0 = new TAC("");
+      } else if (exp->rhs_form == 21) {  // return int
+        ret_val = "#" + std::to_string(exp->int_node->int_token);
+        tac0 = new TAC("");
+      } else {
+        TempPlace *tp = new TempPlace();
+        tac0 = translate_Exp(exp, st, tp);
+        ret_val = tp->name;
+      }
+
+      FunRetCode *tac1 = new FunRetCode(ret_val);
       return new TAC(tac0->value + tac1->value);
     }
     case 3: {  // Stmt := IF LP Exp RP Stmt

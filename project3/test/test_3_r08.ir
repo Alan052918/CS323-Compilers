@@ -15,38 +15,36 @@ PARAM v2
 IF v2 == #0 GOTO label0
 GOTO label1
 LABEL label0 :
-t7 := #0
-RETURN t7
+RETURN #0
 LABEL label1 :
-t12 := #10
-t11 := v2
-ARG t12
+t11 := #10
+t10 := v2
 ARG t11
-t9 := CALL mod
-t14 := v2
-t15 := #10
-t13 := t14 / t15
-ARG t13
-t10 := CALL DigitSum
-t8 := t9 + t10
-RETURN t8
+ARG t10
+t8 := CALL mod
+t13 := v2
+t14 := #10
+t12 := t13 / t14
+ARG t12
+t9 := CALL DigitSum
+t7 := t8 + t9
+RETURN t7
 
 FUNCTION main :
-READ t16
-v3 := t16
+READ t15
+v3 := t15
 IF v3 < #0 GOTO label2
 GOTO label3
 LABEL label2 :
-t18 := #1
-t17 := #0 - t18
-WRITE t17
+t17 := #1
+t16 := #0 - t17
+WRITE t16
 GOTO label4
 LABEL label3 :
-t20 := v3
-ARG t20
-t19 := CALL DigitSum
-WRITE t19
+t19 := v3
+ARG t19
+t18 := CALL DigitSum
+WRITE t18
 LABEL label4 :
-t21 := #0
-RETURN t21
+RETURN #0
 

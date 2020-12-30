@@ -56,6 +56,5 @@ WRITE t17
 LABEL label8 :
 LABEL label5 :
 LABEL label2 :
-t18 := #0
-RETURN t18
+RETURN #0
 

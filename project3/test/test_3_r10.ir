@@ -20,6 +20,5 @@ t4 := #0
 WRITE t4
 LABEL label5 :
 LABEL label2 :
-t5 := #0
-RETURN t5
+RETURN #0
 

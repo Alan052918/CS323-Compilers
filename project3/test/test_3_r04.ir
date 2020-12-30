@@ -31,6 +31,5 @@ t13 := CALL cbc
 v3 := t13
 t15 := v3
 WRITE t15
-t16 := #0
-RETURN t16
+RETURN #0
 

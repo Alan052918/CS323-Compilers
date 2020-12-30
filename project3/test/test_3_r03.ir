@@ -50,6 +50,5 @@ t18 := t19 + t20
 v3 := t18
 GOTO label0
 LABEL label2 :
-t21 := #0
-RETURN t21
+RETURN #0
 
