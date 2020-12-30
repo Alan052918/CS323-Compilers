@@ -22,34 +22,44 @@ class TAC {
 /* Function related expressions */
 class ArgPassCode : public TAC {  // ARG argv
  public:
-  std::string argv;
+  std::string arg_val;
 
-  ArgPassCode(std::string arg_name) : TAC(""), argv(arg_name) {
-    this->value += "ARG " + this->argv + "\n";
+  /**
+   * av: argument value
+   */
+  ArgPassCode(std::string av) : TAC(""), arg_val(av) {
+    this->value += "ARG " + this->arg_val + "\n";
 #ifdef DEBUG
     std::cout << "[ArgPassCode] " << this->value;
 #endif
   }
 };
 
-class FunCallCode : public TAC {  // ret_var := CALL fun_id
+class FunCallCode : public TAC {  // ret_val := CALL fun_id
  public:
-  std::string ret_var;
+  std::string ret_val;
   std::string fun_id;
 
+  /**
+   * rv: return value
+   * fid: function identifier
+   */
   FunCallCode(std::string rv, std::string fid)
-      : TAC(""), ret_var(rv), fun_id(fid) {
-    this->value += this->ret_var + " := CALL " + this->fun_id + "\n";
+      : TAC(""), ret_val(rv), fun_id(fid) {
+    this->value += this->ret_val + " := CALL " + this->fun_id + "\n";
 #ifdef DEBUG
     std::cout << "[FunCallCode] " << this->value;
 #endif
   }
 };
 
-class FunDefCode : public TAC {  // FUNCTION fun_id
+class FunDefCode : public TAC {  // FUNCTION fun_id :
  public:
   std::string fun_id;
 
+  /**
+   * fid: function identifier
+   */
   FunDefCode(std::string fid) : TAC(""), fun_id(fid) {
     this->value += "FUNCTION " + this->fun_id + " :\n";
 #ifdef DEBUG
@@ -62,6 +72,9 @@ class FunRetCode : public TAC {  // RETURN ret_val
  public:
   std::string ret_val;
 
+  /**
+   * rv: return value
+   */
   FunRetCode(std::string rv) : TAC(""), ret_val(rv) {
     this->value += "RETURN " + this->ret_val + "\n";
 #ifdef DEBUG
@@ -72,10 +85,13 @@ class FunRetCode : public TAC {  // RETURN ret_val
 
 class ParamDecCode : public TAC {  // PARAM param
  public:
-  std::string param;
+  std::string param_var;
 
-  ParamDecCode(std::string p) : TAC(""), param(p) {
-    this->value += "PARAM " + this->param + "\n";
+  /**
+   * pv: parameter variable
+   */
+  ParamDecCode(std::string pv) : TAC(""), param_var(pv) {
+    this->value += "PARAM " + this->param_var + "\n";
 #ifdef DEBUG
     std::cout << "[ParamDecCode] " << this->value;
 #endif
@@ -88,6 +104,10 @@ class AddrAssignVarCode : public TAC {  // t_var := &f_var
   std::string t_var;
   std::string f_var;
 
+  /**
+   * tv: to variable
+   * fv: from variable, whose address is assigned to tv
+   */
   AddrAssignVarCode(std::string tv, std::string fv)
       : TAC(""), t_var(tv), f_var(fv) {
     this->value += this->t_var + " := &" + this->f_var + "\n";
@@ -102,6 +122,10 @@ class RefAssignVarCode : public TAC {  // t_var := *f_addr
   std::string t_var;
   std::string f_addr;
 
+  /**
+   * tv: to variable
+   * fa: from address, whose content value is assigned to tv
+   */
   RefAssignVarCode(std::string tv, std::string fa)
       : TAC(""), t_var(tv), f_addr(fa) {
     this->value += this->t_var + " := *" + this->f_addr + "\n";
@@ -116,6 +140,10 @@ class ValAssignVarCode : public TAC {  // t_var := f_val
   std::string t_var;
   std::string f_val;
 
+  /**
+   * tv: to variable
+   * fv: from value, whose value is assigned to tv
+   */
   ValAssignVarCode(std::string tv, std::string fv)
       : TAC(""), t_var(tv), f_val(fv) {
     this->value += this->t_var + " := " + this->f_val + "\n";
@@ -130,6 +158,10 @@ class ValAssignRefCode : public TAC {  // *t_addr := f_val
   std::string t_addr;
   std::string f_val;
 
+  /**
+   * ta: to address, to whose content fv is assigned
+   * fv: from value
+   */
   ValAssignRefCode(std::string ta, std::string fv)
       : TAC(""), t_addr(ta), f_val(fv) {
     this->value += "*" + this->t_addr + " := " + this->f_val + "\n";
@@ -205,12 +237,12 @@ class AriSubCode : public TAC {  // dif_var := min_var - sub_var
 };
 
 /* Jump expressions */
-class LabelDefCode : public TAC {  // LABEL lb
+class LabelDefCode : public TAC {  // LABEL lb :
  public:
   std::string lb;
 
   LabelDefCode(std::string l) : TAC(""), lb(l) {
-    this->value += "LABEL " + this->lb + "\n";
+    this->value += "LABEL " + this->lb + " :\n";
 #ifdef DEBUG
     std::cout << "[LabelDefCode] " << this->value;
 #endif
@@ -236,6 +268,12 @@ class IfCondJumpCode : public TAC {  // IF l_var relop r_var GOTO t_lb
   std::string relop;
   std::string t_lb;
 
+  /**
+   * lv: left variable
+   * rv: right variable
+   * ro: relation operator
+   * tl: to-label
+   */
   IfCondJumpCode(std::string lv, std::string rv, std::string ro, std::string tl)
       : TAC(""), l_var(lv), r_var(rv), relop(ro), t_lb(tl) {
     this->value += "IF " + this->l_var + " " + this->relop + " " + this->r_var +

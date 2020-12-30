@@ -18,16 +18,45 @@ fi
 
 if test $1 = "test"; then
   if test $2 -lt 10; then
-    $IRSIM ./test/test_3_r0$2.ir
+    if test $# -eq 2; then
+      $IRSIM ./test/test_3_r0$2.ir
+    elif test $# -eq 3; then
+      $IRSIM ./test/test_3_r0$2.ir -i $3
+    elif test $# -eq 4; then
+      $IRSIM ./test/test_3_r0$2.ir -i $3,$4
+    else
+      echo "Too many arguments"
+      exit 1
+    fi
   else
-    $IRSIM ./test/test_3_r$2.ir
+    if test $# -eq 2; then
+      $IRSIM ./test/test_3_r$2.ir
+    elif test $# -eq 3; then
+      $IRSIM ./test/test_3_r$2.ir -i $3
+    elif test $# -eq 4; then
+      $IRSIM ./test/test_3_r$2.ir -i $3,$4
+    else
+      echo "Too many arguments"
+      exit 1
+    fi
   fi
 elif test $1 = "sample"; then
   if test $2 -lt 10; then
-    $IRSIM ./sample/test0$2.ir
+    if test $# -eq 2; then
+      $IRSIM ./sample/test0$2.ir
+    elif test $# -eq 3; then
+      $IRSIM ./sample/test0$2.ir -i $3
+    elif test $# -eq 4; then
+      $IRSIM ./sample/test0$2.ir -i $3,$4
+    else
+      echo "Too many arguments"
+      exit 1
+    fi
   else
     echo "test case index out of bounds: sample only has 4 test cases"
+    exit 1
   fi
 else
   echo "Unsupported directory: $1"
+  exit 1
 fi

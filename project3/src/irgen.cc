@@ -78,11 +78,40 @@ TAC *translate_cond_Exp(Exp *exp, SymbolTable *st, Label *lb_t, Label *lb_f) {
       TempPlace *t1 = new TempPlace();
       TAC *tac0 = translate_Exp(exp->exp_1, st, t0);
       TAC *tac1 = translate_Exp(exp->exp_2, st, t1);
+      UncondJumpCode *tac2 = new UncondJumpCode(lb_f->name);
       std::string op = exp->keyword_node->keyword_token;
-      IfCondJumpCode *tac2 =
-          new IfCondJumpCode(t0->name, t1->name, op, lb_t->name);
-      UncondJumpCode *tac3 = new UncondJumpCode(lb_f->name);
-      return new TAC(tac0->value + tac1->value + tac2->value + tac3->value);
+      if (op == "LT") {
+        IfCondJumpCode *tac3 =
+            new IfCondJumpCode(t0->name, t1->name, "<", lb_t->name);
+        return new TAC(tac0->value + tac1->value + tac3->value + tac2->value);
+      }
+      if (op == "LE") {
+        IfCondJumpCode *tac3 =
+            new IfCondJumpCode(t0->name, t1->name, "<=", lb_t->name);
+        return new TAC(tac0->value + tac1->value + tac3->value + tac2->value);
+      }
+      if (op == "GT") {
+        IfCondJumpCode *tac3 =
+            new IfCondJumpCode(t0->name, t1->name, ">", lb_t->name);
+        return new TAC(tac0->value + tac1->value + tac3->value + tac2->value);
+      }
+      if (op == "GE") {
+        IfCondJumpCode *tac3 =
+            new IfCondJumpCode(t0->name, t1->name, ">=", lb_t->name);
+        return new TAC(tac0->value + tac1->value + tac3->value + tac2->value);
+      }
+      if (op == "NE") {
+        IfCondJumpCode *tac3 =
+            new IfCondJumpCode(t0->name, t1->name, "!=", lb_t->name);
+        return new TAC(tac0->value + tac1->value + tac3->value + tac2->value);
+      }
+      if (op == "EQ") {
+        IfCondJumpCode *tac3 =
+            new IfCondJumpCode(t0->name, t1->name, "==", lb_t->name);
+        return new TAC(tac0->value + tac1->value + tac3->value + tac2->value);
+      }
+      std::cout << "Unidentified relation operator\n";
+      return new TAC("");
     }
     case 15: {  // Exp := NOT Exp
 #ifdef DEBUG

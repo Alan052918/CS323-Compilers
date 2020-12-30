@@ -5,9 +5,9 @@ PARAM v2
 PARAM v3
 t0 := v0
 t1 := #1
-IF t0 EQ t1 GOTO label0
+IF t0 == t1 GOTO label0
 GOTO label1
-LABEL label0
+LABEL label0 :
 t5 := v1
 t6 := #1000000
 t3 := t5 * t6
@@ -15,7 +15,7 @@ t4 := v3
 t2 := t3 + t4
 WRITE t2
 GOTO label2
-LABEL label1
+LABEL label1 :
 t12 := v2
 t11 := v3
 t10 := v1
@@ -42,7 +42,7 @@ ARG t23
 ARG t22
 ARG t21
 ARG t18
-LABEL label2
+LABEL label2 :
 t24 := #0
 RETURN t24
 

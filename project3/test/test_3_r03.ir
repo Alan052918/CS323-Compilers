@@ -7,46 +7,46 @@ t2 := #1
 v2 := t2
 t3 := #1
 v3 := t3
-LABEL label0
+LABEL label0 :
 t4 := v3
 t5 := v0
-IF t4 LE t5 GOTO label1
+IF t4 <= t5 GOTO label1
 GOTO label2
-LABEL label1
-LABEL label3
+LABEL label1 :
+LABEL label3 :
 t6 := v2
 t7 := v3
-IF t6 LE t7 GOTO label4
+IF t6 <= t7 GOTO label4
 GOTO label5
-LABEL label4
+LABEL label4 :
 t8 := v3
 t12 := v3
 t13 := v2
 t10 := t12 / t13
 t11 := v2
 t9 := t10 * t11
-IF t8 EQ t9 GOTO label6
+IF t8 == t9 GOTO label6
 GOTO label7
-LABEL label6
+LABEL label6 :
 t15 := v1
 t16 := #1
 t14 := t15 + t16
 v1 := t14
-LABEL label7
+LABEL label7 :
 t18 := v2
 t19 := #1
 t17 := t18 + t19
 v2 := t17
 GOTO label3
-LABEL label5
+LABEL label5 :
 t20 := v1
 t21 := #2
-IF t20 EQ t21 GOTO label8
+IF t20 == t21 GOTO label8
 GOTO label9
-LABEL label8
+LABEL label8 :
 t22 := v3
 WRITE t22
-LABEL label9
+LABEL label9 :
 t23 := #1
 v2 := t23
 t24 := #0
@@ -56,7 +56,7 @@ t27 := #1
 t25 := t26 + t27
 v3 := t25
 GOTO label0
-LABEL label2
+LABEL label2 :
 t28 := #0
 RETURN t28
 
