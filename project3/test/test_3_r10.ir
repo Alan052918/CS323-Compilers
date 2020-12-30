@@ -1,6 +1,5 @@
 FUNCTION main :
-READ t0
-v0 := t0
+READ v0
 IF v0 > #0 GOTO label0
 GOTO label1
 LABEL label0 :
@@ -10,9 +9,9 @@ LABEL label1 :
 IF v0 < #0 GOTO label3
 GOTO label4
 LABEL label3 :
-t2 := #1
-t1 := #0 - t2
-WRITE t1
+t1 := #1
+t0 := #0 - t1
+WRITE t0
 GOTO label5
 LABEL label4 :
 WRITE #0

@@ -190,6 +190,10 @@ TAC *translate_Exp(Exp *exp, SymbolTable *st, Place *p) {
       } else if (exp_2->rhs_form == 21) {  // right expression is int
         rval = "#" + std::to_string(exp_2->int_node->int_token);
         tac0 = new TAC("");
+      } else if (exp_2->rhs_form == 17 &&
+                 std::string(exp_2->id_node->id_token) ==
+                     "read") {  // right expression is read()
+        return new ReadValCode(vr->place_name);
       } else {
         TempPlace *tp = new TempPlace();
         tac0 = translate_Exp(exp_2, st, tp);

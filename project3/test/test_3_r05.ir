@@ -4,8 +4,7 @@ v6 := #2
 v7 := #3
 v1 := #1
 v2 := #1
-READ t0
-v4 := t0
+READ v4
 IF v4 < #1 GOTO label0
 GOTO label1
 LABEL label0 :
@@ -29,12 +28,12 @@ LABEL label9 :
 IF v0 <= v4 GOTO label10
 GOTO label11
 LABEL label10 :
-t1 := v1 + v2
-v3 := t1
+t0 := v1 + v2
+v3 := t0
 v1 := v2
 v2 := v3
-t2 := v0 + #1
-v0 := t2
+t1 := v0 + #1
+v0 := t1
 GOTO label9
 LABEL label11 :
 WRITE v3

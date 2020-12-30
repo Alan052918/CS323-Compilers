@@ -23,19 +23,18 @@ t3 := t4 + t5
 RETURN t3
 
 FUNCTION main :
-READ t7
-v3 := t7
+READ v3
 IF v3 < #0 GOTO label2
 GOTO label3
 LABEL label2 :
-t9 := #1
-t8 := #0 - t9
-WRITE t8
+t8 := #1
+t7 := #0 - t8
+WRITE t7
 GOTO label4
 LABEL label3 :
 ARG v3
-t10 := CALL DigitSum
-WRITE t10
+t9 := CALL DigitSum
+WRITE t9
 LABEL label4 :
 RETURN #0
 

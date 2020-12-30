@@ -10,16 +10,15 @@ t1 := t2 * v1
 RETURN t1
 
 FUNCTION main :
-READ t3
-v2 := t3
+READ v2
 WRITE v2
 ARG v2
-t4 := CALL sqr
-v3 := t4
+t3 := CALL sqr
+v3 := t3
 WRITE v3
 ARG v2
-t5 := CALL cbc
-v3 := t5
+t4 := CALL cbc
+v3 := t4
 WRITE v3
 RETURN #0
 
