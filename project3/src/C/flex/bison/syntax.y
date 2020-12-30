@@ -607,6 +607,7 @@ int main(int argc, char **argv) {
 #ifdef DEBUG
       std::cout << "\n********************PRINT********************\n";
       std::cout << tac->value;
+      return EXIT_SUCCESS;
 #endif
       std::string sfn = std::string(src_file_name);
       std::string ifn = sfn.substr(0, sfn.size() - 3) + "ir";
