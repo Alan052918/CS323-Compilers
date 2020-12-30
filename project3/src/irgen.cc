@@ -157,15 +157,8 @@ TAC *translate_Exp(Exp *exp, SymbolTable *st, Place *p) {
 #endif
       TempPlace *t1 = new TempPlace();
       TempPlace *t2 = new TempPlace();
-      std::cout << "=================================================start "
-                << t1->name << std::endl;
       TAC *tac0 = translate_Exp(exp->exp_1, st, t1);
-      std::cout << "end " << t1->name
-                << "=================================================start "
-                << t2->name << std::endl;
       TAC *tac1 = translate_Exp(exp->exp_2, st, t2);
-      std::cout << "=================================================end "
-                << t2->name << std::endl;
       std::string op = std::string(exp->keyword_node->keyword_token);
       if (op == "PLUS") {
         AriAddCode *tac2 = new AriAddCode(p->name, t1->name, t2->name);
@@ -358,7 +351,7 @@ TAC *translate_Stmt(Stmt *stmt, SymbolTable *st) {
       LabelDefCode *tac1 = new LabelDefCode(lb1->name);
       LabelDefCode *tac2 = new LabelDefCode(lb2->name);
       UncondJumpCode *tac3 = new UncondJumpCode(lb0->name);
-      TAC *tac4 = translate_cond_Exp(stmt->exp, st, lb0, lb1);
+      TAC *tac4 = translate_cond_Exp(stmt->exp, st, lb1, lb2);
       TAC *tac5 = translate_Stmt(stmt->stmt_1, st);
       return new TAC(tac0->value + tac4->value + tac1->value + tac5->value +
                      tac3->value + tac2->value);

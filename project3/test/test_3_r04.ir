@@ -1,11 +1,11 @@
-FUNCTION sqr
+FUNCTION sqr :
 PARAM v0
 t1 := v0
 t2 := v0
 t0 := t1 * t2
 RETURN t0
 
-FUNCTION cbc
+FUNCTION cbc :
 PARAM v1
 t6 := v1
 t7 := v1
@@ -14,7 +14,7 @@ t5 := v1
 t3 := t4 * t5
 RETURN t3
 
-FUNCTION main
+FUNCTION main :
 READ t8
 v2 := t8
 t9 := v2
