@@ -1,23 +1,22 @@
 FUNCTION main :
-t0 := #0
-v3 := t0
+v3 := #0
 v0 := #5
-t2 := v0 * v0
-t3 := v0 + #2
-t1 := t2 * t3
-v1 := t1
+t1 := v0 * v0
+t2 := v0 + #2
+t0 := t1 * t2
+v1 := t0
 WRITE v1
-t5 := v1 / v0
-t4 := t5 + #1
-v2 := t4
+t4 := v1 / v0
+t3 := t4 + #1
+v2 := t3
 WRITE v2
-t8 := v0 + v1
-t9 := v2 * #3
-t7 := t8 - t9
-t11 := v1 / v0
-t10 := t11 - #4
-t6 := t7 + t10
-v3 := t6
+t7 := v0 + v1
+t8 := v2 * #3
+t6 := t7 - t8
+t10 := v1 / v0
+t9 := t10 - #4
+t5 := t6 + t9
+v3 := t5
 WRITE v3
 RETURN #0
 

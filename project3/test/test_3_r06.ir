@@ -30,12 +30,11 @@ LABEL label2 :
 RETURN #0
 
 FUNCTION main :
-t8 := #3
-v4 := t8
+v4 := #3
 ARG #3
 ARG #2
 ARG #1
 ARG v4
-t9 := CALL hanoi
+t8 := CALL hanoi
 RETURN #0
 

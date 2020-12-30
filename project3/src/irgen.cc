@@ -182,12 +182,12 @@ TAC *translate_Exp(Exp *exp, SymbolTable *st, Place *p) {
       TAC *tac0;
       Exp *exp_2 = exp->exp_2;
 
-      if (exp_2->rhs_form == 20) {  // left variable is id
+      if (exp_2->rhs_form == 20) {  // right expression is id
         VarRecord *vr =
             st->find_var(std::string(exp_2->id_node->id_token), UseMode);
         rval = vr->place_name;
         tac0 = new TAC("");
-      } else if (exp_2->rhs_form == 21) {  // left variable is int
+      } else if (exp_2->rhs_form == 21) {  // right expression is int
         rval = "#" + std::to_string(exp_2->int_node->int_token);
         tac0 = new TAC("");
       } else {
@@ -516,9 +516,26 @@ TAC *translate_Dec(Dec *dec, SymbolTable *st) {
                 << dec->last_column << std::endl;
 #endif
       VarPlace *vp = visit_VarDec(dec->var_dec, st);
-      TempPlace *tp = new TempPlace();
-      TAC *tac0 = translate_Exp(dec->exp, st, tp);
-      ValAssignVarCode *tac1 = new ValAssignVarCode(vp->name, tp->name);
+
+      std::string rval;
+      TAC *tac0;
+      Exp *exp = dec->exp;
+
+      if (exp->rhs_form == 20) {  // expression is id
+        VarRecord *vr =
+            st->find_var(std::string(exp->id_node->id_token), UseMode);
+        rval = vr->place_name;
+        tac0 = new TAC("");
+      } else if (exp->rhs_form == 21) {  // expression is int
+        rval = "#" + std::to_string(exp->int_node->int_token);
+        tac0 = new TAC("");
+      } else {
+        TempPlace *tp = new TempPlace();
+        tac0 = translate_Exp(exp, st, tp);
+        rval = tp->name;
+      }
+
+      ValAssignVarCode *tac1 = new ValAssignVarCode(vp->name, rval);
       return new TAC(tac0->value + tac1->value);
     }
 
