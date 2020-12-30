@@ -17,19 +17,14 @@ RETURN t3
 FUNCTION main :
 READ t8
 v2 := t8
-t9 := v2
-WRITE t9
-t11 := v2
-ARG t11
-t10 := CALL sqr
+WRITE v2
+ARG v2
+t9 := CALL sqr
+v3 := t9
+WRITE v3
+ARG v2
+t10 := CALL cbc
 v3 := t10
-t12 := v3
-WRITE t12
-t14 := v2
-ARG t14
-t13 := CALL cbc
-v3 := t13
-t15 := v3
-WRITE t15
+WRITE v3
 RETURN #0
 

@@ -588,10 +588,22 @@ TAC *translate_Args(Args *args, SymbolTable *st,
 #endif
   std::vector<std::string> exp_vec;
   for (Exp *exp : args->node_list) {
-    TempPlace *tp = new TempPlace();
-    arg_vec->insert(arg_vec->begin(), tp->name);
-    TAC *tac = translate_Exp(exp, st, tp);
-    exp_vec.insert(exp_vec.begin(), tac->value);  // reverse combine
+    std::string arg_val;
+
+    if (exp->rhs_form == 20) {  // argument is variable id
+      VarRecord *vr =
+          st->find_var(std::string(exp->id_node->id_token), UseMode);
+      arg_val = vr->place_name;
+    } else if (exp->rhs_form == 21) {  // argument is int
+      arg_val = "#" + std::to_string(exp->int_node->int_token);
+    } else {
+      TempPlace *tp = new TempPlace();
+      arg_val = tp->name;
+      TAC *tac = translate_Exp(exp, st, tp);
+      exp_vec.insert(exp_vec.begin(), tac->value);  // reverse combine
+    }
+
+    arg_vec->insert(arg_vec->begin(), arg_val);  // reverse combine
   }
   return new TAC(vec_to_string(exp_vec));
 }

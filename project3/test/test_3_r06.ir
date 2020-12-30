@@ -14,48 +14,38 @@ t0 := t1 + t2
 WRITE t0
 GOTO label2
 LABEL label1 :
-t10 := v2
-t9 := v3
-t8 := v1
 t6 := v0
 t7 := #1
 t5 := t6 - t7
-ARG t10
-ARG t9
-ARG t8
+ARG v2
+ARG v3
+ARG v1
 ARG t5
-t11 := CALL hanoi
-t15 := v1
-t16 := #1000000
-t13 := t15 * t16
-t14 := v3
-t12 := t13 + t14
-WRITE t12
-t22 := v3
-t21 := v1
-t20 := v2
-t18 := v0
-t19 := #1
-t17 := t18 - t19
-ARG t22
-ARG t21
-ARG t20
-ARG t17
-t23 := CALL hanoi
+t8 := CALL hanoi
+t12 := v1
+t13 := #1000000
+t10 := t12 * t13
+t11 := v3
+t9 := t10 + t11
+WRITE t9
+t15 := v0
+t16 := #1
+t14 := t15 - t16
+ARG v3
+ARG v1
+ARG v2
+ARG t14
+t17 := CALL hanoi
 LABEL label2 :
 RETURN #0
 
 FUNCTION main :
-t24 := #3
-v4 := t24
-t28 := #3
-t27 := #2
-t26 := #1
-t25 := v4
-ARG t28
-ARG t27
-ARG t26
-ARG t25
-t29 := CALL hanoi
+t18 := #3
+v4 := t18
+ARG #3
+ARG #2
+ARG #1
+ARG v4
+t19 := CALL hanoi
 RETURN #0
 

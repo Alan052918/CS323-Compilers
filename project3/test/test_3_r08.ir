@@ -17,34 +17,31 @@ GOTO label1
 LABEL label0 :
 RETURN #0
 LABEL label1 :
-t11 := #10
-t10 := v2
-ARG t11
-ARG t10
+ARG #10
+ARG v2
 t8 := CALL mod
-t13 := v2
-t14 := #10
-t12 := t13 / t14
-ARG t12
+t11 := v2
+t12 := #10
+t10 := t11 / t12
+ARG t10
 t9 := CALL DigitSum
 t7 := t8 + t9
 RETURN t7
 
 FUNCTION main :
-READ t15
-v3 := t15
+READ t13
+v3 := t13
 IF v3 < #0 GOTO label2
 GOTO label3
 LABEL label2 :
-t17 := #1
-t16 := #0 - t17
-WRITE t16
+t15 := #1
+t14 := #0 - t15
+WRITE t14
 GOTO label4
 LABEL label3 :
-t19 := v3
-ARG t19
-t18 := CALL DigitSum
-WRITE t18
+ARG v3
+t16 := CALL DigitSum
+WRITE t16
 LABEL label4 :
 RETURN #0
 

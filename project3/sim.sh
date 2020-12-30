@@ -1,6 +1,6 @@
 #!/bin/bash
 echo "---------------------------------------------"
-echo "SIMULATING running [$1] test case [$2]"
+echo "SIMULATE running [$1] test case [$2]"
 echo "---------------------------------------------"
 
 OS=$(uname -a | cut -d" " -f 1)

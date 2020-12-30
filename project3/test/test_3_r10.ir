@@ -4,20 +4,18 @@ v0 := t0
 IF v0 > #0 GOTO label0
 GOTO label1
 LABEL label0 :
-t1 := #1
-WRITE t1
+WRITE #1
 GOTO label2
 LABEL label1 :
 IF v0 < #0 GOTO label3
 GOTO label4
 LABEL label3 :
-t3 := #1
-t2 := #0 - t3
-WRITE t2
+t2 := #1
+t1 := #0 - t2
+WRITE t1
 GOTO label5
 LABEL label4 :
-t4 := #0
-WRITE t4
+WRITE #0
 LABEL label5 :
 LABEL label2 :
 RETURN #0

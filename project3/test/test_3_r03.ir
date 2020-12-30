@@ -37,17 +37,16 @@ LABEL label5 :
 IF v1 == #2 GOTO label8
 GOTO label9
 LABEL label8 :
-t15 := v3
-WRITE t15
+WRITE v3
 LABEL label9 :
-t16 := #1
-v2 := t16
-t17 := #0
-v1 := t17
-t19 := v3
-t20 := #1
-t18 := t19 + t20
-v3 := t18
+t15 := #1
+v2 := t15
+t16 := #0
+v1 := t16
+t18 := v3
+t19 := #1
+t17 := t18 + t19
+v3 := t17
 GOTO label0
 LABEL label2 :
 RETURN #0

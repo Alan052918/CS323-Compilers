@@ -22,24 +22,21 @@ LABEL label3 :
 IF v0 == #2 GOTO label6
 GOTO label7
 LABEL label6 :
-t12 := #29
-WRITE t12
+WRITE #29
 GOTO label8
 LABEL label7 :
-t16 := v0
-t17 := #2
-t14 := t16 / t17
-t15 := #2
-t13 := t14 * t15
-IF v0 == t13 GOTO label9
+t15 := v0
+t16 := #2
+t13 := t15 / t16
+t14 := #2
+t12 := t13 * t14
+IF v0 == t12 GOTO label9
 GOTO label10
 LABEL label9 :
-t18 := #30
-WRITE t18
+WRITE #30
 GOTO label11
 LABEL label10 :
-t19 := #31
-WRITE t19
+WRITE #31
 LABEL label11 :
 LABEL label8 :
 GOTO label5
@@ -47,58 +44,52 @@ LABEL label4 :
 IF v0 == #2 GOTO label12
 GOTO label13
 LABEL label12 :
-t20 := #28
-WRITE t20
+WRITE #28
 GOTO label14
 LABEL label13 :
-t24 := v0
-t25 := #2
-t22 := t24 / t25
-t23 := #2
-t21 := t22 * t23
-IF v0 == t21 GOTO label15
+t20 := v0
+t21 := #2
+t18 := t20 / t21
+t19 := #2
+t17 := t18 * t19
+IF v0 == t17 GOTO label15
 GOTO label16
 LABEL label15 :
-t26 := #30
-WRITE t26
+WRITE #30
 GOTO label17
 LABEL label16 :
-t27 := #31
-WRITE t27
+WRITE #31
 LABEL label17 :
 LABEL label14 :
 LABEL label5 :
 GOTO label2
 LABEL label1 :
-t31 := v1
-t32 := #4
-t29 := t31 / t32
-t30 := #4
-t28 := t29 * t30
-IF v1 == t28 GOTO label18
+t25 := v1
+t26 := #4
+t23 := t25 / t26
+t24 := #4
+t22 := t23 * t24
+IF v1 == t22 GOTO label18
 GOTO label19
 LABEL label18 :
 IF v0 == #2 GOTO label21
 GOTO label22
 LABEL label21 :
-t33 := #29
-WRITE t33
+WRITE #29
 GOTO label23
 LABEL label22 :
-t37 := v0
-t38 := #2
-t35 := t37 / t38
-t36 := #2
-t34 := t35 * t36
-IF v0 == t34 GOTO label24
+t30 := v0
+t31 := #2
+t28 := t30 / t31
+t29 := #2
+t27 := t28 * t29
+IF v0 == t27 GOTO label24
 GOTO label25
 LABEL label24 :
-t39 := #30
-WRITE t39
+WRITE #30
 GOTO label26
 LABEL label25 :
-t40 := #31
-WRITE t40
+WRITE #31
 LABEL label26 :
 LABEL label23 :
 GOTO label20
@@ -106,24 +97,21 @@ LABEL label19 :
 IF v0 == #2 GOTO label27
 GOTO label28
 LABEL label27 :
-t41 := #28
-WRITE t41
+WRITE #28
 GOTO label29
 LABEL label28 :
-t45 := v0
-t46 := #2
-t43 := t45 / t46
-t44 := #2
-t42 := t43 * t44
-IF v0 == t42 GOTO label30
+t35 := v0
+t36 := #2
+t33 := t35 / t36
+t34 := #2
+t32 := t33 * t34
+IF v0 == t32 GOTO label30
 GOTO label31
 LABEL label30 :
-t47 := #30
-WRITE t47
+WRITE #30
 GOTO label32
 LABEL label31 :
-t48 := #31
-WRITE t48
+WRITE #31
 LABEL label32 :
 LABEL label29 :
 LABEL label20 :

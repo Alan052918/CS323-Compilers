@@ -110,26 +110,22 @@ LABEL label8 :
 IF v12 > #0 GOTO label9
 GOTO label10
 LABEL label9 :
-t63 := #10
-t62 := v12
-ARG t63
-ARG t62
+ARG #10
+ARG v12
 t61 := CALL mod
 v13 := t61
-t67 := v12
-t68 := v13
-t65 := t67 - t68
-t66 := #10
-t64 := t65 / t66
-v12 := t64
-t70 := v11
-t73 := v10
-t72 := v13
-ARG t73
-ARG t72
-t71 := CALL power
-t69 := t70 + t71
-v11 := t69
+t65 := v12
+t66 := v13
+t63 := t65 - t66
+t64 := #10
+t62 := t63 / t64
+v12 := t62
+t68 := v11
+ARG v10
+ARG v13
+t69 := CALL power
+t67 := t68 + t69
+v11 := t67
 GOTO label8
 LABEL label10 :
 IF v11 == v9 GOTO label11
@@ -142,34 +138,31 @@ RETURN #0
 LABEL label13 :
 
 FUNCTION main :
-t74 := #0
-v14 := t74
-t75 := #300
-v15 := t75
+t70 := #0
+v14 := t70
+t71 := #300
+v15 := t71
 LABEL label14 :
 IF v15 < #500 GOTO label15
 GOTO label16
 LABEL label15 :
-t77 := v15
-ARG t77
-t76 := CALL isNarcissistic
-IF t76 == #1 GOTO label17
+ARG v15
+t72 := CALL isNarcissistic
+IF t72 == #1 GOTO label17
 GOTO label18
 LABEL label17 :
-t78 := v15
-WRITE t78
-t80 := v14
-t81 := #1
-t79 := t80 + t81
-v14 := t79
+WRITE v15
+t74 := v14
+t75 := #1
+t73 := t74 + t75
+v14 := t73
 LABEL label18 :
-t83 := v15
-t84 := #1
-t82 := t83 + t84
-v15 := t82
+t77 := v15
+t78 := #1
+t76 := t77 + t78
+v15 := t76
 GOTO label14
 LABEL label16 :
-t85 := v14
-WRITE t85
+WRITE v14
 RETURN v14
 
