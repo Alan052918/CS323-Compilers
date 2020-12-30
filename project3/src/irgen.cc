@@ -74,8 +74,8 @@ TAC *translate_cond_Exp(Exp *exp, SymbolTable *st, Label *lb_t, Label *lb_f) {
                 << exp->last_line << " c" << exp->first_column << "-"
                 << exp->last_column << std::endl;
 #endif
-      std::string lv_name;
-      std::string rv_name;
+      std::string lv_val;
+      std::string rv_val;
       TAC *tac0;
       TAC *tac1;
       Exp *exp_1 = exp->exp_1;
@@ -84,61 +84,61 @@ TAC *translate_cond_Exp(Exp *exp, SymbolTable *st, Label *lb_t, Label *lb_f) {
       if (exp_1->rhs_form == 20) {  // left variable is id
         VarRecord *vr =
             st->find_var(std::string(exp_1->id_node->id_token), UseMode);
-        lv_name = vr->place_name;
+        lv_val = vr->place_name;
         tac0 = new TAC("");
       } else if (exp_1->rhs_form == 21) {  // left variable is int
-        lv_name = "#" + std::to_string(exp_1->int_node->int_token);
+        lv_val = "#" + std::to_string(exp_1->int_node->int_token);
         tac0 = new TAC("");
       } else {
         TempPlace *tp = new TempPlace();
         tac0 = translate_Exp(exp_1, st, tp);
-        lv_name = tp->name;
+        lv_val = tp->name;
       }
 
       if (exp_2->rhs_form == 20) {  // right variable is id
         VarRecord *vr =
             st->find_var(std::string(exp_2->id_node->id_token), UseMode);
-        rv_name = vr->place_name;
+        rv_val = vr->place_name;
         tac1 = new TAC("");
       } else if (exp_2->rhs_form == 21) {  // right variable is int
-        rv_name = "#" + std::to_string(exp_2->int_node->int_token);
+        rv_val = "#" + std::to_string(exp_2->int_node->int_token);
         tac1 = new TAC("");
       } else {
         TempPlace *tp = new TempPlace();
         tac1 = translate_Exp(exp_2, st, tp);
-        rv_name = tp->name;
+        rv_val = tp->name;
       }
 
       UncondJumpCode *tac2 = new UncondJumpCode(lb_f->name);
       std::string op = exp->keyword_node->keyword_token;
       if (op == "LT") {
         IfCondJumpCode *tac3 =
-            new IfCondJumpCode(lv_name, rv_name, "<", lb_t->name);
+            new IfCondJumpCode(lv_val, rv_val, "<", lb_t->name);
         return new TAC(tac0->value + tac1->value + tac3->value + tac2->value);
       }
       if (op == "LE") {
         IfCondJumpCode *tac3 =
-            new IfCondJumpCode(lv_name, rv_name, "<=", lb_t->name);
+            new IfCondJumpCode(lv_val, rv_val, "<=", lb_t->name);
         return new TAC(tac0->value + tac1->value + tac3->value + tac2->value);
       }
       if (op == "GT") {
         IfCondJumpCode *tac3 =
-            new IfCondJumpCode(lv_name, rv_name, ">", lb_t->name);
+            new IfCondJumpCode(lv_val, rv_val, ">", lb_t->name);
         return new TAC(tac0->value + tac1->value + tac3->value + tac2->value);
       }
       if (op == "GE") {
         IfCondJumpCode *tac3 =
-            new IfCondJumpCode(lv_name, rv_name, ">=", lb_t->name);
+            new IfCondJumpCode(lv_val, rv_val, ">=", lb_t->name);
         return new TAC(tac0->value + tac1->value + tac3->value + tac2->value);
       }
       if (op == "NE") {
         IfCondJumpCode *tac3 =
-            new IfCondJumpCode(lv_name, rv_name, "!=", lb_t->name);
+            new IfCondJumpCode(lv_val, rv_val, "!=", lb_t->name);
         return new TAC(tac0->value + tac1->value + tac3->value + tac2->value);
       }
       if (op == "EQ") {
         IfCondJumpCode *tac3 =
-            new IfCondJumpCode(lv_name, rv_name, "==", lb_t->name);
+            new IfCondJumpCode(lv_val, rv_val, "==", lb_t->name);
         return new TAC(tac0->value + tac1->value + tac3->value + tac2->value);
       }
       std::cout << "Unidentified relation operator\n";
@@ -219,25 +219,56 @@ TAC *translate_Exp(Exp *exp, SymbolTable *st, Place *p) {
                 << exp->last_line << " c" << exp->first_column << "-"
                 << exp->last_column << std::endl;
 #endif
-      TempPlace *t1 = new TempPlace();
-      TempPlace *t2 = new TempPlace();
-      TAC *tac0 = translate_Exp(exp->exp_1, st, t1);
-      TAC *tac1 = translate_Exp(exp->exp_2, st, t2);
+      std::string lv_val;
+      std::string rv_val;
+      TAC *tac0;
+      TAC *tac1;
+      Exp *exp_1 = exp->exp_1;
+      Exp *exp_2 = exp->exp_2;
+
+      if (exp_1->rhs_form == 20) {  // left variable is id
+        VarRecord *vr =
+            st->find_var(std::string(exp_1->id_node->id_token), UseMode);
+        lv_val = vr->place_name;
+        tac0 = new TAC("");
+      } else if (exp_1->rhs_form == 21) {  // left variable is int
+        lv_val = "#" + std::to_string(exp_1->int_node->int_token);
+        tac0 = new TAC("");
+      } else {
+        TempPlace *tp = new TempPlace();
+        tac0 = translate_Exp(exp_1, st, tp);
+        lv_val = tp->name;
+      }
+
+      if (exp_2->rhs_form == 20) {  // right variable is id
+        VarRecord *vr =
+            st->find_var(std::string(exp_2->id_node->id_token), UseMode);
+        rv_val = vr->place_name;
+        tac1 = new TAC("");
+      } else if (exp_2->rhs_form == 21) {  // right variable is int
+        rv_val = "#" + std::to_string(exp_2->int_node->int_token);
+        tac1 = new TAC("");
+      } else {
+        TempPlace *tp = new TempPlace();
+        tac1 = translate_Exp(exp_2, st, tp);
+        rv_val = tp->name;
+      }
+
       std::string op = std::string(exp->keyword_node->keyword_token);
       if (op == "PLUS") {
-        AriAddCode *tac2 = new AriAddCode(p->name, t1->name, t2->name);
+        AriAddCode *tac2 = new AriAddCode(p->name, lv_val, rv_val);
         return new TAC(tac0->value + tac1->value + tac2->value);
       }
       if (op == "MINUS") {
-        AriSubCode *tac2 = new AriSubCode(p->name, t1->name, t2->name);
+        AriSubCode *tac2 = new AriSubCode(p->name, lv_val, rv_val);
         return new TAC(tac0->value + tac1->value + tac2->value);
       }
       if (op == "MUL") {
-        AriMulCode *tac2 = new AriMulCode(p->name, t1->name, t2->name);
+        AriMulCode *tac2 = new AriMulCode(p->name, lv_val, rv_val);
         return new TAC(tac0->value + tac1->value + tac2->value);
       }
       if (op == "DIV") {
-        AriDivCode *tac2 = new AriDivCode(p->name, t1->name, t2->name);
+        AriDivCode *tac2 = new AriDivCode(p->name, lv_val, rv_val);
         return new TAC(tac0->value + tac1->value + tac2->value);
       }
       std::cout << "Unidentified operator\n";

@@ -1,13 +1,9 @@
 FUNCTION mod :
 PARAM v0
 PARAM v1
-t1 := v0
-t5 := v0
-t6 := v1
-t3 := t5 / t6
-t4 := v1
-t2 := t3 * t4
-t0 := t1 - t2
+t2 := v0 / v1
+t1 := t2 * v1
+t0 := v0 - t1
 RETURN t0
 
 FUNCTION DigitSum :
@@ -19,29 +15,27 @@ RETURN #0
 LABEL label1 :
 ARG #10
 ARG v2
-t8 := CALL mod
-t11 := v2
-t12 := #10
-t10 := t11 / t12
-ARG t10
-t9 := CALL DigitSum
-t7 := t8 + t9
-RETURN t7
+t4 := CALL mod
+t6 := v2 / #10
+ARG t6
+t5 := CALL DigitSum
+t3 := t4 + t5
+RETURN t3
 
 FUNCTION main :
-READ t13
-v3 := t13
+READ t7
+v3 := t7
 IF v3 < #0 GOTO label2
 GOTO label3
 LABEL label2 :
-t15 := #1
-t14 := #0 - t15
-WRITE t14
+t9 := #1
+t8 := #0 - t9
+WRITE t8
 GOTO label4
 LABEL label3 :
 ARG v3
-t16 := CALL DigitSum
-WRITE t16
+t10 := CALL DigitSum
+WRITE t10
 LABEL label4 :
 RETURN #0
 

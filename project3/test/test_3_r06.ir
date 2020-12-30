@@ -6,46 +6,36 @@ PARAM v3
 IF v0 == #1 GOTO label0
 GOTO label1
 LABEL label0 :
-t3 := v1
-t4 := #1000000
-t1 := t3 * t4
-t2 := v3
-t0 := t1 + t2
+t1 := v1 * #1000000
+t0 := t1 + v3
 WRITE t0
 GOTO label2
 LABEL label1 :
-t6 := v0
-t7 := #1
-t5 := t6 - t7
+t2 := v0 - #1
 ARG v2
 ARG v3
 ARG v1
-ARG t5
-t8 := CALL hanoi
-t12 := v1
-t13 := #1000000
-t10 := t12 * t13
-t11 := v3
-t9 := t10 + t11
-WRITE t9
-t15 := v0
-t16 := #1
-t14 := t15 - t16
+ARG t2
+t3 := CALL hanoi
+t5 := v1 * #1000000
+t4 := t5 + v3
+WRITE t4
+t6 := v0 - #1
 ARG v3
 ARG v1
 ARG v2
-ARG t14
-t17 := CALL hanoi
+ARG t6
+t7 := CALL hanoi
 LABEL label2 :
 RETURN #0
 
 FUNCTION main :
-t18 := #3
-v4 := t18
+t8 := #3
+v4 := t8
 ARG #3
 ARG #2
 ARG #1
 ARG v4
-t19 := CALL hanoi
+t9 := CALL hanoi
 RETURN #0
 

@@ -1,30 +1,25 @@
 FUNCTION sqr :
 PARAM v0
-t1 := v0
-t2 := v0
-t0 := t1 * t2
+t0 := v0 * v0
 RETURN t0
 
 FUNCTION cbc :
 PARAM v1
-t6 := v1
-t7 := v1
-t4 := t6 * t7
-t5 := v1
-t3 := t4 * t5
-RETURN t3
+t2 := v1 * v1
+t1 := t2 * v1
+RETURN t1
 
 FUNCTION main :
-READ t8
-v2 := t8
+READ t3
+v2 := t3
 WRITE v2
 ARG v2
-t9 := CALL sqr
-v3 := t9
+t4 := CALL sqr
+v3 := t4
 WRITE v3
 ARG v2
-t10 := CALL cbc
-v3 := t10
+t5 := CALL cbc
+v3 := t5
 WRITE v3
 RETURN #0
 
