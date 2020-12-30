@@ -3,63 +3,61 @@ PARAM v0
 PARAM v1
 PARAM v2
 PARAM v3
-t0 := v0
-t1 := #1
-IF t0 == t1 GOTO label0
+IF v0 == #1 GOTO label0
 GOTO label1
 LABEL label0 :
-t5 := v1
-t6 := #1000000
-t3 := t5 * t6
-t4 := v3
-t2 := t3 + t4
-WRITE t2
+t3 := v1
+t4 := #1000000
+t1 := t3 * t4
+t2 := v3
+t0 := t1 + t2
+WRITE t0
 GOTO label2
 LABEL label1 :
-t12 := v2
-t11 := v3
-t10 := v1
-t8 := v0
-t9 := #1
-t7 := t8 - t9
-ARG t12
-ARG t11
+t10 := v2
+t9 := v3
+t8 := v1
+t6 := v0
+t7 := #1
+t5 := t6 - t7
 ARG t10
-ARG t7
-t13 := CALL hanoi
-t17 := v1
-t18 := #1000000
-t15 := t17 * t18
-t16 := v3
-t14 := t15 + t16
-WRITE t14
-t24 := v3
-t23 := v1
-t22 := v2
-t20 := v0
-t21 := #1
-t19 := t20 - t21
-ARG t24
-ARG t23
+ARG t9
+ARG t8
+ARG t5
+t11 := CALL hanoi
+t15 := v1
+t16 := #1000000
+t13 := t15 * t16
+t14 := v3
+t12 := t13 + t14
+WRITE t12
+t22 := v3
+t21 := v1
+t20 := v2
+t18 := v0
+t19 := #1
+t17 := t18 - t19
 ARG t22
-ARG t19
-t25 := CALL hanoi
+ARG t21
+ARG t20
+ARG t17
+t23 := CALL hanoi
 LABEL label2 :
-t26 := #0
-RETURN t26
+t24 := #0
+RETURN t24
 
 FUNCTION main :
-t27 := #3
-v4 := t27
-t31 := #3
-t30 := #2
-t29 := #1
-t28 := v4
-ARG t31
-ARG t30
+t25 := #3
+v4 := t25
+t29 := #3
+t28 := #2
+t27 := #1
+t26 := v4
 ARG t29
 ARG t28
-t32 := CALL hanoi
-t33 := #0
-RETURN t33
+ARG t27
+ARG t26
+t30 := CALL hanoi
+t31 := #0
+RETURN t31
 

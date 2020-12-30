@@ -11,61 +11,51 @@ t4 := #1
 v2 := t4
 READ t5
 v4 := t5
-t6 := v4
-t7 := #1
-IF t6 < t7 GOTO label0
+IF v4 < #1 GOTO label0
 GOTO label1
 LABEL label0 :
-t8 := #0
-WRITE t8
+t6 := #0
+WRITE t6
 GOTO label2
 LABEL label1 :
-t9 := v4
-t10 := #1
-IF t9 == t10 GOTO label3
+IF v4 == #1 GOTO label3
 GOTO label6
 LABEL label6 :
-t11 := v4
-t12 := #2
-IF t11 == t12 GOTO label3
+IF v4 == #2 GOTO label3
 GOTO label4
 LABEL label3 :
-t13 := #1
-WRITE t13
+t7 := #1
+WRITE t7
 GOTO label5
 LABEL label4 :
-t14 := v4
-t15 := #2
-IF t14 > t15 GOTO label7
+IF v4 > #2 GOTO label7
 GOTO label8
 LABEL label7 :
-t16 := #3
-v0 := t16
+t8 := #3
+v0 := t8
 LABEL label9 :
-t17 := v0
-t18 := v4
-IF t17 <= t18 GOTO label10
+IF v0 <= v4 GOTO label10
 GOTO label11
 LABEL label10 :
-t20 := v1
-t21 := v2
-t19 := t20 + t21
-v3 := t19
-t22 := v2
-v1 := t22
-t23 := v3
-v2 := t23
-t25 := v0
-t26 := #1
-t24 := t25 + t26
-v0 := t24
+t10 := v1
+t11 := v2
+t9 := t10 + t11
+v3 := t9
+t12 := v2
+v1 := t12
+t13 := v3
+v2 := t13
+t15 := v0
+t16 := #1
+t14 := t15 + t16
+v0 := t14
 GOTO label9
 LABEL label11 :
-t27 := v3
-WRITE t27
+t17 := v3
+WRITE t17
 LABEL label8 :
 LABEL label5 :
 LABEL label2 :
-t28 := #0
-RETURN t28
+t18 := #0
+RETURN t18
 

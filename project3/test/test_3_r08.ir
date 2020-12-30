@@ -12,45 +12,41 @@ RETURN t0
 
 FUNCTION DigitSum :
 PARAM v2
-t7 := v2
-t8 := #0
-IF t7 == t8 GOTO label0
+IF v2 == #0 GOTO label0
 GOTO label1
 LABEL label0 :
-t9 := #0
-RETURN t9
+t7 := #0
+RETURN t7
 LABEL label1 :
-t14 := #10
-t13 := v2
-ARG t14
+t12 := #10
+t11 := v2
+ARG t12
+ARG t11
+t9 := CALL mod
+t14 := v2
+t15 := #10
+t13 := t14 / t15
 ARG t13
-t11 := CALL mod
-t16 := v2
-t17 := #10
-t15 := t16 / t17
-ARG t15
-t12 := CALL DigitSum
-t10 := t11 + t12
-RETURN t10
+t10 := CALL DigitSum
+t8 := t9 + t10
+RETURN t8
 
 FUNCTION main :
-READ t18
-v3 := t18
-t19 := v3
-t20 := #0
-IF t19 < t20 GOTO label2
+READ t16
+v3 := t16
+IF v3 < #0 GOTO label2
 GOTO label3
 LABEL label2 :
-t22 := #1
-t21 := #0 - t22
-WRITE t21
+t18 := #1
+t17 := #0 - t18
+WRITE t17
 GOTO label4
 LABEL label3 :
-t24 := v3
-ARG t24
-t23 := CALL DigitSum
-WRITE t23
+t20 := v3
+ARG t20
+t19 := CALL DigitSum
+WRITE t19
 LABEL label4 :
-t25 := #0
-RETURN t25
+t21 := #0
+RETURN t21
 

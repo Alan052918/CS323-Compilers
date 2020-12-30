@@ -8,55 +8,48 @@ v2 := t2
 t3 := #1
 v3 := t3
 LABEL label0 :
-t4 := v3
-t5 := v0
-IF t4 <= t5 GOTO label1
+IF v3 <= v0 GOTO label1
 GOTO label2
 LABEL label1 :
 LABEL label3 :
-t6 := v2
-t7 := v3
-IF t6 <= t7 GOTO label4
+IF v2 <= v3 GOTO label4
 GOTO label5
 LABEL label4 :
-t8 := v3
-t12 := v3
-t13 := v2
-t10 := t12 / t13
-t11 := v2
-t9 := t10 * t11
-IF t8 == t9 GOTO label6
+t7 := v3
+t8 := v2
+t5 := t7 / t8
+t6 := v2
+t4 := t5 * t6
+IF v3 == t4 GOTO label6
 GOTO label7
 LABEL label6 :
-t15 := v1
-t16 := #1
-t14 := t15 + t16
-v1 := t14
+t10 := v1
+t11 := #1
+t9 := t10 + t11
+v1 := t9
 LABEL label7 :
-t18 := v2
-t19 := #1
-t17 := t18 + t19
-v2 := t17
+t13 := v2
+t14 := #1
+t12 := t13 + t14
+v2 := t12
 GOTO label3
 LABEL label5 :
-t20 := v1
-t21 := #2
-IF t20 == t21 GOTO label8
+IF v1 == #2 GOTO label8
 GOTO label9
 LABEL label8 :
-t22 := v3
-WRITE t22
+t15 := v3
+WRITE t15
 LABEL label9 :
-t23 := #1
-v2 := t23
-t24 := #0
-v1 := t24
-t26 := v3
-t27 := #1
-t25 := t26 + t27
-v3 := t25
+t16 := #1
+v2 := t16
+t17 := #0
+v1 := t17
+t19 := v3
+t20 := #1
+t18 := t19 + t20
+v3 := t18
 GOTO label0
 LABEL label2 :
-t28 := #0
-RETURN t28
+t21 := #0
+RETURN t21
 
