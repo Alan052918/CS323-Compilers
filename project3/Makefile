@@ -23,7 +23,7 @@ DEBUG_OBJ_FILES:=$(patsubst $(SRC_DIR)/%.cc,$(OBJ_DIR)/%_d.o,$(SRC_FILES))
 splc : $(OBJ_FILES) syntax.tab.c lex.yy.c
 	@echo "Linking SPLC..."
 	@echo "  mkdir -p $(BIN)"; mkdir -p $(BIN)
-	@echo "  $(CC) -lfl -ly -o $(BIN)/$@ $^"; $(CC) -lfl -ly -o $(BIN)/$@ $^
+	@echo "  $(CC) -lfl -ly -o $(BIN)/$@ $^ -std=c++17"; $(CC) -lfl -ly -o $(BIN)/$@ $^ -std=c++17
 	@echo "Success! removing middle product files..."
 	@echo "  rm -rf $(OBJ_DIR)"; rm -rf $(OBJ_DIR)
 	@echo "  rm syntax.* lex.*"; rm syntax.* lex*
@@ -38,7 +38,7 @@ $(OBJ_DIR)/%.o : $(SRC_DIR)/%.cc
 debug : $(DEBUG_OBJ_FILES) syntax.tab.c lex.yy.c
 	@echo "Linking DEBUG..."
 	@echo "  mkdir -p $(BIN)"; mkdir -p $(BIN)
-	@echo "  $(CC) -DDEBUG -lfl -ly -o $(BIN)/$@ $^"; $(CC) -DDEBUG -lfl -ly -o $(BIN)/$@ $^
+	@echo "  $(CC) -DDEBUG -lfl -ly -o $(BIN)/$@ $^ -std=c++17"; $(CC) -DDEBUG -lfl -ly -o $(BIN)/$@ $^ -std=c++17
 	@echo "Success! removing middle product files..."
 	@echo "  rm -rf $(OBJ_DIR)"; rm -rf $(OBJ_DIR)
 	@echo "  rm syntax.* lex.*"; rm syntax.* lex*
